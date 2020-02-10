@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+    <item android:title="@string/gce">
+        <menu>
+            <item
+                android:id="@+id/nav_gce_a"
+                android:icon="@drawable/a_50"
+                android:title="@string/gce_a" />
+            <item
+                android:id="@+id/nav_gce_o"
+                android:icon="@drawable/o_50"
+                android:title="@string/gce_o" />
+        </menu>
+    </item>
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_competitive"
+            android:icon="@drawable/test_50"
+            android:title="@string/competitive" />
+        <item
+            android:id="@+id/nav_staff"
+            android:icon="@drawable/user_group_50"
+            android:title="@string/staff" />
+        <item
+            android:id="@+id/nav_galery"
+            android:icon="@drawable/image2_50"
+            android:title="@string/galerie" />
+
+    </group>
+
+    <item android:title="@string/More">
+        <menu>
+            <item
+                android:id="@+id/nav_user"
+                android:icon="@drawable/user_50"
+                android:title="@string/account" />
+            <item
+                android:id="@+id/nav_about"
+                android:icon="@drawable/info_50"
+                android:title="@string/about" />
+        </menu>
+    </item>
+
+</menu>

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+ <head>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <base href="https://www.camerecole.org/examens/731-correction-epreuve-de-mathematiques-au-probatoire-d-et-ti-2019.html">
+	<meta http-equiv="content-type" content="text/html; charset=utf-8">
+	<meta name="keywords" content="Correction épreuve de mathématiques au probatoire D et TI 2019">
+	<meta name="rights" content="Tous droits réservés ">
+	<meta name="description" content="Correction épreuve de mathématiques au probatoire D et TI 2019">
+	<meta name="generator" content="Joomla! - Open Source Content Management">
+	<title>Correction épreuve de mathématiques au probatoire D et TI 2019</title>
+<body style="background: #F3F3F4;"><br><div id="cck754_art_fulltext" class="cck_contents cck_content cck_wysiwyg_editor cck_art_fulltext"><div id="cck754_value_art_fulltext" class="cck_value cck_value_wysiwyg_editor"><div class="row-fluid">
+<div class="span12 ">
+<p style="text-align: center;"><a class="btn btn-success" href="/examens/707-epreuve-de-mathematiques-au-probatoire-d-et-ti-2019.html"><strong> Epreuve de mathématique au probatoire D et TI 2019 </strong> </a></p>
+</div>
+</div>
+<p style="text-align: justify;"><span style="color: #800080;"><strong>Exercice I / 5 points</strong></span><br>1. Dressons le tableau des effectifs de cette série regroupé en classe <span style="color: #ff00ff;"><strong>1,5 pts</strong></span></p>
+<table style="width: 90%; margin-left: auto; margin-right: auto;" border="1">
+<tbody>
+<tr style="background-color: #0000cd; text-align: center;">
+<td><span style="color: #ffffff;"><strong>Classes</strong></span></td>
+<td><span style="color: #ffffff;"><strong>[20,25[</strong></span></td>
+<td><span style="color: #ffffff;"><strong>[25,30[</strong></span></td>
+<td><span style="color: #ffffff;"><strong>[30,35[</strong></span></td>
+<td><span style="color: #ffffff;"><strong>[35,40[</strong></span></td>
+<td><span style="color: #ffffff;"><strong>[40,45[</strong></span></td>
+<td><span style="color: #ffffff;"><strong>[45;50[</strong></span></td>
+</tr>
+<tr style="background-color: #9370d8; text-align: center;">
+<td><span style="color: #ffffff;"><strong>Effectifs</strong></span></td>
+<td><span style="color: #ffffff;"><strong>3</strong></span></td>
+<td><span style="color: #ffffff;"><strong>8</strong></span></td>
+<td><span style="color: #ffffff;"><strong>10</strong></span></td>
+<td><span style="color: #ffffff;"><strong>10</strong></span></td>
+<td><span style="color: #ffffff;"><strong>7</strong></span></td>
+<td><span style="color: #ffffff;"><strong>2</strong></span></td>
+</tr>
+</tbody>
+</table>
+<p style="text-align: justify;">2. Construisons le polygone des effectifs cumulés décroisant <span style="color: #ff00ff;"><strong>1,5 pt</strong></span><br><img style="display: block; margin-left: auto; margin-right: auto;" src="/images/Examens/probatoire_D_TI/2018/effectifs.png" alt="effectifs">3. Détermination graphique et par calculs de la médiane de cette série statistique <span style="color: #ff00ff;"><strong>1 pt</strong></span><br>• Graphiquement (voir graphe)<br>• Par calcul, on a, par interpolation linéaire, puisque <span class="MathJax_Preview" style="color: inherit; display: none;"></span><span class="MathJax" id="MathJax-Element-1-Frame" tabindex="0" style="position: relative;" data-mathml="<math xmlns=&quot;http://www.w3.org/1998/Math/MathML&quot;><mn>20</mn><mo>&amp;#x2208;</mo><mo stretchy=&quot;false&quot;>]</mo><mn>19</mn><mo>,</mo><mn>29</mn><mo stretchy=&quot;false&quot;>[</mo></math>" role="presentation"><nobr aria-hidden="true"><span class="math" id="MathJax-Span-1" style="width: 5.955em; display: inline-block;"><span style="display: inline-block; position: relative; width: 4.94em; height: 0px; font-size: 120%;"><span style="position: absolute; clip: rect(1.333em, 1004.92em, 2.69em, -1000em); top: -2.262em; left: 0em;"><span class="mrow" id="MathJax-Span-2"><span class="mn" id="MathJax-Span-3" style="font-family: MathJax_Main;">20</span><span class="mo" id="MathJax-Span-4" style="font-family: MathJax_Main; padding-left: 0.278em;">∈</span><span class="mo" id="MathJax-Span-5" style="font-family: MathJax_Main;">]</span><span class="mn" id="MathJax-Span-6" style="font-family: MathJax_Main;">19</span><span class="mo" id="MathJax-Span-7" style="font-family: MathJax_Main;">,</span><span class="mn" id="MathJax-Span-8" style="font-family: MathJax_Main; padding-left: 0.167em;">29</span><span class="mo" id="MathJax-Span-9" style="font-family: MathJax_Main;">[</span></span><span style="display: inline-block; width: 0px; height: 2.262em;"></span></span></span><span style="display: inline-block; overflow: hidden; vertical-align: -0.371em; border-left: 0px solid; width: 0px; height: 1.343em;"></span></span></nobr>
+</span></p></div></div><div class="gf-menu-toggle"></div><span id="gototop" style="opacity: 0;"></span><iframe id="google_osd_static_frame_6784243399086" name="google_osd_static_frame" style="display: none; width: 0px; height: 0px;"></iframe></body>

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/nav_gce_a">
+
+    <fragment
+        android:id="@+id/nav_gce_a"
+        android:name="com.MIAG.miaggce.ui.gce_a.GceAFragment"
+        android:label="@string/gce_a"
+        tools:layout="@layout/fragment_gce_a" />
+
+    <fragment
+        android:id="@+id/nav_gce_o"
+        android:name="com.MIAG.miaggce.ui.gce_o.GceOFragment"
+        android:label="@string/gce_o"
+        tools:layout="@layout/fragment_gce_o" />
+
+    <fragment
+        android:id="@+id/nav_competitive"
+        android:name="com.MIAG.miaggce.ui.competitive.CompetitiveFragment"
+        android:label="@string/competitive"
+        tools:layout="@layout/fragment_competitive" />
+
+    <fragment
+        android:id="@+id/nav_staff"
+        android:name="com.MIAG.miaggce.ui.staff.StaffFragment"
+        android:label="@string/staff"
+        tools:layout="@layout/fragment_staff" />
+
+    <fragment
+        android:id="@+id/nav_galery"
+        android:name="com.MIAG.miaggce.ui.gallery.GalleryFragment"
+        android:label="@string/galerie"
+        tools:layout="@layout/fragment_gallery" />
+
+    <fragment
+        android:id="@+id/nav_user"
+        android:name="com.MIAG.miaggce.ui.account.AccountFragment"
+        android:label="@string/account"
+        tools:layout="@layout/fragment_account" />
+
+    <fragment
+        android:id="@+id/nav_about"
+        android:name="com.MIAG.miaggce.ui.about.AboutFragment"
+        android:label="@string/about"
+        tools:layout="@layout/fragment_about" />
+</navigation>
