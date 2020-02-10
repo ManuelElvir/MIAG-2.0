@@ -1,5 +1,6 @@
 package com.MIAG.miaggce.ui.gce_a;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -24,8 +25,6 @@ import com.MIAG.miaggce.adapter.GridAdapterForGCE;
 import com.MIAG.miaggce.models.Subject_test;
 import com.MIAG.miaggce.ui.paper2.Paper2Activity;
 import com.MIAG.miaggce.ui.paper1.Paper1Activity;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,7 +37,6 @@ public class GceAFragment extends Fragment{
     private List<Subject_test> subjects;
     private List<String> years;
     private SharedPreferences mPrefs;
-    public static String SUBJECTS = "subjects";
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -122,7 +120,7 @@ public class GceAFragment extends Fragment{
 
         LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
         if (mPrefs.getBoolean(ENABLE, false)){ //get Boolean
-            View promptView = layoutInflater.inflate(R.layout.layout_start_exam, null);
+            @SuppressLint("InflateParams") View promptView = layoutInflater.inflate(R.layout.layout_start_exam, null);
 
             final AlertDialog builder1 = new AlertDialog.Builder(getContext()).create();
             builder1.setView(promptView);
@@ -188,11 +186,6 @@ public class GceAFragment extends Fragment{
 
     }
 
-    private List<Subject_test> getSubjectToPreference(){
-        Gson gson = new Gson();
-        String json = mPrefs.getString(SUBJECTS, "");
-        List<Subject_test> subjects = gson.fromJson(json, new TypeToken<ArrayList<Subject_test>>(){}.getType());
-        return subjects;
-    }
+
 }
 

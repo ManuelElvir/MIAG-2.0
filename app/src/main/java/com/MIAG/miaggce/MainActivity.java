@@ -1,7 +1,7 @@
 package com.MIAG.miaggce;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -10,23 +10,17 @@ import android.view.Gravity;
 import android.view.View;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.navigation.NavController;
-import androidx.navigation.NavDestination;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.MIAG.miaggce.app.AsyncTaskRunner;
 import com.MIAG.miaggce.app.DBManager;
-import com.MIAG.miaggce.app.appConfig;
-import com.MIAG.miaggce.models.COMPETITIVE;
 import com.MIAG.miaggce.models.EXAM;
 import com.MIAG.miaggce.ui.identification.IdentificationActivity;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
 import androidx.drawerlayout.widget.DrawerLayout;
 
@@ -38,8 +32,6 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import java.util.ArrayList;
 import java.util.List;
 
 import static com.MIAG.miaggce.ui.splash.SplashScreen.EMAIL;
@@ -56,15 +48,9 @@ public class MainActivity extends AppCompatActivity implements MainView {
 
     private AppBarConfiguration mAppBarConfiguration;
     private TextView name, period;
-    private AsyncTaskRunner.AsyncTaskListener asyncTaskListener;
-    private MainPresenter presenter;
     public static String userKey;
     private ProgressBar progressBar;
     SharedPreferences pref;
-    private DBManager dbManager;
-
-    private List<EXAM> exams;
-    private List<COMPETITIVE> competitives;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,6 +76,7 @@ public class MainActivity extends AppCompatActivity implements MainView {
         name = navigationView.getHeaderView(0).findViewById(R.id.nav_name);
         period = navigationView.getHeaderView(0).findViewById(R.id.nav_period);
         navigationView.getHeaderView(0).setOnClickListener(new View.OnClickListener() {
+            @SuppressLint("RtlHardcoded")
             @Override
             public void onClick(View view) {
                 navController.navigate(R.id.nav_user);
@@ -131,14 +118,8 @@ public class MainActivity extends AppCompatActivity implements MainView {
             }
         });
 
-        //get data
-        dbManager = new DBManager(this);
-        dbManager.open();
-        exams = dbManager.fetchExam();
-        competitives = dbManager.fetchCompetitive();
-
         // Tâche asychrone chargé du téléchargement des nouvelles données dès que une connexion internet est établit.
-        asyncTaskListener = new AsyncTaskRunner.AsyncTaskListener() {
+        AsyncTaskRunner.AsyncTaskListener asyncTaskListener = new AsyncTaskRunner.AsyncTaskListener() {
             @Override
             public void startDownload() {
                 getDataToServer();
@@ -198,8 +179,8 @@ public class MainActivity extends AppCompatActivity implements MainView {
 
     private void getDataToServer() {
         Toast.makeText(this, "Update Data...", Toast.LENGTH_SHORT).show();
-        presenter = new MainPresenter(this, userKey);
-        presenter.startDownloadData();
+        MainPresenter presenter = new MainPresenter(this, userKey);
+        presenter.getExams();
 
     }
 
@@ -214,19 +195,6 @@ public class MainActivity extends AppCompatActivity implements MainView {
     }
 
     @Override
-    public void StartDownload() {
-        showLoading();
-        Snackbar.make(progressBar,R.string.start_update_data,Snackbar.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void endDownload() {
-        HideLoadding();
-        Snackbar.make(progressBar,R.string.end_update_data,Snackbar.LENGTH_SHORT).show();
-        saveNewData();
-    }
-
-    @Override
     public void onErrorLoadind(String cause) {
         HideLoadding();
         Snackbar.make(progressBar,cause,Snackbar.LENGTH_SHORT).show();
@@ -234,18 +202,8 @@ public class MainActivity extends AppCompatActivity implements MainView {
 
     @Override
     public void onReceiveExams(List<EXAM> exams) {
-        this.exams = exams;
-        presenter.getCompetitives();
-    }
-
-    @Override
-    public void onReceiveCompetitives(List<COMPETITIVE> competitives) {
-        this.competitives = competitives;
-        endDownload();
-    }
-
-    private void saveNewData() {
+        DBManager dbManager = new DBManager(this);
+        dbManager.open();
         dbManager.insertListExam(exams);
-        dbManager.insertListCompetitive(competitives);
     }
 }
