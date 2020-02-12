@@ -191,7 +191,32 @@ public class DBManager {
     public List<SUBJECT> getSubjectbyExamId(int EXAM_ID, String SJ_NAME, String SJ_DATE) {
         List<SUBJECT> subjects;
         subjects = new ArrayList<>();
-        Cursor cursor = database.rawQuery("SELECT * FROM "+DatabaseHelper.SUBJECT+" WHERE EXAM_ID = "+EXAM_ID+" AND SJ_NAME LIKE '%"+SJ_NAME+"%' AND SJ_DATE LIKE '%"+SJ_DATE+"%'", null);
+        Cursor cursor = database.rawQuery("SELECT * FROM "+DatabaseHelper.SUBJECT+" WHERE EXAM_ID = "+EXAM_ID+" AND TRIM(SJ_NAME) LIKE '%"+SJ_NAME.trim()+"%' AND TRIM(SJ_DATE) LIKE '%"+SJ_DATE.trim()+"%'", null);
+        if (cursor != null) {
+            cursor.moveToFirst();
+            do{
+                if (cursor.getColumnCount()<=2) {
+                    SUBJECT subject = new SUBJECT();
+                    subject.setSJ_ID(cursor.getInt(0));
+                    subject.setSJ_NAME(cursor.getString(1));
+                    subject.setSJ_DATE(cursor.getString(2));
+                    subject.setEXAM_ID(cursor.getInt(3));
+                    subjects.add(subject);
+                }
+            }while(cursor.moveToNext());
+            cursor.close();
+        }
+        return subjects;
+    }
+
+    /**
+     *  get collect of SUBJECT
+     * @return subjects Collection of COMPETITIVE object
+     */
+    public List<SUBJECT> getSubjectbyId(int SJ_ID) {
+        List<SUBJECT> subjects;
+        subjects = new ArrayList<>();
+        Cursor cursor = database.rawQuery("SELECT * FROM "+DatabaseHelper.SUBJECT+" WHERE SJ_ID = "+SJ_ID, null);
         if (cursor != null) {
             cursor.moveToFirst();
             do{
@@ -247,7 +272,33 @@ public class DBManager {
                 if (cursor.getColumnCount()<=2) {
                     CHAPTER chapter = new CHAPTER();
                     chapter.setCHAP_ID(cursor.getInt(0));
-                    chapter.setSJ_ID(cursor.getString(1));
+                    chapter.setSJ_ID(cursor.getInt(1));
+                    chapter.setCHAP_NAME(cursor.getString(2));
+                    chapter.setCHAP_DATE(cursor.getString(3));
+                    chapter.setCOMP_ID(cursor.getInt(4));
+                    chapters.add(chapter);
+                }
+            }while(cursor.moveToNext());
+            cursor.close();
+        }
+        return chapters;
+    }
+
+    /**
+     *  get collect of CHAPTER
+     * @return chapters Collection of CHAPTER object
+     */
+    public List<CHAPTER> getChapterByNameAndCompId(int COMP_ID, String CHAP_NAME) {
+        List<CHAPTER> chapters;
+        chapters = new ArrayList<>();
+        Cursor cursor = database.rawQuery("SELECT * FROM "+DatabaseHelper.CHAPTER+" WHERE COMP_ID = "+COMP_ID+" AND TRIM(CHAP_NAME) LIKE '%"+CHAP_NAME.trim()+"%'", null);
+        if (cursor != null) {
+            cursor.moveToFirst();
+            do{
+                if (cursor.getColumnCount()<=2) {
+                    CHAPTER chapter = new CHAPTER();
+                    chapter.setCHAP_ID(cursor.getInt(0));
+                    chapter.setSJ_ID(cursor.getInt(1));
                     chapter.setCHAP_NAME(cursor.getString(2));
                     chapter.setCHAP_DATE(cursor.getString(3));
                     chapter.setCOMP_ID(cursor.getInt(4));
@@ -273,7 +324,7 @@ public class DBManager {
                 if (cursor.getColumnCount()<=2) {
                     CHAPTER chapter = new CHAPTER();
                     chapter.setCHAP_ID(cursor.getInt(0));
-                    chapter.setSJ_ID(cursor.getString(1));
+                    chapter.setSJ_ID(cursor.getInt(1));
                     chapter.setCHAP_NAME(cursor.getString(2));
                     chapter.setCHAP_DATE(cursor.getString(3));
                     chapter.setCOMP_ID(cursor.getInt(4));

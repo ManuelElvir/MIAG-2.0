@@ -141,7 +141,7 @@ public class GcePresenter {
                 if (response.isSuccessful() && response.body()!=null)
                     gceView.onReceiveAnwser(response.body());
                 else
-                    gceView.onErrorLoadind("Error when get Paper1 Question");
+                    gceView.onErrorLoadind("Error when get Question Answer");
                 gceView.HideLoadding();
             }
 

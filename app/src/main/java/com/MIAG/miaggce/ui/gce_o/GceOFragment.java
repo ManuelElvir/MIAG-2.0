@@ -179,68 +179,91 @@ public class GceOFragment extends Fragment  implements GceView {
 
     private void showDialog(final String title, final PAPER paper, final int subjectId){
 
-        LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
-        if (mPrefs.getBoolean(ENABLE, false)) { //get Boolean
-            @SuppressLint("InflateParams") View promptView = layoutInflater.inflate(R.layout.layout_start_exam, null);
-
-            final AlertDialog builder1 = new AlertDialog.Builder(getContext()).create();
-            builder1.setView(promptView);
-            TextView text_title = promptView.findViewById(R.id.title);
-            text_title.setText(title);
-            Button start = promptView.findViewById(R.id.start);
-            Button cancel = promptView.findViewById(R.id.cancel);
-            Button back =  promptView.findViewById(R.id.back);
-
-            back.setOnClickListener(new View.OnClickListener() {
-                public void onClick(View v) {
-                    builder1.dismiss();
-                }
-            });
-
-            builder1.setCancelable(true);
-            start.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Intent i;
-                    switch (paper){
-                        case PAPER1:
-                            i = new Intent(getActivity(), Paper1Activity.class);
-                            break;
-
-                        case PAPER2:
-                            i = new Intent(getActivity(), Paper2Activity.class);
-                            break;
-
-                        default: //Default is Paper3Type
-                            i = new Intent(getActivity(), Paper2Activity.class);
-                            i.putExtra("no_timer",true);
-                            break;
-                    }
-                    i.putExtra("title",title);
-                    i.putExtra("subject",subjectId);
-                    startActivity(i);
-                    builder1.dismiss();
-                }
-            });
-            cancel.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    builder1.cancel();
-                }
-            });
-            builder1.show();
+        int paperId = 0;
+        if (paper == PAPER.PAPER1){
+            List<PAPER1> paper1s = dbManager.getPaper1BySubjectId(subjectId);
+            if (paper1s!=null)
+                if (paper1s.size()>0)
+                    paperId = paper1s.get(0).getPAPER1_ID();
         }
-        else {
-            @SuppressLint("InflateParams") View promptView = layoutInflater.inflate(R.layout.layout_not_register, null);
-            final AlertDialog builder1 = new AlertDialog.Builder(getContext()).create();
-            builder1.setView(promptView);
-            Button back =  promptView.findViewById(R.id.back);
-            back.setOnClickListener(new View.OnClickListener() {
-                public void onClick(View v) {
-                    builder1.dismiss();
-                }
-            });
-            builder1.show();
+        if (paper == PAPER.PAPER2){
+            List<PAPER2> paper2s = dbManager.getPaper2BySubjectId(subjectId);
+            if (paper2s!=null)
+                if (paper2s.size()>0)
+                    paperId = paper2s.get(0).getPAPER2_ID();
+        }
+        if (paper == PAPER.PAPER3){
+            List<PAPER3> paper3s = dbManager.getPaper3BySubjectId(subjectId);
+            if (paper3s!=null)
+                if (paper3s.size()>0)
+                    paperId = paper3s.get(0).getPAPER3_ID();
+        }
+        if (paperId>0){
+            LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
+            if (mPrefs.getBoolean(ENABLE, false)) { //get Boolean
+                @SuppressLint("InflateParams") View promptView = layoutInflater.inflate(R.layout.layout_start_exam, null);
+
+                final AlertDialog builder1 = new AlertDialog.Builder(getContext()).create();
+                builder1.setView(promptView);
+                TextView text_title = promptView.findViewById(R.id.title);
+                text_title.setText(title);
+                Button start = promptView.findViewById(R.id.start);
+                Button cancel = promptView.findViewById(R.id.cancel);
+                Button back =  promptView.findViewById(R.id.back);
+
+                back.setOnClickListener(new View.OnClickListener() {
+                    public void onClick(View v) {
+                        builder1.dismiss();
+                    }
+                });
+
+                builder1.setCancelable(true);
+                start.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent i;
+                        switch (paper){
+                            case PAPER1:
+                                i = new Intent(getActivity(), Paper1Activity.class);
+                                break;
+
+                            case PAPER2:
+                                i = new Intent(getActivity(), Paper2Activity.class);
+                                break;
+
+                            default: //Default is Paper3Type
+                                i = new Intent(getActivity(), Paper2Activity.class);
+                                i.putExtra("no_timer",true);
+                                break;
+                        }
+                        i.putExtra("title",title);
+                        i.putExtra("subject",subjectId);
+                        startActivity(i);
+                        builder1.dismiss();
+                    }
+                });
+                cancel.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        builder1.cancel();
+                    }
+                });
+                builder1.show();
+            }
+            else {
+                @SuppressLint("InflateParams") View promptView = layoutInflater.inflate(R.layout.layout_not_register, null);
+                final AlertDialog builder1 = new AlertDialog.Builder(getContext()).create();
+                builder1.setView(promptView);
+                Button back =  promptView.findViewById(R.id.back);
+                back.setOnClickListener(new View.OnClickListener() {
+                    public void onClick(View v) {
+                        builder1.dismiss();
+                    }
+                });
+                builder1.show();
+            }
+        }else {
+            onErrorLoadind("this paper is not download, please connect your device to internet and try again.");
         }
 
     }

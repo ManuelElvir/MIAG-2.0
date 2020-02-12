@@ -11,7 +11,7 @@ public class CHAPTER {
 
     @Expose
     @SerializedName("SJ_ID")
-    private String SJ_ID;
+    private int SJ_ID;
 
     @Expose
     @SerializedName("CHAP_NAME")
@@ -41,11 +41,11 @@ public class CHAPTER {
         this.CHAP_ID = CHAP_ID;
     }
 
-    public String getSJ_ID() {
+    public int getSJ_ID() {
         return SJ_ID;
     }
 
-    public void setSJ_ID(String SJ_ID) {
+    public void setSJ_ID(int SJ_ID) {
         this.SJ_ID = SJ_ID;
     }
 
