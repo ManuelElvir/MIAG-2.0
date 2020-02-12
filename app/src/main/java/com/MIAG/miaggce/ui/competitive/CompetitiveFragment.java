@@ -1,5 +1,6 @@
 package com.MIAG.miaggce.ui.competitive;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -21,7 +22,6 @@ import androidx.fragment.app.Fragment;
 
 import com.MIAG.miaggce.R;
 import com.MIAG.miaggce.adapter.GridAdapterForGCE;
-import com.MIAG.miaggce.models.Subject_test;
 import com.MIAG.miaggce.ui.paper1.Paper1Activity;
 import com.MIAG.miaggce.ui.requierement.RequierementActivity;
 
@@ -33,7 +33,7 @@ import static com.MIAG.miaggce.ui.splash.SplashScreen.PREFERENCE;
 
 public class CompetitiveFragment extends Fragment {
     private GridView gridView;
-    private List<Subject_test> school;
+    private List<String> school;
     private List<String> subjects;
     private List<String> chapter;
     private boolean isclick = false;
@@ -59,27 +59,27 @@ public class CompetitiveFragment extends Fragment {
 
         //replace to dynamics
         school = new ArrayList<>();
-        school.add(new Subject_test(0,"ENS Maroua"));
-        school.add(new Subject_test(1,"Polytechnique Yaoundé"));
-        school.add(new Subject_test(2,"Polytechnique Maroua"));
-        school.add(new Subject_test(3,"Ecole des Postes"));
-        school.add(new Subject_test(4,"Ecole des Travaux"));
-        school.add(new Subject_test(5,"Faculté du Génie Indistruel"));
-        school.add(new Subject_test(6,"IUT Douala"));
-        school.add(new Subject_test(7,"IUT Bandjoun"));
-        school.add(new Subject_test(8,"IUT Ngaoundéré"));
-        school.add(new Subject_test(9,"Faculté de Médécine Yaoundé"));
-        school.add(new Subject_test(10,"Faculté de Médécine Douala"));
-        school.add(new Subject_test(11,"Biomédical de Dschang"));
+        school.add("ENS Maroua");
+        school.add("Polytechnique Yaoundé");
+        school.add("Polytechnique Maroua");
+        school.add("Ecole des Postes");
+        school.add("Ecole des Travaux");
+        school.add("Faculté du Génie Indistruel");
+        school.add("IUT Douala");
+        school.add("IUT Bandjoun");
+        school.add("IUT Ngaoundéré");
+        school.add("Faculté de Médécine Yaoundé");
+        school.add("Faculté de Médécine Douala");
+        school.add("Biomédical de Dschang");
 
-        subjects = new ArrayList<String>();
+        subjects = new ArrayList<>();
         subjects.add("Mathematics");
         subjects.add("Physical");
         subjects.add("French");
         subjects.add("General culture");
 
 
-        chapter = new ArrayList<String>();
+        chapter = new ArrayList<>();
         chapter.add("chapter 1 : limits");
         chapter.add("chapter 2 : derivation and primitive");
         chapter.add("chapter 3 : Equation and inegality");
@@ -116,7 +116,7 @@ public class CompetitiveFragment extends Fragment {
             public boolean onMenuItemClick(MenuItem item) {
                 if (item.getItemId() == MENU_1_ITEM){
                     Intent intent = new Intent(getActivity(), RequierementActivity.class);
-                    intent.putExtra("title","Requierement for "+school.get(i).getName());
+                    intent.putExtra("title","Requierement for "+school.get(i));
                     startActivity(intent);
                 }
                 else if(item.getItemId() <= MENU_2_ITEM+subjects.size()){
@@ -135,7 +135,7 @@ public class CompetitiveFragment extends Fragment {
 
         LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
         if (mPrefs.getBoolean(ENABLE, false)) { //get Boolean
-            View promptView = layoutInflater.inflate(R.layout.layout_start_exam, null);
+            @SuppressLint("InflateParams") View promptView = layoutInflater.inflate(R.layout.layout_start_exam, null);
 
             final AlertDialog builder1 = new AlertDialog.Builder(getContext()).create();
             builder1.setView(promptView);
@@ -171,7 +171,7 @@ public class CompetitiveFragment extends Fragment {
             builder1.show();
         }
         else {
-            View promptView = layoutInflater.inflate(R.layout.layout_not_register, null);
+            @SuppressLint("InflateParams") View promptView = layoutInflater.inflate(R.layout.layout_not_register, null);
             final AlertDialog builder1 = new AlertDialog.Builder(getContext()).create();
             builder1.setView(promptView);
             Button back =  promptView.findViewById(R.id.back);

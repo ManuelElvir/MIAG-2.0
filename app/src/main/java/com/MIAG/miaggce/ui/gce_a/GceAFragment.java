@@ -14,17 +14,26 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.PopupMenu;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
+import com.MIAG.miaggce.MainActivity;
 import com.MIAG.miaggce.R;
 import com.MIAG.miaggce.adapter.GridAdapterForGCE;
-import com.MIAG.miaggce.models.Subject_test;
+import com.MIAG.miaggce.app.DBManager;
+import com.MIAG.miaggce.models.ANWSER;
+import com.MIAG.miaggce.models.PAPER1;
+import com.MIAG.miaggce.models.PAPER2;
+import com.MIAG.miaggce.models.PAPER3;
+import com.MIAG.miaggce.models.QUESTION;
+import com.MIAG.miaggce.models.SUBJECT;
 import com.MIAG.miaggce.ui.paper2.Paper2Activity;
 import com.MIAG.miaggce.ui.paper1.Paper1Activity;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,32 +41,76 @@ import java.util.List;
 import static com.MIAG.miaggce.ui.splash.SplashScreen.ENABLE;
 import static com.MIAG.miaggce.ui.splash.SplashScreen.PREFERENCE;
 
-public class GceAFragment extends Fragment{
+public class GceAFragment extends Fragment implements GceView{
 
-    private List<Subject_test> subjects;
+    private List<String> subjects;
     private List<String> years;
     private SharedPreferences mPrefs;
+    private ProgressBar progressBar;
+    private GridView gridView;
+    private GcePresenter presenter;
+    private List<SUBJECT> subjects_list;
+    private DBManager dbManager;
+    private int position;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         mPrefs = getContext().getSharedPreferences(PREFERENCE,0);
 
         View root = inflater.inflate(R.layout.fragment_gce_a, container, false);
-        GridView gridView = root.findViewById(R.id.gridView);
+        gridView = root.findViewById(R.id.gridView);
+        progressBar = root.findViewById(R.id.progressBar);
+        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                showSubMenu(i, view);
+            }
+        });
+
+        refreshContent();
+        getData();
+
+        return root;
+    }
+
+    private void getData() {
+        presenter = new GcePresenter(this, MainActivity.userKey);
+        presenter.getSubject(1);
+        dbManager = new DBManager(getActivity());
+        dbManager.open();
+    }
+
+    private void refreshContent() {
+        subjects = new ArrayList<>();
+        subjects.add(subjects_list.get(0).getSJ_NAME());
+        for (int i=1; i<subjects_list.size(); i++){
+            int j = 0;
+            boolean alReadyUsed = false;
+            do{
+                if (subjects_list.get(i).getSJ_NAME().equals(subjects_list.get(j).getSJ_NAME())){
+                    alReadyUsed =true;
+                }
+                j++;
+            }while (!alReadyUsed && j<i+1);
+            if (!alReadyUsed){
+                subjects.add(subjects_list.get(0).getSJ_NAME());
+            }
+        }
 
         //replace to dynamics
-        subjects = new ArrayList<>();
-        subjects.add(new Subject_test(0,"Mathematics"));
-        subjects.add(new Subject_test(0,"Physical"));
-        subjects.add(new Subject_test(0,"Chemistry"));
-        subjects.add(new Subject_test(0,"Biology"));
-        subjects.add(new Subject_test(0,"Economy"));
-        subjects.add(new Subject_test(0,"History"));
-        subjects.add(new Subject_test(0,"Geography"));
-        subjects.add(new Subject_test(0,"French"));
-        subjects.add(new Subject_test(0,"English"));
-        subjects.add(new Subject_test(0,"Biologie"));
-        subjects.add(new Subject_test(0,"Others"));
+        if (subjects.size()==0){
+            subjects.add("Mathematics");
+            subjects.add("Physical");
+            subjects.add("Chemistry");
+            subjects.add("Biology");
+            subjects.add("Economy");
+            subjects.add("History");
+            subjects.add("Geography");
+            subjects.add("French");
+            subjects.add("English");
+            subjects.add("Biologie");
+            subjects.add("Others");
+        }
 
         years = new ArrayList<>();
         years.add("2019");
@@ -74,14 +127,6 @@ public class GceAFragment extends Fragment{
 
         GridAdapterForGCE adapter = new GridAdapterForGCE(this.getContext(), subjects);
         gridView.setAdapter(adapter);
-        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                showSubMenu(i, view);
-            }
-        });
-
-        return root;
     }
 
     private void showSubMenu(final int i, final View view) {
@@ -98,25 +143,36 @@ public class GceAFragment extends Fragment{
         popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                int paperid = getPaperFromSubjectAndyear(years.get(item.getGroupId()), subjects.get(i).getId());
-                if(item.getTitle() == getText(R.string.paper_1))
-                    showDialog(getText(R.string.gce_as)+" "+years.get(item.getGroupId())+" : "+subjects.get(i).getName(),PAPER.PAPER1,paperid);
-                else if(item.getTitle() == getText(R.string.paper_2))
-                    showDialog(getText(R.string.gce_as)+" "+years.get(item.getGroupId())+" : "+subjects.get(i).getName(),PAPER.PAPER2,paperid);
-                else if(item.getTitle() == getText(R.string.paper_3))
-                    showDialog(getText(R.string.gce_as)+" "+years.get(item.getGroupId())+" : "+subjects.get(i).getName(),PAPER.PAPER3,paperid);
+                int subject = getSubjectIdFromNameAndyear(years.get(item.getGroupId()), years.get(item.getGroupId()));
+                if (subject>0){
+                    if(item.getTitle() == getText(R.string.paper_1))
+                        showDialog(getText(R.string.gce_as)+" "+years.get(item.getGroupId())+" : "+subjects.get(i),PAPER.PAPER1,subject);
+                    else if(item.getTitle() == getText(R.string.paper_2))
+                        showDialog(getText(R.string.gce_as)+" "+years.get(item.getGroupId())+" : "+subjects.get(i),PAPER.PAPER2,subject);
+                    else if(item.getTitle() == getText(R.string.paper_3))
+                        showDialog(getText(R.string.gce_as)+" "+years.get(item.getGroupId())+" : "+subjects.get(i),PAPER.PAPER3,subject);
+                }
                 return false;
             }
         });
         popupMenu.show();
     }
 
-    //replace to call from server
-    private int getPaperFromSubjectAndyear(String s, int id) {
-        return 0;
+
+    private int getSubjectIdFromNameAndyear(String sj_name, String sj_date) {
+        List<SUBJECT> subject_choice = dbManager.getSubjectbyExamId(0,sj_name,sj_date);
+        if (subject_choice==null){
+            onErrorLoadind("This subject is not download, please connect your device to internet");
+            return 0;
+        }else if (subject_choice.size()==0){
+            onErrorLoadind("This subject is not download, please connect your device to internet");
+            return 0;
+        }else{
+            return subject_choice.get(0).getSJ_ID();
+        }
     }
 
-    private void showDialog(final String title, final PAPER paper, final int paperId){
+    private void showDialog(final String title, final PAPER paper, final int subjectId){
 
         LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
         if (mPrefs.getBoolean(ENABLE, false)){ //get Boolean
@@ -159,7 +215,7 @@ public class GceAFragment extends Fragment{
                             break;
                     }
                     i.putExtra("title",title);
-                    i.putExtra("paper",paperId);
+                    i.putExtra("subject",subjectId);
                     startActivity(i);
                     builder1.dismiss();
                 }
@@ -172,7 +228,7 @@ public class GceAFragment extends Fragment{
             });
             builder1.show();
         }else{
-            View promptView = layoutInflater.inflate(R.layout.layout_not_register, null);
+            @SuppressLint("InflateParams") View promptView = layoutInflater.inflate(R.layout.layout_not_register, null);
             final AlertDialog builder1 = new AlertDialog.Builder(getContext()).create();
             builder1.setView(promptView);
             Button back =  promptView.findViewById(R.id.back);
@@ -184,6 +240,82 @@ public class GceAFragment extends Fragment{
             builder1.show();
         }
 
+    }
+
+    @Override
+    public void showLoading() {
+        progressBar.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void HideLoadding() {
+        progressBar.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void onErrorLoadind(String cause) {
+        Snackbar.make(progressBar,cause,Snackbar.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onReceiveSubject(List<SUBJECT> subjects) {
+        dbManager.insertListSubject(subjects);
+        subjects_list = dbManager.fetchSubject();
+        if (subjects_list!=null){
+            if (subjects_list.size()>0){
+                refreshContent();
+                position = 0;
+                presenter.getPaper1(subjects_list.get(position).getSJ_ID());
+            }
+        }
+
+    }
+
+    @Override
+    public void onReceivePaper1(List<PAPER1> paper1s) {
+        dbManager.insertListPaper1(paper1s);
+        presenter.getPaper2(subjects_list.get(position).getSJ_ID());
+    }
+
+    @Override
+    public void onReceivePaper2(List<PAPER2> paper2s) {
+        dbManager.insertListPaper2(paper2s);
+        presenter.getPaper3(subjects_list.get(position).getSJ_ID());
+    }
+
+    @Override
+    public void onReceivePaper3(List<PAPER3> paper3s) {
+        dbManager.insertListPaper3(paper3s);
+        if (position<subjects_list.size()-1){
+            position++;
+            presenter.getPaper1(subjects_list.get(position).getSJ_ID());
+        }else {
+            starGetQuestion();
+        }
+    }
+
+    @Override
+    public void onReceiveQuestion(List<QUESTION> questions) {
+        dbManager.insertListQuestion(questions);
+        for (int i=0; i<questions.size(); i++){
+            presenter.getAnswers(questions.get(i).getQUEST_ID());
+        }
+    }
+
+    @Override
+    public void onReceiveAnwser(List<ANWSER> anwsers) {
+        dbManager.insertListAnwser(anwsers);
+    }
+
+    private void starGetQuestion() {
+        for (int i =0; i<subjects_list.size(); i++){
+            List<PAPER1> paper1s = dbManager.getPaper1BySubjectId(subjects_list.get(i).getSJ_ID());
+            if (paper1s !=null){
+                if (paper1s.size()>0){
+                    presenter.getQuestions(paper1s.get(0).getPAPER1_ID());
+                }
+            }
+        }
     }
 
 

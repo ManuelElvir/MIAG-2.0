@@ -1,6 +1,7 @@
 package com.MIAG.miaggce.api;
 
 
+import com.MIAG.miaggce.models.ANWSER;
 import com.MIAG.miaggce.models.CHAPTER;
 import com.MIAG.miaggce.models.COMPETITIVE;
 import com.MIAG.miaggce.models.EXAM;
@@ -76,9 +77,9 @@ public interface ApiInterface {
             @Query("paper1_id") int PAPER1_ID
     );
 
-    @GET("correction/list")
-    Call<List<QUESTION>> listCorrection(
-            @Query("paper1_id") int PAPER1_ID
+    @GET("answer/list")
+    Call<List<ANWSER>> listAnswer(
+            @Query("quest_id") int QUEST_ID
     );
 
     @GET("question/list2")

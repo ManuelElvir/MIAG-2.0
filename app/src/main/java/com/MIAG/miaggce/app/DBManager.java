@@ -163,10 +163,10 @@ public class DBManager {
      *  get collect of SUBJECT
      * @return subjects Collection of COMPETITIVE object
      */
-    public List<SUBJECT> getSubjectbyId(int SJ_ID) {
+    public List<SUBJECT> fetchSubject() {
         List<SUBJECT> subjects;
         subjects = new ArrayList<>();
-        Cursor cursor = database.rawQuery("SELECT * FROM "+DatabaseHelper.SUBJECT+" WHERE SJ_ID = "+SJ_ID, null);
+        Cursor cursor = database.rawQuery("SELECT * FROM "+DatabaseHelper.SUBJECT, null);
         if (cursor != null) {
             cursor.moveToFirst();
             do{
@@ -188,10 +188,10 @@ public class DBManager {
      *  get collect of SUBJECT
      * @return subjects Collection of COMPETITIVE object
      */
-    public List<SUBJECT> getSubjectbyExamId(int EXAM_ID) {
+    public List<SUBJECT> getSubjectbyExamId(int EXAM_ID, String SJ_NAME, String SJ_DATE) {
         List<SUBJECT> subjects;
         subjects = new ArrayList<>();
-        Cursor cursor = database.rawQuery("SELECT * FROM "+DatabaseHelper.SUBJECT+" WHERE EXAM_ID = "+EXAM_ID, null);
+        Cursor cursor = database.rawQuery("SELECT * FROM "+DatabaseHelper.SUBJECT+" WHERE EXAM_ID = "+EXAM_ID+" AND SJ_NAME LIKE '%"+SJ_NAME+"%' AND SJ_DATE LIKE '%"+SJ_DATE+"%'", null);
         if (cursor != null) {
             cursor.moveToFirst();
             do{
