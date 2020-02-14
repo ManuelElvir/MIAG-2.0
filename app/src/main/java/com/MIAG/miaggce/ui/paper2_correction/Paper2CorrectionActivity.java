@@ -10,17 +10,21 @@ import android.webkit.WebViewClient;
 import android.widget.Button;
 
 import com.MIAG.miaggce.R;
+import com.MIAG.miaggce.app.DBManager;
+import com.MIAG.miaggce.models.SUBJECT_CORRECTION;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.List;
 
 public class Paper2CorrectionActivity extends AppCompatActivity{
 
     String message;
     WebView webView;
+    private DBManager dbManager;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,16 +56,25 @@ public class Paper2CorrectionActivity extends AppCompatActivity{
     }
 
     private void getPaperText() {
-        InputStream is = this.getResources().openRawResource(R.raw.epreuve);
-        BufferedReader br = new BufferedReader(new InputStreamReader(is));
-        String readLine = null;
+        dbManager = new DBManager(this);
+        dbManager.open();
+        List<SUBJECT_CORRECTION> corrections = dbManager.getSubjectCorrectionByPaper2Id(getIntent().getIntExtra("paper",0));
+        if (corrections!=null)
+            if (corrections.size()>0)
+                message = corrections.get(0).getSC_CONTENT();
 
-        try {
-            while ((readLine = br.readLine()) != null) {
-                message += readLine;
+        if (message.isEmpty()){
+            InputStream is = this.getResources().openRawResource(R.raw.epreuve);
+            BufferedReader br = new BufferedReader(new InputStreamReader(is));
+            String readLine;
+
+            try {
+                while ((readLine = br.readLine()) != null) {
+                    message += readLine;
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-        } catch (IOException e) {
-            e.printStackTrace();
         }
     }
 

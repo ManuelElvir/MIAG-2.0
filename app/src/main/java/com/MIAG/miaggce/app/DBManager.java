@@ -378,7 +378,7 @@ public class DBManager {
                     paper1.setQCM_ID(cursor.getInt(1));
                     paper1.setTEST_ID(cursor.getInt(2));
                     paper1.setTEST_NAME(cursor.getString(3));
-                    paper1.setTEST_CHRONO(cursor.getString(4));
+                    paper1.setTEST_CHRONO(cursor.getInt(4));
                     paper1.setTEST_DATE(cursor.getString(5));
                     paper1.setSJ_ID(cursor.getInt(6));
                     paper1s.add(paper1);
@@ -430,7 +430,7 @@ public class DBManager {
                     paper2.setPAPER2_ID(cursor.getInt(0));
                     paper2.setTEST_ID(cursor.getInt(1));
                     paper2.setTEST_NAME(cursor.getString(2));
-                    paper2.setTEST_CHRONO(cursor.getString(3));
+                    paper2.setTEST_CHRONO(cursor.getInt(3));
                     paper2.setTEST_DATE(cursor.getString(4));
                     paper2.setTEST_CONTENT(cursor.getString(5));
                     paper2.setSJ_ID(cursor.getInt(6));
@@ -760,7 +760,8 @@ public class DBManager {
                     anwser.setANWS_ID(cursor.getInt(0));
                     anwser.setANWS_CONTENT(cursor.getString(1));
                     anwser.setANWS_DATE(cursor.getString(2));
-                    anwser.setQUEST_ID(cursor.getInt(3));
+                    anwser.setANWS_STATE(cursor.getInt(3));
+                    anwser.setQUEST_ID(cursor.getInt(4));
                     anwsers.add(anwser);
                 }
             }while(cursor.moveToNext());
@@ -782,6 +783,7 @@ public class DBManager {
             contentValue.put("ANWS_ID",anwsers.get(i).getANWS_ID());
             contentValue.put("ANWS_CONTENT",anwsers.get(i).getANWS_CONTENT());
             contentValue.put("ANWS_DATE",anwsers.get(i).getANWS_DATE());
+            contentValue.put("ANWS_STATE",anwsers.get(i).getANWS_STATE());
             contentValue.put("QUEST_ID",anwsers.get(i).getQUEST_ID());
             if (cursor == null)
                 database.insert(DatabaseHelper.ANWSER, null, contentValue);

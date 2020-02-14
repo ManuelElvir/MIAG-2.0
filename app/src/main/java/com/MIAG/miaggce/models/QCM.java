@@ -10,6 +10,11 @@ public class QCM {
     private int paper_id;
     private int correct_answer;
 
+    public QCM(int id, String question) {
+        this.id = id;
+        this.question = question;
+    }
+
     public QCM(int id, String question, String answer1, String answer2, String answer3, String answer4, int paper_id, int correct_answer) {
         this.id = id;
         this.question = question;

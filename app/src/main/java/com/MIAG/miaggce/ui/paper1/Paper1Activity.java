@@ -19,28 +19,38 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.MIAG.miaggce.MainActivity;
 import com.MIAG.miaggce.R;
 import com.MIAG.miaggce.adapter.ListAdapterForQCM;
 import com.MIAG.miaggce.app.AudioPlayer;
+import com.MIAG.miaggce.app.DBManager;
+import com.MIAG.miaggce.app.appConfig;
+import com.MIAG.miaggce.models.ANWSER;
 import com.MIAG.miaggce.models.Answer_test;
 import com.MIAG.miaggce.models.QCM;
+import com.MIAG.miaggce.models.QUESTION;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class Paper1Activity extends AppCompatActivity implements View.OnClickListener {
+public class Paper1Activity extends AppCompatActivity implements View.OnClickListener, Paper1View {
 
     List<QCM> qcms;
+    List<QUESTION> questions;
     public static List<Answer_test> results;
     TextView hour, minute, second;
-    ProgressBar progressHour, progressMinute, progressSecond;
+    private ProgressBar progressHour, progressMinute, progressSecond, progressBar;
     LinearLayout card;
-    int paperId;
+    int paperId, paperTime;
     private long timeleftinmillisecond = 0, timeTotal, timeUsedMilliSecond=0;
     private CountDownTimer countDownTimer;
     private AudioPlayer audioPlayer = new AudioPlayer();
     ListView list;
+    private DBManager dbManager;
+    private Paper1Presenter presenter;
+    private int position;
+    private Button button;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,22 +62,88 @@ public class Paper1Activity extends AppCompatActivity implements View.OnClickLis
         getSupportActionBar().setHomeButtonEnabled(true);
         paperId = getIntent().getIntExtra("paper",1);
 
-        getListofQCM(paperId);
-
+        progressBar = findViewById(R.id.progressBar);
         list = findViewById(R.id.listView);
 
-        ListAdapterForQCM adapterForQCM = new ListAdapterForQCM(this,qcms,getIntent().getBooleanExtra("isCorrection",false));
-        list.setAdapter(adapterForQCM);
-
-        View footer = getLayoutInflater().inflate(R.layout.button_list_footer, null);
+        @SuppressLint("InflateParams") View footer = getLayoutInflater().inflate(R.layout.button_list_footer, null);
         list.addFooterView(footer);
-        Button button = list.findViewById(R.id.finish);
+        button = list.findViewById(R.id.finish);
         card = findViewById(R.id.card_timer);
 
+
+        button.setOnClickListener(this);
+
+        getData();
+        refreshContent();
+    }
+
+    private void getData() {
+        qcms = new ArrayList<>();
+        results = new ArrayList<>();
+        dbManager = new DBManager(this);
+        dbManager.open();
+
+        if (appConfig.isInternetAvailable()){
+            presenter = new Paper1Presenter(this, MainActivity.userKey);
+            if (getIntent().getBooleanExtra("isChapter",false)){
+                presenter.getQuestionByChapterId(paperId,getIntent().getIntExtra("comp",0));
+            }else {
+                presenter.getQuestionByPaperId(paperId);
+            }
+        }else {
+            getDataToDataBase();
+        }
+    }
+
+    private void getDataToDataBase() {
+        showLoading();
+        if (getIntent().getBooleanExtra("isChapter",false)){
+            questions = dbManager.getQuestionByChapId(paperId);
+        }else {
+            questions = dbManager.getQuestionByPaper1Id(paperId);
+        }
+
+        if (this.questions!=null)
+            if (questions.size()>0)
+                for (int i=0; i<questions.size(); i++){
+                    QCM qcm = new QCM(questions.get(i).getQUEST_ID(),questions.get(i).getQUEST_LABEL());
+                    List<ANWSER> anwsers = dbManager.getAnwserByQuestionId(questions.get(i).getQUEST_ID());
+                    for (int j =0; j<anwsers.size(); j++){
+                        switch (j){
+                            case 0:
+                                qcm.setAnswer1(anwsers.get(j).getANWS_CONTENT());
+                                break;
+                            case 1:
+                                qcm.setAnswer2(anwsers.get(j).getANWS_CONTENT());
+                                break;
+                            case 2:
+                                qcm.setAnswer3(anwsers.get(j).getANWS_CONTENT());
+                                break;
+                            case 4:
+                                qcm.setAnswer4(anwsers.get(j).getANWS_CONTENT());
+                                break;
+                        }
+                        if (anwsers.get(j).getANWS_STATE()==1)
+                            qcm.setCorrect_answer(j);
+                    }
+                    qcms.add(qcm);
+                }
+
+        if (qcms.size()==0){
+            for (int i=0; i<40; i++){
+                qcms.add(new QCM(i,"Parmi la liste suivante, quel nombre n’est pas premier :","2","31","27","41",paperId,3));
+                results.add(new Answer_test(5));
+            }
+        }
+        HideLoadding();
+    }
+
+    private void refreshContent() {
         if(getIntent().getBooleanExtra("isCorrection",false)){
             button.setText(getString(R.string.go_back));
             card.setVisibility(View.GONE);
-        }else{
+        }
+        else {
             timeTotal = timeleftinmillisecond = 60000*getIntent().getIntExtra("time",12);
 
             card = findViewById(R.id.card_timer);
@@ -99,7 +175,9 @@ public class Paper1Activity extends AppCompatActivity implements View.OnClickLis
             progressSecond.setProgress(0);
             startCount();
         }
-        button.setOnClickListener(this);
+
+        ListAdapterForQCM adapterForQCM = new ListAdapterForQCM(this,qcms,getIntent().getBooleanExtra("isCorrection",false));
+        list.setAdapter(adapterForQCM);
     }
 
 
@@ -175,16 +253,6 @@ public class Paper1Activity extends AppCompatActivity implements View.OnClickLis
         progressSecond.setProgress(second_left);
     }
 
-
-    private void getListofQCM(int paperId) {
-        qcms = new ArrayList<>();
-        results = new ArrayList<>();
-        for (int i=0; i<40; i++){
-            qcms.add(new QCM(i,"Parmi la liste suivante, quel nombre n’est pas premier :","2","31","27","41",paperId,3));
-            results.add(new Answer_test(5));
-        }
-    }
-
     @Override
     public boolean onSupportNavigateUp() {
         onBackPressed();
@@ -248,7 +316,7 @@ public class Paper1Activity extends AppCompatActivity implements View.OnClickLis
 
     private void showDialog(final String title, final int paperId){
         LayoutInflater layoutInflater = LayoutInflater.from(this);
-        View promptView = layoutInflater.inflate(R.layout.layout_result, null);
+        @SuppressLint("InflateParams") View promptView = layoutInflater.inflate(R.layout.layout_result, null);
 
         final AlertDialog alertD = new AlertDialog.Builder(this).create();
         alertD.setOnDismissListener(new DialogInterface.OnDismissListener() { //lorsque on ferme le alertDialog il démarre le countDownTimer
@@ -317,5 +385,66 @@ public class Paper1Activity extends AppCompatActivity implements View.OnClickLis
         alertD.setView(promptView);
 
         alertD.show();
+    }
+
+    @Override
+    public void showLoading() {
+        progressBar.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void HideLoadding() {
+        progressBar.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void onErrorLoadind(String cause) {
+        Snackbar.make(progressBar,cause,Snackbar.LENGTH_SHORT).show();
+        getDataToDataBase();
+    }
+
+    @Override
+    public void onReceiveQuestion(List<QUESTION> questions) {
+        dbManager.insertListQuestion(questions);
+        if (getIntent().getBooleanExtra("isChapter",false)){
+            this.questions =  dbManager.getQuestionByChapId(paperId);
+        }else {
+            this.questions =  dbManager.getQuestionByPaper1Id(paperId);
+        }
+
+        if (this.questions!=null)
+            if (questions.size()>0){
+                position =0;
+                presenter.getAnswer(questions.get(position).getQUEST_ID());
+            }
+
+    }
+
+    @Override
+    public void onReceiveAnwser(List<ANWSER> anwsers) {
+        dbManager.insertListAnwser(anwsers);
+        QCM qcm = new QCM(questions.get(position).getQUEST_ID(),questions.get(position).getQUEST_LABEL());
+        for (int i =0; i<anwsers.size(); i++){
+            switch (i){
+                case 0:
+                    qcm.setAnswer1(anwsers.get(i).getANWS_CONTENT());
+                    break;
+                case 1:
+                    qcm.setAnswer2(anwsers.get(i).getANWS_CONTENT());
+                    break;
+                case 2:
+                    qcm.setAnswer3(anwsers.get(i).getANWS_CONTENT());
+                    break;
+                case 4:
+                    qcm.setAnswer4(anwsers.get(i).getANWS_CONTENT());
+                    break;
+            }
+            if (anwsers.get(i).getANWS_STATE()==1)
+                qcm.setCorrect_answer(i);
+        }
+        qcms.add(qcm);
+        position++;
+        if (position<questions.size()-1)
+            presenter.getAnswer(questions.get(position).getQUEST_ID());
     }
 }

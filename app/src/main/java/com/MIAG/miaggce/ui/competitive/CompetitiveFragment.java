@@ -52,7 +52,7 @@ public class CompetitiveFragment extends Fragment implements CompetitiveView {
     private CompetitivePresenter competitivePresenter;
     private List<COMPETITIVE> competitives;
     private DBManager dbManager;
-    private int position;
+    private int position, paperChrono;
 
     private static final int MENU1 = 0;
     private static final int MENU2 = 1;
@@ -199,7 +199,9 @@ public class CompetitiveFragment extends Fragment implements CompetitiveView {
                     }else if (chapters.size()==0)
                         onErrorLoadind("This requierement is not download, please connect your device to internet");
                     else {
-                        showDialog(item.getTitle().toString(),chapters.get(0).getCHAP_ID());
+                        //paperChrono = chapters.get(0).getCHRONO;
+                        paperChrono = 12;
+                        showDialog(item.getTitle().toString(),chapters.get(0).getCHAP_ID(),chapters.get(0).getCOMP_ID());
                     }
                 }
                 return false;
@@ -208,7 +210,7 @@ public class CompetitiveFragment extends Fragment implements CompetitiveView {
         popupMenu.show();
     }
 
-    private void showDialog(final String title, final int chapterId){
+    private void showDialog(final String title, final int chapterId, final int compId){
 
         LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
         if (mPrefs.getBoolean(ENABLE, false)) { //get Boolean
@@ -235,7 +237,10 @@ public class CompetitiveFragment extends Fragment implements CompetitiveView {
                     builder1.cancel();
                     Intent intent = new Intent(getActivity(), Paper1Activity.class);
                     intent.putExtra("paper",chapterId);
+                    intent.putExtra("comp",compId);
                     intent.putExtra("title",title);
+                    intent.putExtra("time",paperChrono);
+                    intent.putExtra("isChapter",true);
                     startActivity(intent);
                 }
             });

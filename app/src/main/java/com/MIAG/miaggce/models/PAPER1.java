@@ -23,7 +23,7 @@ public class PAPER1 {
 
     @Expose
     @SerializedName("TEST_CHRONO")
-    private String TEST_CHRONO;
+    private int TEST_CHRONO;
 
     @Expose
     @SerializedName("TEST_DATE")
@@ -73,11 +73,11 @@ public class PAPER1 {
         this.TEST_NAME = TEST_NAME;
     }
 
-    public String getTEST_CHRONO() {
+    public int getTEST_CHRONO() {
         return TEST_CHRONO;
     }
 
-    public void setTEST_CHRONO(String TEST_CHRONO) {
+    public void setTEST_CHRONO(int TEST_CHRONO) {
         this.TEST_CHRONO = TEST_CHRONO;
     }
 

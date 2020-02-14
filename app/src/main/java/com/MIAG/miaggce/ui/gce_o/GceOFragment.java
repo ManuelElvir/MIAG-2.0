@@ -55,7 +55,7 @@ public class GceOFragment extends Fragment  implements GceView {
     private GcePresenter presenter;
     private List<SUBJECT> subjects_list;
     private DBManager dbManager;
-    private int position;
+    private int position, paperChrono;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -183,8 +183,10 @@ public class GceOFragment extends Fragment  implements GceView {
         if (paper == PAPER.PAPER1){
             List<PAPER1> paper1s = dbManager.getPaper1BySubjectId(subjectId);
             if (paper1s!=null)
-                if (paper1s.size()>0)
+                if (paper1s.size()>0){
                     paperId = paper1s.get(0).getPAPER1_ID();
+                    paperChrono = paper1s.get(0).getTEST_CHRONO();
+                }
         }
         if (paper == PAPER.PAPER2){
             List<PAPER2> paper2s = dbManager.getPaper2BySubjectId(subjectId);
@@ -225,15 +227,18 @@ public class GceOFragment extends Fragment  implements GceView {
                         switch (paper){
                             case PAPER1:
                                 i = new Intent(getActivity(), Paper1Activity.class);
+                                i.putExtra("time",paperChrono);
                                 break;
 
                             case PAPER2:
                                 i = new Intent(getActivity(), Paper2Activity.class);
+                                i.putExtra("subject",subjectId);
                                 break;
 
                             default: //Default is Paper3Type
                                 i = new Intent(getActivity(), Paper2Activity.class);
                                 i.putExtra("no_timer",true);
+                                i.putExtra("subject",subjectId);
                                 break;
                         }
                         i.putExtra("title",title);

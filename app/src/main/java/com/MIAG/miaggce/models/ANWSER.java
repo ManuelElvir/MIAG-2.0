@@ -17,6 +17,10 @@ public class ANWSER {
     private String ANWS_DATE;
 
     @Expose
+    @SerializedName("ANWS_STATE")
+    private int ANWS_STATE;
+
+    @Expose
     @SerializedName("QUEST_ID")
     private int QUEST_ID;
 
@@ -42,6 +46,14 @@ public class ANWSER {
 
     public void setANWS_DATE(String ANWS_DATE) {
         this.ANWS_DATE = ANWS_DATE;
+    }
+
+    public int getANWS_STATE() {
+        return ANWS_STATE;
+    }
+
+    public void setANWS_STATE(int ANWS_STATE) {
+        this.ANWS_STATE = ANWS_STATE;
     }
 
     public int getQUEST_ID() {
