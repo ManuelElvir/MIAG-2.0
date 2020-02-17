@@ -509,6 +509,7 @@ public class DBManager {
             contentValue.put("REQ_NAME",requierements.get(i).getREQ_NAME());
             contentValue.put("REQ_FILE",requierements.get(i).getREQ_FILE());
             contentValue.put("REQ_CONTENT",requierements.get(i).getREQ_CONTENT());
+            contentValue.put("REQ_URL",requierements.get(i).getREQ_URL());
             contentValue.put("REQ_DATE",requierements.get(i).getREQ_DATE());
             if (cursor==null){
                 database.insert(DatabaseHelper.REQUIEREMENT, null, contentValue);
@@ -538,7 +539,8 @@ public class DBManager {
                     requierement.setREQ_NAME(cursor.getString(2));
                     requierement.setREQ_FILE(cursor.getString(3));
                     requierement.setREQ_CONTENT(cursor.getString(4));
-                    requierement.setREQ_DATE(cursor.getString(5));
+                    requierement.setREQ_URL(cursor.getString(5));
+                    requierement.setREQ_DATE(cursor.getString(6));
                 }
             }while(cursor.moveToNext());
             cursor.close();

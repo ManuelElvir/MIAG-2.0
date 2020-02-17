@@ -26,6 +26,10 @@ public class REQUIEREMENT {
     private String REQ_CONTENT;
 
     @Expose
+    @SerializedName("REQ_URL")
+    private String REQ_URL;
+
+    @Expose
     @SerializedName("REQ_DATE")
     private String REQ_DATE;
 
@@ -75,5 +79,13 @@ public class REQUIEREMENT {
 
     public void setREQ_DATE(String REQ_DATE) {
         this.REQ_DATE = REQ_DATE;
+    }
+
+    public String getREQ_URL() {
+        return REQ_URL;
+    }
+
+    public void setREQ_URL(String REQ_URL) {
+        this.REQ_URL = REQ_URL;
     }
 }

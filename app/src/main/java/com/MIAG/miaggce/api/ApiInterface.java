@@ -112,6 +112,17 @@ public interface ApiInterface {
             @Query("tel_parent2") String STD_PARENT2
     );
 
+    @POST("student/update")
+    Call<RESPONSE> updateStudent(
+            @Query("id") int STD_ID,
+            @Query("name") String STD_NAME,
+            @Query("number") String STD_NUMBER,
+            @Query("password") String STD_PASSWORD,
+            @Query("email") String STD_EMAIL,
+            @Query("tel_parent1") String STD_PARENT1,
+            @Query("tel_parent2") String STD_PARENT2
+    );
+
     @POST("student/connect")
     Call<RESPONSE> connectStudent(
             @Query("username") String USERNAME,
@@ -120,7 +131,7 @@ public interface ApiInterface {
 
     @POST("student/register")
     Call<RESPONSE> registerStudent(
-            @Query("USERNAME") String USERNAME,
+            @Query("id") int ID,
             @Query("REGISTER_CODE") String REGISTER_CODE
     );
 }

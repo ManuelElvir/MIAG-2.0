@@ -3,7 +3,9 @@ package com.MIAG.miaggce.ui.competitive;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -18,6 +20,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
@@ -25,6 +28,7 @@ import com.MIAG.miaggce.MainActivity;
 import com.MIAG.miaggce.R;
 import com.MIAG.miaggce.adapter.GridAdapterForGCE;
 import com.MIAG.miaggce.app.DBManager;
+import com.MIAG.miaggce.app.DownloadFileFromURL;
 import com.MIAG.miaggce.models.ANWSER;
 import com.MIAG.miaggce.models.CHAPTER;
 import com.MIAG.miaggce.models.COMPETITIVE;
@@ -37,6 +41,7 @@ import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import static com.MIAG.miaggce.ui.splash.SplashScreen.ENABLE;
 import static com.MIAG.miaggce.ui.splash.SplashScreen.PREFERENCE;
@@ -60,13 +65,14 @@ public class CompetitiveFragment extends Fragment implements CompetitiveView {
     private static final int MENU_1_ITEM = Menu.FIRST;
     private static final int MENU_2_ITEM = Menu.FIRST + 1;
 
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
         View root = inflater.inflate(R.layout.fragment_competitive, container, false);
 
         gridView = root.findViewById(R.id.gridView);
-        mPrefs = getContext().getSharedPreferences(PREFERENCE,0);
+        mPrefs = Objects.requireNonNull(getContext()).getSharedPreferences(PREFERENCE,0);
 
         progressBar = root.findViewById(R.id.progressBar);
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -174,6 +180,7 @@ public class CompetitiveFragment extends Fragment implements CompetitiveView {
             }
         }
         popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.KITKAT)
             @Override
             public boolean onMenuItemClick(MenuItem item) {
                 if (item.getItemId() == MENU_1_ITEM){
@@ -183,14 +190,12 @@ public class CompetitiveFragment extends Fragment implements CompetitiveView {
                     }else if (requierements.size()==0)
                         onErrorLoadind("This requierement is not download, please connect your device to internet");
                     else {
-                        Intent intent = new Intent(getActivity(), RequierementActivity.class);
-                        intent.putExtra("title","Requierement for "+school.get(i));
-                        intent.putExtra("req_id",requierements.get(0).getREQ_ID());
-                        startActivity(intent);
+                        DownloadFileFromURL downloadFileFromURL = new DownloadFileFromURL("Requierement for "+school.get(i),requierements.get(0).getREQ_NAME(),getContext(),CompetitiveFragment.this);
+                        downloadFileFromURL.execute(requierements.get(0).getREQ_URL());
                     }
                 }
                 else if(item.getItemId() <= MENU_2_ITEM+subjects.size()){
-                    //nothing
+                    Log.d("Click","Submenu");
                 }
                 else{
                     List<CHAPTER> chapters = dbManager.getChapterByNameAndCompId(competitives.get(i).getCOMP_ID(),item.getTitle().toString());
@@ -210,13 +215,14 @@ public class CompetitiveFragment extends Fragment implements CompetitiveView {
         popupMenu.show();
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     private void showDialog(final String title, final int chapterId, final int compId){
 
         LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
         if (mPrefs.getBoolean(ENABLE, false)) { //get Boolean
             @SuppressLint("InflateParams") View promptView = layoutInflater.inflate(R.layout.layout_start_exam, null);
 
-            final AlertDialog builder1 = new AlertDialog.Builder(getContext()).create();
+            final AlertDialog builder1 = new AlertDialog.Builder(Objects.requireNonNull(getContext())).create();
             builder1.setView(promptView);
             TextView text_title = promptView.findViewById(R.id.title);
             text_title.setText(title);
@@ -254,7 +260,7 @@ public class CompetitiveFragment extends Fragment implements CompetitiveView {
         }
         else {
             @SuppressLint("InflateParams") View promptView = layoutInflater.inflate(R.layout.layout_not_register, null);
-            final AlertDialog builder1 = new AlertDialog.Builder(getContext()).create();
+            final AlertDialog builder1 = new AlertDialog.Builder(Objects.requireNonNull(getContext())).create();
             builder1.setView(promptView);
             Button back =  promptView.findViewById(R.id.back);
             back.setOnClickListener(new View.OnClickListener() {
@@ -318,6 +324,14 @@ public class CompetitiveFragment extends Fragment implements CompetitiveView {
     @Override
     public void onReceiveAnwser(List<ANWSER> anwsers) {
         dbManager.insertListAnwser(anwsers);
+    }
+
+    @Override
+    public void openRequierement(String pathFile, String reqName) {
+        Intent intent = new Intent(getActivity(), RequierementActivity.class);
+        intent.putExtra("title",reqName);
+        intent.putExtra("pathFile",pathFile);
+        startActivity(intent);
     }
 
     private void starGetQuestion() {

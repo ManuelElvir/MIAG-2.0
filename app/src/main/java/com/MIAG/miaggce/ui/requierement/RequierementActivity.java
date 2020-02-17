@@ -1,25 +1,17 @@
 package com.MIAG.miaggce.ui.requierement;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.text.Html;
-import android.util.Base64;
-import android.util.Log;
-import android.view.View;
-import android.webkit.WebChromeClient;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
 
 import com.MIAG.miaggce.R;
 import com.github.barteksc.pdfviewer.PDFView;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.File;
+import java.util.Objects;
 
 /**
  * @author Manuel Elvir
@@ -28,6 +20,7 @@ import java.io.InputStreamReader;
  */
 public class RequierementActivity extends AppCompatActivity {
 
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,12 +28,19 @@ public class RequierementActivity extends AppCompatActivity {
 
 
         String htmlTitle = "<p style=\"font-size:10px\">"+getIntent().getStringExtra("title")+"</p>";
-        getSupportActionBar().setTitle(Html.fromHtml(htmlTitle));
+        String pathFile = getIntent().getStringExtra("pathFile");
+        Objects.requireNonNull(getSupportActionBar()).setTitle(Html.fromHtml(htmlTitle));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
 
         PDFView pdfView = findViewById(R.id.pdfView);
-        pdfView.fromAsset(getPdfUriFile()).load();
+        if (pathFile!=null){
+            File file = new File( pathFile );
+            pdfView.fromFile(file);
+        }
+        else
+            pdfView.fromAsset(getPdfUriFile()).load();
+
     }
 
     @Override

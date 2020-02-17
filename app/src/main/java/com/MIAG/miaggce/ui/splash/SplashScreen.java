@@ -19,7 +19,7 @@ import com.MIAG.miaggce.ui.identification.IdentificationActivity;
  */
 public class SplashScreen extends AppCompatActivity {
 
-    public static  final String PREFERENCE = "MIAG_GCE", NUMBER = "number", NAME = "name", EMAIL = "email", PASSWORD = "password", PARENT1 = "parent1", PARENT2 = "parent2", ENABLE = "enable", USERKEY = "userkey";
+    public static  final String PREFERENCE = "MIAG_GCE", ID = "id", NUMBER = "number", NAME = "name", EMAIL = "email", PASSWORD = "password", PARENT1 = "parent1", PARENT2 = "parent2", ENABLE = "enable", USERKEY = "userkey";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

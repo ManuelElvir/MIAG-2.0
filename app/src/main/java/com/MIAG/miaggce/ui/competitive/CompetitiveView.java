@@ -15,4 +15,5 @@ public interface CompetitiveView {
     void onReceiveChapter(List<CHAPTER> chapters);
     void onReceiveQuestion(List<QUESTION> questions);
     void onReceiveAnwser(List<ANWSER> anwsers);
+    void openRequierement(String pathFile, String reqName);
 }
