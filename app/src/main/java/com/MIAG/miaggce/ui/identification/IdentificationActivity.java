@@ -167,15 +167,16 @@ public class IdentificationActivity extends AppCompatActivity {
             public void onResponse(@NotNull Call<RESPONSE> call, @NotNull Response<RESPONSE> response) {
                 revertAnimation();
                 if (response.isSuccessful() && response.body()!=null){
-                    if (response.body().getSuccess() == 1){
+                    if (response.body().getSuccess()){
                         success = true;
                         boolean enable = false;
                         if (response.body().getStudent().getSTD_STATE()==1)
                             enable =true;
                         saveConnexion(response.body().getStudent().getSTD_ID(),response.body().getStudent().getSTD_NAME(), response.body().getStudent().getSTD_EMAIL(), password,response.body().getStudent().getSTD_EMAIL(), response.body().getStudent().getSTD_TEL_PARENT1(),response.body().getStudent().getSTD_TEL_PARENT2(),enable);
                     }
-                    else
+                    else{
                         errorReponse(response.body().getCause());
+                    }
                 }
                 else
                     errorReponse(IdentificationActivity.this.getString(R.string.error_server));
@@ -200,7 +201,7 @@ public class IdentificationActivity extends AppCompatActivity {
             public void onResponse(@NotNull Call<RESPONSE> call, @NotNull Response<RESPONSE> response) {
                 revertAnimation();
                 if (response.isSuccessful() && response.body()!=null){
-                    if (response.body().getSuccess() == 1){
+                    if (response.body().getSuccess()){
                         success = true;
                         saveConnexion(response.body().getStudent().getSTD_ID(),name, number, password,"", "","",false);
                     }

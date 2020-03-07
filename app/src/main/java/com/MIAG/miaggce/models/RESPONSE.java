@@ -6,7 +6,7 @@ import com.google.gson.annotations.SerializedName;
 public class RESPONSE {
     @Expose
     @SerializedName("Success")
-    private int Success;
+    private boolean Success;
 
     @Expose
     @SerializedName("Cause")
@@ -20,11 +20,11 @@ public class RESPONSE {
     @SerializedName("student")
     private STUDENT student;
 
-    public int getSuccess() {
+    public boolean getSuccess() {
         return Success;
     }
 
-    public void setSuccess(int success) {
+    public void setSuccess(boolean success) {
         Success = success;
     }
 

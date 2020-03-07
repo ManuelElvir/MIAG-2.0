@@ -8,8 +8,8 @@ import java.net.InetAddress;
 import java.net.URL;
 
 public class appConfig {
-    public static String SITE_URL = "https://miag.vitteck.com/";
-    public static String DEFAULT_KEY = "miaggcedefaultkey";
+    public static String SITE_URL = "https://miag.vitteck.com/api/";
+    public static String DEFAULT_KEY = "SNFT3GSWuwqZOUkqocEqyiFxyOfqpX";
 
     public static boolean isInternetAvailable() {
         try {

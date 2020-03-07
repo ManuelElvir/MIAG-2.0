@@ -27,7 +27,7 @@ import retrofit2.Response;
             @Override
             public void onResponse(@NotNull Call<RESPONSE> call, @NotNull Response<RESPONSE> response) {
                 if (response.isSuccessful() && response.body()!=null){
-                    if (response.body().getSuccess()==1)
+                    if (response.body().getSuccess())
                         view.onUpdateSuccess(response.body());
                     else
                         view.onReceiveError(response.body().getCause());
@@ -52,7 +52,7 @@ import retrofit2.Response;
             @Override
             public void onResponse(@NotNull Call<RESPONSE> call, @NotNull Response<RESPONSE> response) {
                 if (response.isSuccessful() && response.body()!=null){
-                    if (response.body().getSuccess()==1)
+                    if (response.body().getSuccess())
                         view.onUpdateSuccess(response.body());
                     else
                         view.onReceiveError(response.body().getCause());

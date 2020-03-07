@@ -102,17 +102,17 @@ public interface ApiInterface {
             @Query("FILE_TYPE") String FILE_TYPE // file_type always image
     );
 
-    @POST("student/add")
+    @POST("STUDENT/ADD")
     Call<RESPONSE> addStudent(
             @Query("name") String SJ_NSTD_NAMEAME,
             @Query("number") String STD_NUMBER,
             @Query("password") String STD_PASSWORD,
             @Query("email") String STD_EMAIL,
-            @Query("tel_parent1") String STD_PARENT1,
-            @Query("tel_parent2") String STD_PARENT2
+            @Query("telparentone") String STD_PARENT1,
+            @Query("telparenttwo") String STD_PARENT2
     );
 
-    @POST("student/update")
+    @POST("STUDENT/update")
     Call<RESPONSE> updateStudent(
             @Query("id") int STD_ID,
             @Query("name") String STD_NAME,
@@ -123,7 +123,7 @@ public interface ApiInterface {
             @Query("tel_parent2") String STD_PARENT2
     );
 
-    @POST("student/connect")
+    @POST("STUDENT/CONNECT")
     Call<RESPONSE> connectStudent(
             @Query("username") String USERNAME,
             @Query("password") String PASSWORD
