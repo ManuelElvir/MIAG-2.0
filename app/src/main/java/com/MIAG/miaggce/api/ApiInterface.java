@@ -102,36 +102,40 @@ public interface ApiInterface {
             @Query("FILE_TYPE") String FILE_TYPE // file_type always image
     );
 
+    @FormUrlEncoded
     @POST("STUDENT/ADD")
     Call<RESPONSE> addStudent(
-            @Query("name") String SJ_NSTD_NAMEAME,
-            @Query("number") String STD_NUMBER,
-            @Query("password") String STD_PASSWORD,
-            @Query("email") String STD_EMAIL,
-            @Query("telparentone") String STD_PARENT1,
-            @Query("telparenttwo") String STD_PARENT2
+            @Field("name") String SJ_NSTD_NAMEAME,
+            @Field("number") String STD_NUMBER,
+            @Field("password") String STD_PASSWORD,
+            @Field("email") String STD_EMAIL,
+            @Field("tel_parent1") String STD_PARENT1,
+            @Field("tel_parent2") String STD_PARENT2
     );
 
+    @FormUrlEncoded
     @POST("STUDENT/update")
     Call<RESPONSE> updateStudent(
-            @Query("id") int STD_ID,
-            @Query("name") String STD_NAME,
-            @Query("number") String STD_NUMBER,
-            @Query("password") String STD_PASSWORD,
-            @Query("email") String STD_EMAIL,
-            @Query("tel_parent1") String STD_PARENT1,
-            @Query("tel_parent2") String STD_PARENT2
+            @Field("id") int STD_ID,
+            @Field("name") String STD_NAME,
+            @Field("number") String STD_NUMBER,
+            @Field("password") String STD_PASSWORD,
+            @Field("email") String STD_EMAIL,
+            @Field("tel_parent1") String STD_PARENT1,
+            @Field("tel_parent2") String STD_PARENT2
     );
 
+    @FormUrlEncoded
     @POST("STUDENT/CONNECT")
     Call<RESPONSE> connectStudent(
-            @Query("username") String USERNAME,
-            @Query("password") String PASSWORD
+            @Field("username") String USERNAME,
+            @Field("password") String PASSWORD
     );
 
+    @FormUrlEncoded
     @POST("student/register")
     Call<RESPONSE> registerStudent(
-            @Query("id") int ID,
-            @Query("REGISTER_CODE") String REGISTER_CODE
+            @Field("id") int ID,
+            @Field("REGISTER_CODE") String REGISTER_CODE
     );
 }
