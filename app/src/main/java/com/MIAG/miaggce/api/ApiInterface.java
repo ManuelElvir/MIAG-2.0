@@ -105,7 +105,7 @@ public interface ApiInterface {
     @FormUrlEncoded
     @POST("STUDENT/ADD")
     Call<RESPONSE> addStudent(
-            @Field("name") String SJ_NSTD_NAMEAME,
+            @Field("name") String STD_NAME,
             @Field("number") String STD_NUMBER,
             @Field("password") String STD_PASSWORD,
             @Field("email") String STD_EMAIL,
