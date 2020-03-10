@@ -6,7 +6,7 @@ import com.google.gson.annotations.SerializedName;
 public class STUDENT {
     @Expose
     @SerializedName("STD_ID")
-    private int STD_ID;
+    private String STD_ID;
 
     @Expose
     @SerializedName("STD_NAME")
@@ -30,13 +30,13 @@ public class STUDENT {
 
     @Expose
     @SerializedName("STD_STATE")
-    private int STD_STATE;
+    private String STD_STATE;
 
-    public int getSTD_ID() {
+    public String getSTD_ID() {
         return STD_ID;
     }
 
-    public void setSTD_ID(int STD_ID) {
+    public void setSTD_ID(String STD_ID) {
         this.STD_ID = STD_ID;
     }
 
@@ -80,11 +80,11 @@ public class STUDENT {
         this.STD_TEL_PARENT2 = STD_TEL_PARENT2;
     }
 
-    public int getSTD_STATE() {
+    public String getSTD_STATE() {
         return STD_STATE;
     }
 
-    public void setSTD_STATE(int STD_STATE) {
+    public void setSTD_STATE(String STD_STATE) {
         this.STD_STATE = STD_STATE;
     }
 }

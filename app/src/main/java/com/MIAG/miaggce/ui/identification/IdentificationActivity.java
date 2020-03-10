@@ -170,7 +170,7 @@ public class IdentificationActivity extends AppCompatActivity {
                     if (response.body().getSuccess()){
                         success = true;
                         boolean enable = false;
-                        if (response.body().getStudent().getSTD_STATE()==1)
+                        if (response.body().getStudent().getSTD_STATE()=="1")
                             enable =true;
                         saveConnexion(response.body().getStudent().getSTD_ID(),response.body().getStudent().getSTD_NAME(), response.body().getStudent().getSTD_EMAIL(), password,response.body().getStudent().getSTD_EMAIL(), response.body().getStudent().getSTD_TEL_PARENT1(),response.body().getStudent().getSTD_TEL_PARENT2(),enable);
                     }
@@ -186,6 +186,7 @@ public class IdentificationActivity extends AppCompatActivity {
             public void onFailure(@NotNull Call<RESPONSE> call, @NotNull Throwable t) {
                 revertAnimation();
                 errorReponse(t.getLocalizedMessage());
+                Log.e("error", call.toString(),t);
                 Log.e("Request error",""+t.getLocalizedMessage());
             }
         });
@@ -195,7 +196,7 @@ public class IdentificationActivity extends AppCompatActivity {
     private boolean SinginToServer(final String name, final String number, final String password) {
         startAnimation();
         ApiInterface apiInterface = ApiClient.getApiClient(appConfig.DEFAULT_KEY).create(ApiInterface.class);
-        Call<RESPONSE> call = apiInterface.addStudent(name,number,password,"","","");
+        Call<RESPONSE> call = apiInterface.addStudent(name,number,password,"njiakimjules20@gmail.com",number,number);
         call.enqueue(new Callback<RESPONSE>() {
             @Override
             public void onResponse(@NotNull Call<RESPONSE> call, @NotNull Response<RESPONSE> response) {
@@ -245,10 +246,10 @@ public class IdentificationActivity extends AppCompatActivity {
         snackbar.show();
     }
 
-    private void saveConnexion(int id, String name, String number, String password, String email, String parent1, String parent2, boolean enable){
+    private void saveConnexion(String id, String name, String number, String password, String email, String parent1, String parent2, boolean enable){
         SharedPreferences pref = getApplicationContext().getSharedPreferences(PREFERENCE, 0); // 0 - for private mode
         @SuppressLint("CommitPrefEdits") SharedPreferences.Editor editor = pref.edit();
-        editor.putInt(ID, id);
+        editor.putString(ID, id);
         editor.putString(NUMBER, number);
         editor.putString(PASSWORD, password);
         editor.putString(EMAIL, email);
@@ -258,5 +259,8 @@ public class IdentificationActivity extends AppCompatActivity {
         editor.putString(PARENT2, parent2);
         editor.putBoolean(ENABLE, enable);
         editor.apply();
+
+        Intent intent = new Intent(this,MainActivity.class);
+        startActivity(intent);
     }
 }

@@ -67,6 +67,8 @@ public class GceAFragment extends Fragment implements GceView{
             }
         });
 
+        subjects_list = new ArrayList<>();
+
         refreshContent();
         getData();
 
