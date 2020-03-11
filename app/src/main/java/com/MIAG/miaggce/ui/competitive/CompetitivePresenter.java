@@ -25,27 +25,6 @@ public class CompetitivePresenter {
         apiInterface = ApiClient.getApiClient(userKey).create(ApiInterface.class);
     }
 
-    public void getCompetitive(){
-        competitiveView.showLoading();
-        Call<List<COMPETITIVE>> call = apiInterface.listCompetitive();
-        call.enqueue(new Callback<List<COMPETITIVE>>() {
-            @Override
-            public void onResponse(@NotNull Call<List<COMPETITIVE>> call, @NotNull Response<List<COMPETITIVE>> response) {
-                if (response.isSuccessful() && response.body()!=null)
-                    competitiveView.onReceiveCompetitive(response.body());
-                else
-                    competitiveView.onErrorLoadind("Error when get Competitive");
-                competitiveView.HideLoadding();
-            }
-
-            @Override
-            public void onFailure(@NotNull Call<List<COMPETITIVE>> call, @NotNull Throwable t) {
-                competitiveView.onErrorLoadind(t.getLocalizedMessage());
-                competitiveView.HideLoadding();
-            }
-        });
-    }
-
     public void getChapter(int COMP_ID){
         competitiveView.showLoading();
         Call<List<CHAPTER>> call = apiInterface.listChapter(COMP_ID);
@@ -67,9 +46,9 @@ public class CompetitivePresenter {
         });
     }
 
-    public void getQuestions(int CHAP_ID, int COMP_ID) {
+    public void getQuestions(int tutorial_id) {
         competitiveView.showLoading();
-        Call<List<QUESTION>> call = apiInterface.listQuestionComp(CHAP_ID,COMP_ID);
+        Call<List<QUESTION>> call = apiInterface.listQuestionComp(tutorial_id);
         call.enqueue(new Callback<List<QUESTION>>() {
             @Override
             public void onResponse(@NotNull Call<List<QUESTION>> call, @NotNull Response<List<QUESTION>> response) {

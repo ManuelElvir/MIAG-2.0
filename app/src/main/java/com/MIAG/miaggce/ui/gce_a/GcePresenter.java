@@ -27,27 +27,6 @@ public class GcePresenter {
         apiInterface = ApiClient.getApiClient(userKey).create(ApiInterface.class);
     }
 
-    public void getSubject(int EXAM_ID){
-        gceView.showLoading();
-        Call<List<SUBJECT>> call = apiInterface.getSubject(EXAM_ID,null,null);
-        call.enqueue(new Callback<List<SUBJECT>>() {
-            @Override
-            public void onResponse(@NotNull Call<List<SUBJECT>> call, @NotNull Response<List<SUBJECT>> response) {
-                if (response.isSuccessful() && response.body()!=null)
-                    gceView.onReceiveSubject(response.body());
-                else
-                    gceView.onErrorLoadind("Error when get Subjects");
-                gceView.HideLoadding();
-            }
-
-            @Override
-            public void onFailure(@NotNull Call<List<SUBJECT>> call, @NotNull Throwable t) {
-                gceView.onErrorLoadind(t.getLocalizedMessage());
-                gceView.HideLoadding();
-            }
-        });
-    }
-
     public void getPaper1(int SJ_ID) {
         gceView.showLoading();
         Call<List<PAPER1>> call = apiInterface.listPaper1(SJ_ID);
@@ -113,7 +92,7 @@ public class GcePresenter {
 
     public void getQuestions(int PAPER1_ID) {
         gceView.showLoading();
-        Call<List<QUESTION>> call = apiInterface.listQuestion(PAPER1_ID);
+        Call<List<QUESTION>> call = apiInterface.listQuestionPaper1(PAPER1_ID);
         call.enqueue(new Callback<List<QUESTION>>() {
             @Override
             public void onResponse(@NotNull Call<List<QUESTION>> call, @NotNull Response<List<QUESTION>> response) {

@@ -27,65 +27,71 @@ import retrofit2.http.Query;
 
 public interface ApiInterface {
 
-    @GET("exam/list")
+    @GET("EXAM/LIST")
     Call<List<EXAM>> listExams(
     );
 
-    @GET("competitive/list")
+    @GET("COMPETITIVE/LIST")
     Call<List<COMPETITIVE>> listCompetitive(
     );
 
-    @GET("subject/get")
-    Call<List<SUBJECT>> getSubject(
-            @Query("examid") int EXAM_ID,
-            @Query("sj_name") String SJ_NAME,
-            @Query("sj_date") String SJ_DATE
+    @GET("SUBJECT/LIST")
+    Call<List<SUBJECT>> listSubject(
     );
 
-    @GET("paper1/list")
+    @GET("PAPERONE/list")
     Call<List<PAPER1>> listPaper1(
-            @Query("sj_id") int SJ_ID
+            @Query("subjectid") int SJ_ID
     );
 
-    @GET("paper2/list")
+    @GET("PAPERTWO/list")
     Call<List<PAPER2>> listPaper2(
-            @Query("sj_id") int SJ_ID
+            @Query("subjectid") int SJ_ID
     );
 
-    @GET("paper3/list")
+    @GET("PAPERTREE/list")
     Call<List<PAPER3>> listPaper3(
-            @Query("sj_id") int SJ_ID
+            @Query("subjectid") int SJ_ID
     );
 
-    @GET("chapter/list")
+    @GET("CHAPTER/LIST")
     Call<List<CHAPTER>> listChapter(
-            @Query("comp_id") int COMP_ID
+            @Query("Competitiveid") int COMP_ID
     );
 
-    @GET("requierement/get")
+    @GET("REQUIEREMENT/GET")
     Call<List<REQUIEREMENT>> getRequierement(
-            @Query("SJ_ID") int SJ_ID
+            @Query("Competitiveid") int SJ_ID
     );
 
-    @GET("file/get")
+    @GET("FILE/GET")
     Call<List<FILE>> getFile(
-            @Query("FILE_ID") int FILE_ID
+            @Query("Fileid") int FILE_ID
     );
 
-    @GET("question/list")
-    Call<List<QUESTION>> listQuestion(
-            @Query("paper1_id") int PAPER1_ID
+    @GET("QUESTION/PAPERONELIST")
+    Call<List<QUESTION>> listQuestionPaper1(
+            @Query("Paperoneid") int PAPER1_ID
     );
 
-    @GET("answer/list")
-    Call<List<ANWSER>> listAnswer(
-            @Query("quest_id") int QUEST_ID
+    @GET("QUESTION/PAPERTWOLIST")
+    Call<List<QUESTION>> listQuestionPaper2(
+            @Query("Papertwoid") int PAPER2_ID
     );
 
-    @GET("question/list2")
+    @GET("QUESTION/PAPERTREELIST")
+    Call<List<QUESTION>> listQuestionPaper3(
+            @Query("Papertreeid") int PAPER3_ID
+    );
+
+    @GET("QUESTION/TUTORIALIST")
     Call<List<QUESTION>> listQuestionComp(
-            @Query("CHAPTER_ID") int CHAPTER_ID,
-            @Query("COMP_ID") int COMP_ID
+            @Query("tutorialid") int TUTORIAL_ID
+    );
+
+    @GET("ANSWER/GET")
+    Call<List<ANWSER>> listAnswer(
+            @Query("question_id") int QUEST_ID
     );
 
     @GET("subject_correction/get")

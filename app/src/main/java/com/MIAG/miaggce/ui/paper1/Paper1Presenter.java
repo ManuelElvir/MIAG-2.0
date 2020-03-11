@@ -24,7 +24,7 @@ public class Paper1Presenter {
 
     void getQuestionByPaperId(int paperId){
         paper1View.showLoading();
-        Call<List<QUESTION>> call = apiInterface.listQuestion(paperId);
+        Call<List<QUESTION>> call = apiInterface.listQuestionPaper1(paperId);
         call.enqueue(new Callback<List<QUESTION>>() {
             @Override
             public void onResponse(@NotNull Call<List<QUESTION>> call, @NotNull Response<List<QUESTION>> response) {
@@ -45,7 +45,7 @@ public class Paper1Presenter {
 
     void getQuestionByChapterId(int chapterId, int compId){
         paper1View.showLoading();
-        Call<List<QUESTION>> call = apiInterface.listQuestionComp(chapterId,compId);
+        Call<List<QUESTION>> call = apiInterface.listQuestionComp(compId);
         call.enqueue(new Callback<List<QUESTION>>() {
             @Override
             public void onResponse(@NotNull Call<List<QUESTION>> call, @NotNull Response<List<QUESTION>> response) {

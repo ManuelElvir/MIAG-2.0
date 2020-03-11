@@ -89,9 +89,17 @@ public class CompetitiveFragment extends Fragment implements CompetitiveView {
 
     private void getData() {
         competitivePresenter = new CompetitivePresenter(this, MainActivity.userKey);
-        competitivePresenter.getCompetitive();
         dbManager = new DBManager(getActivity());
         dbManager.open();
+
+        this.competitives = dbManager.fetchCompetitive();
+        refreshContent();
+        if (this.competitives!=null){
+            if (this.competitives.size()>0){
+                position = 0;
+                competitivePresenter.getChapter(competitives.get(position).getCOMP_ID());
+            }
+        }
     }
 
     private void refreshContent() {
@@ -289,19 +297,6 @@ public class CompetitiveFragment extends Fragment implements CompetitiveView {
     }
 
     @Override
-    public void onReceiveCompetitive(List<COMPETITIVE> competitives) {
-        dbManager.insertListCompetitive(competitives);
-        this.competitives = dbManager.fetchCompetitive();
-        if (this.competitives!=null){
-            if (this.competitives.size()>0){
-                refreshContent();
-                position = 0;
-                competitivePresenter.getChapter(competitives.get(position).getCOMP_ID());
-            }
-        }
-    }
-
-    @Override
     public void onReceiveChapter(List<CHAPTER> chapters) {
         dbManager.insertListChapter(chapters);
         this.chapters = dbManager.listChapter();
@@ -338,7 +333,7 @@ public class CompetitiveFragment extends Fragment implements CompetitiveView {
         for (int i =0; i<competitives.size(); i++){
             if (chapters !=null){
                 if (chapters.size()>0){
-                    competitivePresenter.getQuestions(chapters.get(i).getCHAP_ID(),competitives.get(i).getCOMP_ID());
+                    competitivePresenter.getQuestions(competitives.get(i).getCOMP_ID());
                 }
             }
         }

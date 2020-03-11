@@ -17,7 +17,10 @@ import androidx.navigation.ui.NavigationUI;
 
 import com.MIAG.miaggce.app.AsyncTaskRunner;
 import com.MIAG.miaggce.app.DBManager;
+import com.MIAG.miaggce.app.appConfig;
+import com.MIAG.miaggce.models.COMPETITIVE;
 import com.MIAG.miaggce.models.EXAM;
+import com.MIAG.miaggce.models.SUBJECT;
 import com.MIAG.miaggce.ui.identification.IdentificationActivity;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
@@ -50,7 +53,9 @@ public class MainActivity extends AppCompatActivity implements MainView {
     private TextView name, period;
     public static String userKey;
     private ProgressBar progressBar;
+    DBManager dbManager;
     SharedPreferences pref;
+    MainPresenter presenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -148,7 +153,7 @@ public class MainActivity extends AppCompatActivity implements MainView {
         if (pref.getBoolean(ENABLE, false)){ //get Boolean
             period.setText(getText(R.string.enable));
         }
-        userKey = pref.getString(USERKEY,null);
+        userKey = pref.getString(USERKEY, appConfig.DEFAULT_KEY);
     }
 
     public static void logout(final Activity activity, final View v) {
@@ -179,7 +184,9 @@ public class MainActivity extends AppCompatActivity implements MainView {
 
     private void getDataToServer() {
         Toast.makeText(this, "Update Data...", Toast.LENGTH_SHORT).show();
-        MainPresenter presenter = new MainPresenter(this, userKey);
+        presenter = new MainPresenter(this, userKey);
+        dbManager = new DBManager(this);
+        dbManager.open();
         presenter.getExams();
 
     }
@@ -202,8 +209,18 @@ public class MainActivity extends AppCompatActivity implements MainView {
 
     @Override
     public void onReceiveExams(List<EXAM> exams) {
-        DBManager dbManager = new DBManager(this);
-        dbManager.open();
+        presenter.getCompetitive();
         dbManager.insertListExam(exams);
+    }
+
+    @Override
+    public void onReceiveSubject(List<SUBJECT> subjects) {
+        dbManager.insertListSubject(subjects);
+    }
+
+    @Override
+    public void onReceiveCompetitive(List<COMPETITIVE> competitives) {
+        presenter.getSubject();
+        dbManager.insertListCompetitive(competitives);
     }
 }

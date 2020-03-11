@@ -11,7 +11,6 @@ public interface CompetitiveView {
     void showLoading();
     void HideLoadding();
     void onErrorLoadind(String cause);
-    void onReceiveCompetitive(List<COMPETITIVE> competitives);
     void onReceiveChapter(List<CHAPTER> chapters);
     void onReceiveQuestion(List<QUESTION> questions);
     void onReceiveAnwser(List<ANWSER> anwsers);

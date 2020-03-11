@@ -2,7 +2,9 @@ package com.MIAG.miaggce;
 
 import com.MIAG.miaggce.api.ApiClient;
 import com.MIAG.miaggce.api.ApiInterface;
+import com.MIAG.miaggce.models.COMPETITIVE;
 import com.MIAG.miaggce.models.EXAM;
+import com.MIAG.miaggce.models.SUBJECT;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -36,6 +38,50 @@ class MainPresenter {
 
             @Override
             public void onFailure(@NotNull Call<List<EXAM>> call, @NotNull Throwable t) {
+                mainView.onErrorLoadind(t.getLocalizedMessage());
+                mainView.HideLoadding();
+            }
+        });
+    }
+
+    public void getSubject(){
+        mainView.showLoading();
+        Call<List<SUBJECT>> call = apiInterface.listSubject();
+        call.enqueue(new Callback<List<SUBJECT>>() {
+            @Override
+            public void onResponse(@NotNull Call<List<SUBJECT>> call, @NotNull Response<List<SUBJECT>> response) {
+                if (response.isSuccessful() && response.body()!=null)
+                    mainView.onReceiveSubject(response.body());
+                else
+                    mainView.onErrorLoadind("Error when get Subjects");
+                mainView.HideLoadding();
+            }
+
+            @Override
+            public void onFailure(@NotNull Call<List<SUBJECT>> call, @NotNull Throwable t) {
+                mainView.onErrorLoadind(t.getLocalizedMessage());
+                mainView.HideLoadding();
+            }
+        });
+    }
+
+
+
+    public void getCompetitive(){
+        mainView.showLoading();
+        Call<List<COMPETITIVE>> call = apiInterface.listCompetitive();
+        call.enqueue(new Callback<List<COMPETITIVE>>() {
+            @Override
+            public void onResponse(@NotNull Call<List<COMPETITIVE>> call, @NotNull Response<List<COMPETITIVE>> response) {
+                if (response.isSuccessful() && response.body()!=null)
+                    mainView.onReceiveCompetitive(response.body());
+                else
+                    mainView.onErrorLoadind("Error when get Competitive");
+                mainView.HideLoadding();
+            }
+
+            @Override
+            public void onFailure(@NotNull Call<List<COMPETITIVE>> call, @NotNull Throwable t) {
                 mainView.onErrorLoadind(t.getLocalizedMessage());
                 mainView.HideLoadding();
             }

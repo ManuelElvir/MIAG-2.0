@@ -52,7 +52,7 @@ public class IdentificationActivity extends AppCompatActivity {
     LinearLayout layoutSingin, layoutLogin;
     Button buttonLogin, buttonSingin;
     ProgressBar animate;
-    boolean isLogin = true, success =false;
+    boolean isLogin = true;
     Animation animFadeIn, animFadeOut;
 
     @Override
@@ -131,12 +131,7 @@ public class IdentificationActivity extends AppCompatActivity {
             public void onClick(View view) {
                 number = findViewById(R.id.number_login);
                 password = findViewById(R.id.password_login);
-
-                if (LoginToServer(number.getText().toString(), password.getText().toString())){
-                    Intent intent = new Intent(IdentificationActivity.this, MainActivity.class);
-                    startActivity(intent);
-                    IdentificationActivity.this.finish();
-                }
+                LoginToServer(number.getText().toString(), password.getText().toString());
             }
         });
 
@@ -146,19 +141,14 @@ public class IdentificationActivity extends AppCompatActivity {
                 number = findViewById(R.id.number_singin);
                 password = findViewById(R.id.password_singin);
                 name = findViewById(R.id.name_singin);
-
-                if (SinginToServer(name.getText().toString(), number.getText().toString(), password.getText().toString())){
-                    Intent intent = new Intent(IdentificationActivity.this, MainActivity.class);
-                    startActivity(intent);
-                    IdentificationActivity.this.finish();
-                }
+                SinginToServer(name.getText().toString(), number.getText().toString(), password.getText().toString());
             }
         });
 
 
     }
 
-    private boolean LoginToServer(String number, final String password) {
+    private void LoginToServer(String number, final String password) {
         startAnimation();
         ApiInterface apiInterface = ApiClient.getApiClient(appConfig.DEFAULT_KEY).create(ApiInterface.class);
         Call<RESPONSE> call = apiInterface.connectStudent(number,password);
@@ -168,7 +158,6 @@ public class IdentificationActivity extends AppCompatActivity {
                 revertAnimation();
                 if (response.isSuccessful() && response.body()!=null){
                     if (response.body().getSuccess()){
-                        success = true;
                         boolean enable = false;
                         if (response.body().getStudent().getSTD_STATE()=="1")
                             enable =true;
@@ -190,10 +179,9 @@ public class IdentificationActivity extends AppCompatActivity {
                 Log.e("Request error",""+t.getLocalizedMessage());
             }
         });
-        return success;
     }
 
-    private boolean SinginToServer(final String name, final String number, final String password) {
+    private void SinginToServer(final String name, final String number, final String password) {
         startAnimation();
         ApiInterface apiInterface = ApiClient.getApiClient(appConfig.DEFAULT_KEY).create(ApiInterface.class);
         Call<RESPONSE> call = apiInterface.addStudent(name,number,password,"njiakimjules20@gmail.com",number,number);
@@ -203,7 +191,6 @@ public class IdentificationActivity extends AppCompatActivity {
                 revertAnimation();
                 if (response.isSuccessful() && response.body()!=null){
                     if (response.body().getSuccess()){
-                        success = true;
                         saveConnexion(response.body().getStudent().getSTD_ID(),name, number, password,"", "","",false);
                     }
                     else
@@ -220,7 +207,6 @@ public class IdentificationActivity extends AppCompatActivity {
                 Log.e("Request error",""+t.getLocalizedMessage());
             }
         });
-        return success;
     }
 
     private void revertAnimation() {
@@ -260,7 +246,9 @@ public class IdentificationActivity extends AppCompatActivity {
         editor.putBoolean(ENABLE, enable);
         editor.apply();
 
-        Intent intent = new Intent(this,MainActivity.class);
+
+        Intent intent = new Intent(IdentificationActivity.this, MainActivity.class);
         startActivity(intent);
+        IdentificationActivity.this.finish();
     }
 }

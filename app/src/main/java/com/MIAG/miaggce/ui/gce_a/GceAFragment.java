@@ -67,9 +67,7 @@ public class GceAFragment extends Fragment implements GceView{
             }
         });
 
-        subjects_list = new ArrayList<>();
-
-        refreshContent();
+        //get data
         getData();
 
         return root;
@@ -77,9 +75,17 @@ public class GceAFragment extends Fragment implements GceView{
 
     private void getData() {
         presenter = new GcePresenter(this, MainActivity.userKey);
-        presenter.getSubject(1);
         dbManager = new DBManager(getActivity());
         dbManager.open();
+        //get list of subject to data base
+        subjects_list = dbManager.fetchSubject();
+        refreshContent();
+        if (subjects_list!=null){
+            if (subjects_list.size()>0){
+                position = 0;
+                presenter.getPaper1(subjects_list.get(position).getSJ_ID());
+            }
+        }
     }
 
     private void refreshContent() {
@@ -287,20 +293,6 @@ public class GceAFragment extends Fragment implements GceView{
     @Override
     public void onErrorLoadind(String cause) {
         Snackbar.make(progressBar,cause,Snackbar.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void onReceiveSubject(List<SUBJECT> subjects) {
-        dbManager.insertListSubject(subjects);
-        subjects_list = dbManager.fetchSubject();
-        if (subjects_list!=null){
-            if (subjects_list.size()>0){
-                refreshContent();
-                position = 0;
-                presenter.getPaper1(subjects_list.get(position).getSJ_ID());
-            }
-        }
-
     }
 
     @Override
