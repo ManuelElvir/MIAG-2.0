@@ -1,5 +1,7 @@
 package com.MIAG.miaggce;
 
+import android.util.Log;
+
 import com.MIAG.miaggce.api.ApiClient;
 import com.MIAG.miaggce.api.ApiInterface;
 import com.MIAG.miaggce.models.COMPETITIVE;

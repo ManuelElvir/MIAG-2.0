@@ -55,7 +55,7 @@ public class CompetitiveFragment extends Fragment implements CompetitiveView {
     private SharedPreferences mPrefs;
     private ProgressBar progressBar;
     private CompetitivePresenter competitivePresenter;
-    private List<COMPETITIVE> competitives;
+    private List<COMPETITIVE> competitives = new ArrayList<>();
     private DBManager dbManager;
     private int position, paperChrono;
 

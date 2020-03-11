@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -79,6 +80,7 @@ public class GceAFragment extends Fragment implements GceView{
         dbManager.open();
         //get list of subject to data base
         subjects_list = dbManager.fetchSubject();
+        Log.e("SUBJECT", String.valueOf(subjects_list));
         refreshContent();
         if (subjects_list!=null){
             if (subjects_list.size()>0){
@@ -90,18 +92,20 @@ public class GceAFragment extends Fragment implements GceView{
 
     private void refreshContent() {
         subjects = new ArrayList<>();
-        subjects.add(subjects_list.get(0).getSJ_NAME());
+        if(subjects_list.size()>0){
+            subjects.add(subjects_list.get(0).getSJ_NAME());
+        }
         for (int i=1; i<subjects_list.size(); i++){
+            String name = subjects_list.get(i).getSJ_NAME();
             int j = 0;
             boolean alReadyUsed = false;
             do{
-                if (subjects_list.get(i).getSJ_NAME().equals(subjects_list.get(j).getSJ_NAME())){
+                if (subjects.get(j).equals(name))
                     alReadyUsed =true;
-                }
                 j++;
-            }while (!alReadyUsed && j<i+1);
+            }while (!alReadyUsed && j<subjects.size());
             if (!alReadyUsed){
-                subjects.add(subjects_list.get(0).getSJ_NAME());
+                subjects.add(name);
             }
         }
 

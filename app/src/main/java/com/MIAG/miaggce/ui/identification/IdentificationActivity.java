@@ -161,7 +161,7 @@ public class IdentificationActivity extends AppCompatActivity {
                         boolean enable = false;
                         if (response.body().getStudent().getSTD_STATE()=="1")
                             enable =true;
-                        saveConnexion(response.body().getStudent().getSTD_ID(),response.body().getStudent().getSTD_NAME(), response.body().getStudent().getSTD_EMAIL(), password,response.body().getStudent().getSTD_EMAIL(), response.body().getStudent().getSTD_TEL_PARENT1(),response.body().getStudent().getSTD_TEL_PARENT2(),enable);
+                        saveConnexion(response.body().getStudent().getSTD_ID(),response.body().getStudent().getSTD_NAME(), response.body().getStudent().getSTD_EMAIL(), password,response.body().getStudent().getSTD_EMAIL(), response.body().getStudent().getSTD_TEL_PARENT1(),response.body().getStudent().getSTD_TEL_PARENT2(),enable, response.body().getUser_Key());
                     }
                     else{
                         errorReponse(response.body().getCause());
@@ -191,7 +191,7 @@ public class IdentificationActivity extends AppCompatActivity {
                 revertAnimation();
                 if (response.isSuccessful() && response.body()!=null){
                     if (response.body().getSuccess()){
-                        saveConnexion(response.body().getStudent().getSTD_ID(),name, number, password,"", "","",false);
+                        saveConnexion(response.body().getStudent().getSTD_ID(),name, number, password,"", "","",false, response.body().getUser_Key());
                     }
                     else
                         errorReponse(response.body().getCause());
@@ -232,7 +232,7 @@ public class IdentificationActivity extends AppCompatActivity {
         snackbar.show();
     }
 
-    private void saveConnexion(String id, String name, String number, String password, String email, String parent1, String parent2, boolean enable){
+    private void saveConnexion(String id, String name, String number, String password, String email, String parent1, String parent2, boolean enable, String key){
         SharedPreferences pref = getApplicationContext().getSharedPreferences(PREFERENCE, 0); // 0 - for private mode
         @SuppressLint("CommitPrefEdits") SharedPreferences.Editor editor = pref.edit();
         editor.putString(ID, id);
@@ -240,7 +240,7 @@ public class IdentificationActivity extends AppCompatActivity {
         editor.putString(PASSWORD, password);
         editor.putString(EMAIL, email);
         editor.putString(NAME, name);
-        editor.putString(USERKEY, email);
+        editor.putString(USERKEY, key);
         editor.putString(PARENT1, parent1);
         editor.putString(PARENT2, parent2);
         editor.putBoolean(ENABLE, enable);

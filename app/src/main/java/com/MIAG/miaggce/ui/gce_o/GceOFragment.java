@@ -93,19 +93,20 @@ public class GceOFragment extends Fragment  implements GceView {
 
     private void refreshContent() {
         subjects = new ArrayList<>();
-        if (subjects_list.size()>0)
+        if(subjects_list.size()>0){
             subjects.add(subjects_list.get(0).getSJ_NAME());
+        }
         for (int i=1; i<subjects_list.size(); i++){
+            String name = subjects_list.get(i).getSJ_NAME();
             int j = 0;
             boolean alReadyUsed = false;
             do{
-                if (subjects_list.get(i).getSJ_NAME().equals(subjects_list.get(j).getSJ_NAME())){
+                if (subjects.get(j).equals(name))
                     alReadyUsed =true;
-                }
                 j++;
-            }while (!alReadyUsed && j<i+1);
+            }while (!alReadyUsed && j<subjects.size());
             if (!alReadyUsed){
-                subjects.add(subjects_list.get(0).getSJ_NAME());
+                subjects.add(name);
             }
         }
 

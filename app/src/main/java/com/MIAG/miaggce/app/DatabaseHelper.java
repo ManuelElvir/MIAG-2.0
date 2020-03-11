@@ -33,12 +33,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String DB_NAME = "MIAG.DB";
 
     // database version
-    private static final int DB_VERSION = 1;
+    private static final int DB_VERSION = 2;
 
     // Creating table query
     private static final String CREATE_TABLE_EXAM = "create table " + EXAM + "( EXAM_ID INTEGER  PRIMARY KEY, EXAM_NAME TEXT NOT NULL, EXAM_DATE_START TEXT, EXAM_DATE_END TEXT);";
     private static final String CREATE_TABLE_COMPETITIVE = "create table " + COMPETITIVE + "( COMP_ID INTEGER  PRIMARY KEY, COMP_NAME TEXT NOT NULL, COMP_DATE TEXT);";
-    private static final String CREATE_TABLE_SUBJECT = "create table " + SUBJECT + "( SJ_ID INTEGER  PRIMARY KEY, SJ_NAME TEXT NOT NULL, SJ_DATE TEXT);";
+    private static final String CREATE_TABLE_SUBJECT = "create table " + SUBJECT + "( SJ_ID INTEGER  PRIMARY KEY, SJ_NAME TEXT NOT NULL, SJ_DATE TEXT, EXAM_ID INT);";
     private static final String CREATE_TABLE_PAPER1 = "create table " + PAPER1 + "( PAPER1_ID INTEGER PRIMARY KEY, QCM_ID INTEGER, TEST_ID INTEGER, TEST_NAME TEXT NOT NULL, TEST_CHRONO INTEGER, TEST_DATE TEXT, SJ_ID INTEGER);";
     private static final String CREATE_TABLE_PAPER2 = "create table " + PAPER2 + "( PAPER2_ID INTEGER PRIMARY KEY, TEST_ID INTEGER, TEST_NAME TEXT NOT NULL, TEST_CHRONO INTEGER, TEST_DATE TEXT, TEST_CONTENT TEXT, SJ_ID INTEGER);";
     private static final String CREATE_TABLE_PAPER3 = "create table " + PAPER3 + "( PAPER3_ID INTEGER PRIMARY KEY, TEST_ID INTEGER, TEST_NAME TEXT NOT NULL, TEST_CHRONO INTEGER, TEST_DATE TEXT, TEST_CONTENT TEXT, SJ_ID INTEGER);";

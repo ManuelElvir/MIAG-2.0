@@ -122,9 +122,7 @@ public class DBManager {
         if (cursor != null) {
             cursor.moveToFirst();
             do{
-                Log.d("FETCH COMPETITIVE","Position "+cursor.getPosition());
                 if (cursor.getColumnCount()<=2) {
-                    Log.d("FETCH COMPP NOT EMPTY", "Position " + cursor.getPosition() + " ColumCount " + cursor.getColumnCount());
                     COMPETITIVE competitive = new COMPETITIVE();
                     competitive.setCOMP_ID(cursor.getInt(0));
                     competitive.setCOMP_NAME(cursor.getString(1));
@@ -142,20 +140,15 @@ public class DBManager {
      * @param subjects SUBJECT
      */
     public void insertListSubject(List<SUBJECT> subjects) {
+        database.delete(DatabaseHelper.SUBJECT, "1=1", null);
         for (int i=0; i<subjects.size(); i++)
         {
-            Cursor cursor = database.rawQuery("SELECT * FROM "+DatabaseHelper.SUBJECT+" WHERE SJ_ID = "+subjects.get(i).getSJ_ID(), null);
             ContentValues contentValue = new ContentValues();
             contentValue.put("SJ_ID",subjects.get(i).getSJ_ID());
             contentValue.put("SJ_NAME",subjects.get(i).getSJ_NAME());
             contentValue.put("SJ_DATE",subjects.get(i).getSJ_DATE());
             contentValue.put("EXAM_ID",subjects.get(i).getEXAM_ID());
-            if (cursor ==  null){//si l'élément n'exite pas déjà dans la base de donnée
-                database.insert(DatabaseHelper.SUBJECT, null, contentValue);
-            }else {
-                database.update(DatabaseHelper.SUBJECT, contentValue, "SJ_ID = "+subjects.get(i).getSJ_ID(),null);
-                cursor.close();
-            }
+            database.insert(DatabaseHelper.SUBJECT, null, contentValue);
         }
     }
 
@@ -169,8 +162,10 @@ public class DBManager {
         Cursor cursor = database.rawQuery("SELECT * FROM "+DatabaseHelper.SUBJECT, null);
         if (cursor != null) {
             cursor.moveToFirst();
-            do{
-                if (cursor.getColumnCount()<=2) {
+            for(int i=0; i<cursor.getCount(); i++){
+                Log.e("FOR", String.valueOf(cursor));
+                if (cursor.getColumnCount()>3) {
+                    Log.e("IF", String.valueOf(cursor));
                     SUBJECT subject = new SUBJECT();
                     subject.setSJ_ID(cursor.getInt(0));
                     subject.setSJ_NAME(cursor.getString(1));
@@ -178,7 +173,8 @@ public class DBManager {
                     subject.setEXAM_ID(cursor.getInt(3));
                     subjects.add(subject);
                 }
-            }while(cursor.moveToNext());
+                cursor.moveToNext();
+            }
             cursor.close();
         }
         return subjects;
