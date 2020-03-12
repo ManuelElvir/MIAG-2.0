@@ -1,8 +1,12 @@
 package com.MIAG.miaggce.ui.staff;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.StrictMode;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +26,8 @@ import com.MIAG.miaggce.app.appConfig;
 import com.MIAG.miaggce.models.STAFFMEMBER;
 import com.MIAG.miaggce.models.TeamMember;
 import com.google.android.material.snackbar.Snackbar;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,13 +66,19 @@ public class StaffFragment extends Fragment implements ListAdapterForStaff.ItemC
         dbManager.open();
 
         refreshContent();
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
+                .permitAll().build();
+        StrictMode.setThreadPolicy(policy);
         if (appConfig.isInternetAvailable())
             LoadStaffToServer();
+
         return root;
     }
 
     private void refreshContent() {
         List<STAFFMEMBER> staffmembers = dbManager.listStaffMember();
+
+        Log.e("STAFF GET BASE", String.valueOf(staffmembers));
 
         ListAdapterForStaff adapter = new ListAdapterForStaff(getContext(),staff, this);
         gridView.setAdapter(adapter);
@@ -77,7 +89,7 @@ public class StaffFragment extends Fragment implements ListAdapterForStaff.ItemC
         Call<List<STAFFMEMBER>> call = apiInterface.listStaffMember();
         call.enqueue(new Callback<List<STAFFMEMBER>>() {
             @Override
-            public void onResponse(Call<List<STAFFMEMBER>> call, Response<List<STAFFMEMBER>> response) {
+            public void onResponse(@NotNull Call<List<STAFFMEMBER>> call, @NotNull Response<List<STAFFMEMBER>> response) {
                 if (response.isSuccessful() && response.body()!=null){
                     dbManager.insertListStaffMember(response.body());
                     refreshContent();
@@ -87,7 +99,7 @@ public class StaffFragment extends Fragment implements ListAdapterForStaff.ItemC
             }
 
             @Override
-            public void onFailure(Call<List<STAFFMEMBER>> call, Throwable t) {
+            public void onFailure(@NotNull Call<List<STAFFMEMBER>> call, @NotNull Throwable t) {
                 Snackbar.make(gridView,R.string.update_fail,Snackbar.LENGTH_SHORT).show();
             }
         });

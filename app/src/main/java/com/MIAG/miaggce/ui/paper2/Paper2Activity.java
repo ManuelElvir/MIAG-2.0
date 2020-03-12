@@ -105,7 +105,9 @@ public class Paper2Activity extends AppCompatActivity implements View.OnClickLis
             if (paper2!=null)
                 if (paper2.size()>0){
                     message = paper2.get(0).getTEST_CONTENT();
-                    paperTime = paper2.get(0).getTEST_CHRONO();
+                    int heure = Integer.valueOf(paper2.get(0).getTEST_CHRONO().substring(0,2));
+                    int minutes = Integer.valueOf(paper2.get(0).getTEST_CHRONO().substring(3,5));
+                    paperTime = (heure*60)+minutes;
                 }
         }
 
@@ -322,7 +324,9 @@ public class Paper2Activity extends AppCompatActivity implements View.OnClickLis
         if (paper2s!=null)
             if (paper2s.size()>0){
                 message = paper2s.get(0).getTEST_CONTENT();
-                paperTime = paper2s.get(0).getTEST_CHRONO();
+                int heure = Integer.valueOf(paper2s.get(0).getTEST_CHRONO().substring(0,2));
+                int minutes = Integer.valueOf(paper2s.get(0).getTEST_CHRONO().substring(3,5));
+                paperTime = (heure*60)+minutes;
                 paperId = paper2s.get(0).getPAPER2_ID();
                 presenter.getPaperCorrection(paper2s.get(0).getPAPER2_ID());
             }

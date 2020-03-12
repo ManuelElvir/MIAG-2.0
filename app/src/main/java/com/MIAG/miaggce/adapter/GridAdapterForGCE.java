@@ -52,15 +52,13 @@ public class GridAdapterForGCE extends BaseAdapter {
         TextView caps = v.findViewById(R.id.text_caps);
         int lastPosition = 0;
         StringBuilder text_caps = new StringBuilder();
-        text_caps.append(list.get(i).substring(lastPosition, lastPosition + 1));
         while (lastPosition>=0){
             if(lastPosition>0){
                 if(list.get(i).substring(lastPosition+1, lastPosition + 2).equals(list.get(i).substring(lastPosition+1, lastPosition + 2).toUpperCase()))
                     text_caps.append(list.get(i).substring(lastPosition+1, lastPosition + 2));
             }
             else{
-                if(list.get(i).substring(lastPosition, lastPosition +1).equals(list.get(i).substring(lastPosition, lastPosition +1).toUpperCase()))
-                    text_caps.append(list.get(i).substring(lastPosition, lastPosition +1));
+                text_caps.append(list.get(i).substring(lastPosition, lastPosition + 1).toUpperCase());
             }
             lastPosition = list.get(i).indexOf(" ",lastPosition+1);
         }

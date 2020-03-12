@@ -80,7 +80,6 @@ public class GceAFragment extends Fragment implements GceView{
         dbManager.open();
         //get list of subject to data base
         subjects_list = dbManager.fetchSubject();
-        Log.e("SUBJECT", String.valueOf(subjects_list));
         refreshContent();
         if (subjects_list!=null){
             if (subjects_list.size()>0){
@@ -192,7 +191,9 @@ public class GceAFragment extends Fragment implements GceView{
             if (paper1s!=null)
                 if (paper1s.size()>0){
                     paperId = paper1s.get(0).getPAPER1_ID();
-                    paperChrono = paper1s.get(0).getTEST_CHRONO();
+                    int heure = Integer.valueOf(paper1s.get(0).getTEST_CHRONO().substring(0,2));
+                    int minutes = Integer.valueOf(paper1s.get(0).getTEST_CHRONO().substring(3,5));
+                    paperChrono = (heure*60)+minutes;
                 }
         }
         if (paper == PAPER.PAPER2){

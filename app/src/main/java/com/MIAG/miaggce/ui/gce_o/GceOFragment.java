@@ -194,7 +194,9 @@ public class GceOFragment extends Fragment  implements GceView {
             if (paper1s!=null)
                 if (paper1s.size()>0){
                     paperId = paper1s.get(0).getPAPER1_ID();
-                    paperChrono = paper1s.get(0).getTEST_CHRONO();
+                    int heure = Integer.valueOf(paper1s.get(0).getTEST_CHRONO().substring(0,2));
+                    int minutes = Integer.valueOf(paper1s.get(0).getTEST_CHRONO().substring(3,5));
+                    paperChrono = (heure*60)+minutes;
                 }
         }
         if (paper == PAPER.PAPER2){

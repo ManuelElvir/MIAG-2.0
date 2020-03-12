@@ -1,5 +1,7 @@
 package com.MIAG.miaggce.ui.gce_a;
 
+import android.util.Log;
+
 import com.MIAG.miaggce.api.ApiClient;
 import com.MIAG.miaggce.api.ApiInterface;
 import com.MIAG.miaggce.models.ANWSER;
@@ -42,7 +44,8 @@ public class GcePresenter {
 
             @Override
             public void onFailure(@NotNull Call<List<PAPER1>> call, @NotNull Throwable t) {
-                gceView.onErrorLoadind(t.getLocalizedMessage());
+                gceView.onErrorLoadind("PAPER1:"+t.getLocalizedMessage());
+                Log.e("PAPER1:",t.getMessage(),t);
                 gceView.HideLoadding();
             }
         });
@@ -63,7 +66,8 @@ public class GcePresenter {
 
             @Override
             public void onFailure(@NotNull Call<List<PAPER2>> call, @NotNull Throwable t) {
-                gceView.onErrorLoadind(t.getLocalizedMessage());
+                gceView.onErrorLoadind("PAPER2:"+t.getLocalizedMessage());
+                Log.e("PAPER2:",t.getMessage(),t);
                 gceView.HideLoadding();
             }
         });
@@ -84,7 +88,8 @@ public class GcePresenter {
 
             @Override
             public void onFailure(@NotNull Call<List<PAPER3>> call, @NotNull Throwable t) {
-                gceView.onErrorLoadind(t.getLocalizedMessage());
+                gceView.onErrorLoadind("PAPER3:"+t.getLocalizedMessage());
+                Log.e("PAPER3:",t.getMessage(),t);
                 gceView.HideLoadding();
             }
         });
@@ -105,7 +110,8 @@ public class GcePresenter {
 
             @Override
             public void onFailure(@NotNull Call<List<QUESTION>> call, @NotNull Throwable t) {
-                gceView.onErrorLoadind(t.getLocalizedMessage());
+                gceView.onErrorLoadind("UESTIONS:"+t.getLocalizedMessage());
+                Log.e("QUESTIONS:",t.getMessage(),t);
                 gceView.HideLoadding();
             }
         });
@@ -126,7 +132,8 @@ public class GcePresenter {
 
             @Override
             public void onFailure(@NotNull Call<List<ANWSER>> call, @NotNull Throwable t) {
-                gceView.onErrorLoadind(t.getLocalizedMessage());
+                gceView.onErrorLoadind("ANSWER:"+t.getLocalizedMessage());
+                Log.e("ANSWER:",t.getMessage(),t);
                 gceView.HideLoadding();
             }
         });

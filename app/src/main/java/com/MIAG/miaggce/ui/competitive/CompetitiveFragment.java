@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -203,7 +202,6 @@ public class CompetitiveFragment extends Fragment implements CompetitiveView {
                     }
                 }
                 else if(item.getItemId() <= MENU_2_ITEM+subjects.size()){
-                    Log.d("Click","Submenu");
                 }
                 else{
                     List<CHAPTER> chapters = dbManager.getChapterByNameAndCompId(competitives.get(i).getCOMP_ID(),item.getTitle().toString());

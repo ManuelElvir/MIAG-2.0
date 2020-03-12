@@ -5,7 +5,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
 
 import com.MIAG.miaggce.models.ANWSER;
 import com.MIAG.miaggce.models.CHAPTER;
@@ -78,9 +77,7 @@ public class DBManager {
         if (cursor != null) {
             cursor.moveToFirst();
             do{
-                Log.d("FETCH EXAM","Position "+cursor.getPosition());
-                if (cursor.getColumnCount()<3){
-                    Log.d("FETCH EXAM NOT EMPTY","Position "+cursor.getPosition()+" ColumCount "+cursor.getColumnCount());
+                if (cursor.getColumnCount()>3){
                     EXAM exam = new EXAM();
                     exam.setEXAM_ID(cursor.getInt(0));
                     exam.setEXAM_NAME(cursor.getString(1));
@@ -100,7 +97,7 @@ public class DBManager {
      * @param competitives COMPETITIVE
      */
     public void insertListCompetitive(List<COMPETITIVE> competitives) {
-        database.delete(DatabaseHelper.COMPETITIVE, "", null);
+        database.delete(DatabaseHelper.COMPETITIVE, "1=1", null);
         for (int i=0; i<competitives.size(); i++)
         {
             ContentValues contentValue = new ContentValues();
@@ -122,7 +119,7 @@ public class DBManager {
         if (cursor != null) {
             cursor.moveToFirst();
             do{
-                if (cursor.getColumnCount()<=2) {
+                if (cursor.getColumnCount()>2) {
                     COMPETITIVE competitive = new COMPETITIVE();
                     competitive.setCOMP_ID(cursor.getInt(0));
                     competitive.setCOMP_NAME(cursor.getString(1));
@@ -163,9 +160,7 @@ public class DBManager {
         if (cursor != null) {
             cursor.moveToFirst();
             for(int i=0; i<cursor.getCount(); i++){
-                Log.e("FOR", String.valueOf(cursor));
                 if (cursor.getColumnCount()>3) {
-                    Log.e("IF", String.valueOf(cursor));
                     SUBJECT subject = new SUBJECT();
                     subject.setSJ_ID(cursor.getInt(0));
                     subject.setSJ_NAME(cursor.getString(1));
@@ -190,8 +185,8 @@ public class DBManager {
         Cursor cursor = database.rawQuery("SELECT * FROM "+DatabaseHelper.SUBJECT+" WHERE EXAM_ID = "+EXAM_ID+" AND TRIM(SJ_NAME) LIKE '%"+SJ_NAME.trim()+"%' AND TRIM(SJ_DATE) LIKE '%"+SJ_DATE.trim()+"%'", null);
         if (cursor != null) {
             cursor.moveToFirst();
-            do{
-                if (cursor.getColumnCount()<=2) {
+            for(int i=0; i<cursor.getCount(); i++){
+                if (cursor.getColumnCount()>3) {
                     SUBJECT subject = new SUBJECT();
                     subject.setSJ_ID(cursor.getInt(0));
                     subject.setSJ_NAME(cursor.getString(1));
@@ -199,7 +194,8 @@ public class DBManager {
                     subject.setEXAM_ID(cursor.getInt(3));
                     subjects.add(subject);
                 }
-            }while(cursor.moveToNext());
+                cursor.moveToNext();
+            }
             cursor.close();
         }
         return subjects;
@@ -215,8 +211,8 @@ public class DBManager {
         Cursor cursor = database.rawQuery("SELECT * FROM "+DatabaseHelper.SUBJECT+" WHERE SJ_ID = "+SJ_ID, null);
         if (cursor != null) {
             cursor.moveToFirst();
-            do{
-                if (cursor.getColumnCount()<=2) {
+            for(int i=0; i<cursor.getCount(); i++){
+                if (cursor.getColumnCount()>3) {
                     SUBJECT subject = new SUBJECT();
                     subject.setSJ_ID(cursor.getInt(0));
                     subject.setSJ_NAME(cursor.getString(1));
@@ -224,7 +220,8 @@ public class DBManager {
                     subject.setEXAM_ID(cursor.getInt(3));
                     subjects.add(subject);
                 }
-            }while(cursor.moveToNext());
+                cursor.moveToNext();
+            }
             cursor.close();
         }
         return subjects;
@@ -235,22 +232,16 @@ public class DBManager {
      * @param chapters CHAPTER
      */
     public void insertListChapter(List<CHAPTER> chapters) {
-
+        database.delete(DatabaseHelper.CHAPTER, "1=1", null);
         for (int i=0; i<chapters.size(); i++)
         {
-            Cursor cursor = database.rawQuery("SELECT * FROM "+DatabaseHelper.CHAPTER+" WHERE CHAP_ID = "+chapters.get(i).getCHAP_ID(), null);
             ContentValues contentValue = new ContentValues();
             contentValue.put("CHAP_ID",chapters.get(i).getCHAP_ID());
             contentValue.put("SJ_ID",chapters.get(i).getSJ_ID());
             contentValue.put("CHAP_NAME",chapters.get(i).getCHAP_NAME());
             contentValue.put("CHAP_DATE",chapters.get(i).getCHAP_DATE());
             contentValue.put("COMP_ID",chapters.get(i).getCOMP_ID());
-            if (cursor == null){
-                database.insert(DatabaseHelper.CHAPTER, null, contentValue);
-            }else {
-                database.update(DatabaseHelper.CHAPTER, contentValue, "CHAP_ID = "+chapters.get(i).getCHAP_ID(),null);
-                cursor.close();
-            }
+            database.insert(DatabaseHelper.CHAPTER, null, contentValue);
         }
     }
 
@@ -265,7 +256,7 @@ public class DBManager {
         if (cursor != null) {
             cursor.moveToFirst();
             do{
-                if (cursor.getColumnCount()<=2) {
+                if (cursor.getColumnCount()>4) {
                     CHAPTER chapter = new CHAPTER();
                     chapter.setCHAP_ID(cursor.getInt(0));
                     chapter.setSJ_ID(cursor.getInt(1));
@@ -291,7 +282,7 @@ public class DBManager {
         if (cursor != null) {
             cursor.moveToFirst();
             do{
-                if (cursor.getColumnCount()<=2) {
+                if (cursor.getColumnCount()>4) {
                     CHAPTER chapter = new CHAPTER();
                     chapter.setCHAP_ID(cursor.getInt(0));
                     chapter.setSJ_ID(cursor.getInt(1));
@@ -317,7 +308,7 @@ public class DBManager {
         if (cursor != null) {
             cursor.moveToFirst();
             do{
-                if (cursor.getColumnCount()<=2) {
+                if (cursor.getColumnCount()>4) {
                     CHAPTER chapter = new CHAPTER();
                     chapter.setCHAP_ID(cursor.getInt(0));
                     chapter.setSJ_ID(cursor.getInt(1));
@@ -337,9 +328,9 @@ public class DBManager {
      * @param paper1s PAPER1
      */
     public void insertListPaper1(List<PAPER1> paper1s) {
+        database.delete(DatabaseHelper.PAPER1,"1=1", null);
         for (int i=0; i<paper1s.size(); i++)
         {
-            Cursor cursor = database.rawQuery("SELECT * FROM "+DatabaseHelper.PAPER1+" WHERE PAPER1_ID = "+paper1s.get(i).getPAPER1_ID(), null);
             ContentValues contentValue = new ContentValues();
             contentValue.put("PAPER1_ID",paper1s.get(i).getPAPER1_ID());
             contentValue.put("QCM_ID",paper1s.get(i).getQCM_ID());
@@ -348,12 +339,7 @@ public class DBManager {
             contentValue.put("TEST_CHRONO",paper1s.get(i).getTEST_CHRONO());
             contentValue.put("TEST_DATE",paper1s.get(i).getTEST_DATE());
             contentValue.put("SJ_ID",paper1s.get(i).getSJ_ID());
-            if (cursor==null){//enregistrement exist on data base
-                database.insert(DatabaseHelper.PAPER1, null, contentValue);
-            }else {
-                database.update(DatabaseHelper.PAPER1, contentValue, "PAPER1_ID = "+paper1s.get(i).getPAPER1_ID(),null);
-                cursor.close();
-            }
+            database.insert(DatabaseHelper.PAPER1, null, contentValue);
         }
     }
 
@@ -368,13 +354,13 @@ public class DBManager {
         if (cursor != null) {
             cursor.moveToFirst();
             do{
-                if (cursor.getColumnCount()<=2) {
+                if (cursor.getColumnCount()>6) {
                     PAPER1 paper1 = new PAPER1();
                     paper1.setPAPER1_ID(cursor.getInt(0));
                     paper1.setQCM_ID(cursor.getInt(1));
                     paper1.setTEST_ID(cursor.getInt(2));
                     paper1.setTEST_NAME(cursor.getString(3));
-                    paper1.setTEST_CHRONO(cursor.getInt(4));
+                    paper1.setTEST_CHRONO(cursor.getString(4));
                     paper1.setTEST_DATE(cursor.getString(5));
                     paper1.setSJ_ID(cursor.getInt(6));
                     paper1s.add(paper1);
@@ -390,9 +376,9 @@ public class DBManager {
      * @param paper2s PAPER2
      */
     public void insertListPaper2(List<PAPER2> paper2s) {
+        database.delete(DatabaseHelper.PAPER2,"1=1", null);
         for (int i=0; i<paper2s.size(); i++)
         {
-            Cursor cursor = database.rawQuery("SELECT * FROM "+DatabaseHelper.PAPER2+" WHERE PAPER2_ID = "+paper2s.get(i).getPAPER2_ID(), null);
             ContentValues contentValue = new ContentValues();
             contentValue.put("PAPER2_ID",paper2s.get(i).getPAPER2_ID());
             contentValue.put("TEST_ID",paper2s.get(i).getTEST_ID());
@@ -401,12 +387,7 @@ public class DBManager {
             contentValue.put("TEST_DATE",paper2s.get(i).getTEST_DATE());
             contentValue.put("TEST_CONTENT",paper2s.get(i).getTEST_CONTENT());
             contentValue.put("SJ_ID",paper2s.get(i).getSJ_ID());
-            if (cursor==null){
-                database.insert(DatabaseHelper.PAPER2, null, contentValue);
-            }else {
-                database.update(DatabaseHelper.PAPER2, contentValue, "PAPER2_ID = "+paper2s.get(i).getPAPER2_ID(),null);
-                cursor.close();
-            }
+            database.insert(DatabaseHelper.PAPER2, null, contentValue);
         }
     }
 
@@ -421,12 +402,12 @@ public class DBManager {
         if (cursor != null) {
             cursor.moveToFirst();
             do{
-                if (cursor.getColumnCount()<=2) {
+                if (cursor.getColumnCount()>6) {
                     PAPER2 paper2 = new PAPER2();
                     paper2.setPAPER2_ID(cursor.getInt(0));
                     paper2.setTEST_ID(cursor.getInt(1));
                     paper2.setTEST_NAME(cursor.getString(2));
-                    paper2.setTEST_CHRONO(cursor.getInt(3));
+                    paper2.setTEST_CHRONO(cursor.getString(3));
                     paper2.setTEST_DATE(cursor.getString(4));
                     paper2.setTEST_CONTENT(cursor.getString(5));
                     paper2.setSJ_ID(cursor.getInt(6));
@@ -443,9 +424,9 @@ public class DBManager {
      * @param paper3s PAPER3
      */
     public void insertListPaper3(List<PAPER3> paper3s) {
+        database.delete(DatabaseHelper.PAPER3,"1=1", null);
         for (int i=0; i<paper3s.size(); i++)
         {
-            Cursor cursor = database.rawQuery("SELECT * FROM "+DatabaseHelper.PAPER3+" WHERE PAPER3_ID = "+paper3s.get(i).getPAPER3_ID(), null);
             ContentValues contentValue = new ContentValues();
             contentValue.put("PAPER3_ID",paper3s.get(i).getPAPER3_ID());
             contentValue.put("TEST_ID",paper3s.get(i).getTEST_ID());
@@ -454,12 +435,7 @@ public class DBManager {
             contentValue.put("TEST_DATE",paper3s.get(i).getTEST_DATE());
             contentValue.put("TEST_CONTENT",paper3s.get(i).getTEST_CONTENT());
             contentValue.put("SJ_ID",paper3s.get(i).getSJ_ID());
-            if (cursor==null){
-                database.insert(DatabaseHelper.PAPER3, null, contentValue);
-            }else {
-                database.update(DatabaseHelper.PAPER2, contentValue, "PAPER3_ID = "+paper3s.get(i).getPAPER3_ID(),null);
-                cursor.close();
-            }
+            database.insert(DatabaseHelper.PAPER3, null, contentValue);
         }
     }
 
@@ -474,7 +450,7 @@ public class DBManager {
         if (cursor != null) {
             cursor.moveToFirst();
             do{
-                if (cursor.getColumnCount()<=2) {
+                if (cursor.getColumnCount()>6) {
                     PAPER3 paper3 = new PAPER3();
                     paper3.setPAPER3_ID(cursor.getInt(0));
                     paper3.setTEST_ID(cursor.getInt(1));
@@ -496,9 +472,9 @@ public class DBManager {
      * @param requierements REQUIEREMENT
      */
     public void insertListRequierement(List<REQUIEREMENT> requierements) {
+        database.delete(DatabaseHelper.REQUIEREMENT,"1=1", null);
         for (int i=0; i<requierements.size(); i++)
         {
-            Cursor cursor = database.rawQuery("SELECT * FROM "+DatabaseHelper.REQUIEREMENT+" WHERE REQ_ID = "+requierements.get(i).getREQ_ID(), null);
             ContentValues contentValue = new ContentValues();
             contentValue.put("REQ_ID",requierements.get(i).getREQ_ID());
             contentValue.put("COMP_ID",requierements.get(i).getCOMP_ID());
@@ -507,13 +483,7 @@ public class DBManager {
             contentValue.put("REQ_CONTENT",requierements.get(i).getREQ_CONTENT());
             contentValue.put("REQ_URL",requierements.get(i).getREQ_URL());
             contentValue.put("REQ_DATE",requierements.get(i).getREQ_DATE());
-            if (cursor==null){
-                database.insert(DatabaseHelper.REQUIEREMENT, null, contentValue);
-            }else {
-                database.update(DatabaseHelper.REQUIEREMENT, contentValue, "REQ_ID = "+requierements.get(i).getREQ_ID(),null);
-                cursor.close();
-            }
-
+            database.insert(DatabaseHelper.REQUIEREMENT, null, contentValue);
         }
     }
 
@@ -528,7 +498,7 @@ public class DBManager {
         if (cursor != null) {
             cursor.moveToFirst();
             do{
-                if (cursor.getColumnCount()<=2) {
+                if (cursor.getColumnCount()>6) {
                     REQUIEREMENT requierement = new REQUIEREMENT();
                     requierement.setREQ_ID(cursor.getInt(0));
                     requierement.setCOMP_ID(cursor.getInt(1));
@@ -549,7 +519,7 @@ public class DBManager {
      * @param staffmembers STAFFMEMBER
      */
     public void insertListStaffMember(List<STAFFMEMBER> staffmembers) {
-        database.delete(DatabaseHelper.STAFFMEMBER, "", null);
+        database.delete(DatabaseHelper.STAFFMEMBER, "1=1", null);
         for (int i=0; i<staffmembers.size(); i++)
         {
             ContentValues contentValue = new ContentValues();
@@ -572,8 +542,8 @@ public class DBManager {
         Cursor cursor = database.rawQuery("SELECT * FROM "+DatabaseHelper.STAFFMEMBER, null);
         if (cursor != null) {
             cursor.moveToFirst();
-            do{
-                if (cursor.getColumnCount()<=2) {
+            for (int i=0; i<cursor.getCount(); i++){
+                if (cursor.getColumnCount()>4) {
                     STAFFMEMBER staffmember = new STAFFMEMBER();
                     staffmember.setSM_ID(cursor.getInt(0));
                     staffmember.setSM_NAME(cursor.getString(1));
@@ -581,7 +551,8 @@ public class DBManager {
                     staffmember.setSM_NUMBER(cursor.getString(3));
                     staffmember.setSM_DATE(cursor.getString(4));
                 }
-            }while(cursor.moveToNext());
+                cursor.moveToNext();
+            }
             cursor.close();
         }
         return staffmembers;
@@ -644,21 +615,16 @@ public class DBManager {
      * @param subject_corrections SUBJECT_CORRECTION
      */
     public void insertListSubjectCorrection(List<SUBJECT_CORRECTION> subject_corrections) {
+        database.delete(DatabaseHelper.SUBJECT_CORRECTION, "1=1", null);
         for (int i=0; i<subject_corrections.size(); i++)
         {
-            Cursor cursor = database.rawQuery("SELECT * FROM "+DatabaseHelper.SUBJECT_CORRECTION+" WHERE SC_ID = "+subject_corrections.get(i).getSC_ID(), null);
             ContentValues contentValue = new ContentValues();
             contentValue.put("SC_ID",subject_corrections.get(i).getSC_ID());
             contentValue.put("SC_CONTENT",subject_corrections.get(i).getSC_CONTENT());
             contentValue.put("SC_DATE",subject_corrections.get(i).getSC_DATE());
             contentValue.put("SC_PAPER1_ID",subject_corrections.get(i).getSC_PAPER1_ID());
             contentValue.put("SC_PAPER2_ID",subject_corrections.get(i).getSC_PAPER2_ID());
-            if (cursor==null){
-                database.insert(DatabaseHelper.SUBJECT_CORRECTION, null, contentValue);
-            }else {
-                database.update(DatabaseHelper.SUBJECT_CORRECTION, contentValue, "SC_ID = "+subject_corrections.get(i).getSC_ID(),null);
-                cursor.close();
-            }
+            database.insert(DatabaseHelper.SUBJECT_CORRECTION, null, contentValue);
         }
     }
 
@@ -674,7 +640,7 @@ public class DBManager {
         if (cursor != null) {
             cursor.moveToFirst();
             do{
-                if (cursor.getColumnCount()<=2) {
+                if (cursor.getColumnCount()>5) {
                     QUESTION question = new QUESTION();
                     question.setQUEST_ID(cursor.getInt(0));
                     question.setQUEST_LABEL(cursor.getString(1));
@@ -702,7 +668,7 @@ public class DBManager {
         if (cursor != null) {
             cursor.moveToFirst();
             do{
-                if (cursor.getColumnCount()<=2) {
+                if (cursor.getColumnCount()>5) {
                     QUESTION question = new QUESTION();
                     question.setQUEST_ID(cursor.getInt(0));
                     question.setQUEST_LABEL(cursor.getString(1));
@@ -723,9 +689,9 @@ public class DBManager {
      * @param questions QUESTION
      */
     public void insertListQuestion(List<QUESTION> questions) {
+        database.delete(DatabaseHelper.QUESTION,"1=1", null);
         for (int i=0; i<questions.size(); i++)
         {
-            Cursor cursor = database.rawQuery("SELECT * FROM "+DatabaseHelper.QUESTION+" WHERE QUEST_ID = "+questions.get(i).getQUEST_ID(), null);
             ContentValues contentValue = new ContentValues();
             contentValue.put("QUEST_ID",questions.get(i).getQUEST_ID());
             contentValue.put("QUEST_LABEL",questions.get(i).getQUEST_LABEL());
@@ -733,12 +699,7 @@ public class DBManager {
             contentValue.put("QUEST_DATE",questions.get(i).getQUEST_DATE());
             contentValue.put("PAPER1_ID",questions.get(i).getPAPER1_ID());
             contentValue.put("CHAP_ID",questions.get(i).getCHAP_ID());
-            if(cursor==null){
-                database.insert(DatabaseHelper.QUESTION, null, contentValue);
-            }else {
-                database.update(DatabaseHelper.SUBJECT_CORRECTION, contentValue, "QUEST_ID = "+questions.get(i).getQUEST_ID(),null);
-                cursor.close();
-            }
+            database.insert(DatabaseHelper.QUESTION, null, contentValue);
         }
     }
 
@@ -753,7 +714,7 @@ public class DBManager {
         if (cursor != null) {
             cursor.moveToFirst();
             do{
-                if (cursor.getColumnCount()<=2) {
+                if (cursor.getColumnCount()>4) {
                     ANWSER anwser = new ANWSER();
                     anwser.setANWS_ID(cursor.getInt(0));
                     anwser.setANWS_CONTENT(cursor.getString(1));
@@ -773,22 +734,16 @@ public class DBManager {
      * @param anwsers ANWSER
      */
     public void insertListAnwser(List<ANWSER> anwsers) {
-        database.delete(DatabaseHelper.ANWSER, "", null);
+        database.delete(DatabaseHelper.ANWSER, "1=1", null);
         for (int i=0; i<anwsers.size(); i++)
         {
-            Cursor cursor = database.rawQuery("SELECT * FROM "+DatabaseHelper.ANWSER+" WHERE ANWS_ID = "+anwsers.get(i).getANWS_ID(), null);
             ContentValues contentValue = new ContentValues();
             contentValue.put("ANWS_ID",anwsers.get(i).getANWS_ID());
             contentValue.put("ANWS_CONTENT",anwsers.get(i).getANWS_CONTENT());
             contentValue.put("ANWS_DATE",anwsers.get(i).getANWS_DATE());
             contentValue.put("ANWS_STATE",anwsers.get(i).getANWS_STATE());
             contentValue.put("QUEST_ID",anwsers.get(i).getQUEST_ID());
-            if (cursor == null)
-                database.insert(DatabaseHelper.ANWSER, null, contentValue);
-            else {
-                database.update(DatabaseHelper.ANWSER, contentValue, "ANWS_ID = "+anwsers.get(i).getANWS_ID(),null);
-                cursor.close();
-            }
+            database.insert(DatabaseHelper.ANWSER, null, contentValue);
         }
     }
 
@@ -803,7 +758,7 @@ public class DBManager {
         if (cursor != null) {
             cursor.moveToFirst();
             do{
-                if (cursor.getColumnCount()<=2) {
+                if (cursor.getColumnCount()>4) {
                     FILE file = new FILE();
                     file.setFILE_ID(cursor.getInt(0));
                     file.setFILE_NAME(cursor.getString(1));
@@ -829,7 +784,7 @@ public class DBManager {
         if (cursor != null) {
             cursor.moveToFirst();
             do{
-                if (cursor.getColumnCount()<=2) {
+                if (cursor.getColumnCount()>4) {
                     FILE file = new FILE();
                     file.setFILE_ID(cursor.getInt(0));
                     file.setFILE_NAME(cursor.getString(1));
@@ -849,22 +804,17 @@ public class DBManager {
      * @param files FILE
      */
     public void insertListFile(List<FILE> files) {
-        database.delete(DatabaseHelper.FILE, "", null);
+        database.delete(DatabaseHelper.FILE, "1=1", null);
         for (int i=0; i<files.size(); i++)
         {
-            Cursor cursor = database.rawQuery("SELECT * FROM "+DatabaseHelper.FILE+" WHERE FILE_ID = "+files.get(i).getFILE_ID(), null);
             ContentValues contentValue = new ContentValues();
             contentValue.put("FILE_ID",files.get(i).getFILE_ID());
             contentValue.put("FILE_NAME",files.get(i).getFILE_NAME());
             contentValue.put("FILE_TYPE",files.get(i).getFILE_TYPE());
             contentValue.put("FILE_FORMAT",files.get(i).getFILE_FORMAT());
             contentValue.put("FILE_DATE",files.get(i).getFILE_DATE());
-            if (cursor == null)
-                database.insert(DatabaseHelper.FILE, null, contentValue);
-            else {
-                database.update(DatabaseHelper.FILE, contentValue, "FILE_ID = "+files.get(i).getFILE_ID(),null);
-                cursor.close();
-            }
+            database.insert(DatabaseHelper.FILE, null, contentValue);
+
         }
     }
 }

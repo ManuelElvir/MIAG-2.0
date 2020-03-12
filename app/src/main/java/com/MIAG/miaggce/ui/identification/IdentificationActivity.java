@@ -175,8 +175,6 @@ public class IdentificationActivity extends AppCompatActivity {
             public void onFailure(@NotNull Call<RESPONSE> call, @NotNull Throwable t) {
                 revertAnimation();
                 errorReponse(t.getLocalizedMessage());
-                Log.e("error", call.toString(),t);
-                Log.e("Request error",""+t.getLocalizedMessage());
             }
         });
     }
@@ -204,7 +202,6 @@ public class IdentificationActivity extends AppCompatActivity {
             public void onFailure(@NotNull Call<RESPONSE> call, @NotNull Throwable t) {
                 revertAnimation();
                 errorReponse(t.getLocalizedMessage());
-                Log.e("Request error",""+t.getLocalizedMessage());
             }
         });
     }

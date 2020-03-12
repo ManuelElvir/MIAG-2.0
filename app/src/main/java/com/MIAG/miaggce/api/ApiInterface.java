@@ -39,17 +39,17 @@ public interface ApiInterface {
     Call<List<SUBJECT>> listSubject(
     );
 
-    @GET("PAPERONE/list")
+    @GET("PAPERONE/LIST")
     Call<List<PAPER1>> listPaper1(
             @Query("subjectid") int SJ_ID
     );
 
-    @GET("PAPERTWO/list")
+    @GET("PAPERTWO/LIST")
     Call<List<PAPER2>> listPaper2(
             @Query("subjectid") int SJ_ID
     );
 
-    @GET("PAPERTREE/list")
+    @GET("PAPERTREE/LIST")
     Call<List<PAPER3>> listPaper3(
             @Query("subjectid") int SJ_ID
     );
@@ -99,7 +99,7 @@ public interface ApiInterface {
             @Query("PAPER_ID") int PAPER_ID
     );
 
-    @GET("staff_member/list")
+    @GET("STAFFMEMBER/LIST")
     Call<List<STAFFMEMBER>> listStaffMember(
     );
 

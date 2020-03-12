@@ -1,5 +1,7 @@
 package com.MIAG.miaggce.app;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
 import android.util.Log;
 
 import java.io.IOException;
@@ -19,14 +21,18 @@ public class appConfig {
             urlc.setRequestProperty("Connection", "close");
             urlc.setReadTimeout(1000);
             urlc.connect();
-            if (urlc.getResponseCode()==200)
-                return true;
-            else
-                return false;
+            return urlc.getResponseCode() == 200;
 
         } catch (IOException e) {
             return false;
         }
     }
 
+
+
+    public static boolean isNetworkConnected(Context context) {
+        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        assert cm != null;
+        return cm.getActiveNetworkInfo() != null && cm.getActiveNetworkInfo().isConnected();
+    }
 }
