@@ -25,7 +25,7 @@ import androidx.fragment.app.Fragment;
 
 import com.MIAG.miaggce.MainActivity;
 import com.MIAG.miaggce.R;
-import com.MIAG.miaggce.adapter.GridAdapterForGCE;
+import com.MIAG.miaggce.adapter.GridAdapterForCOMP;
 import com.MIAG.miaggce.app.DBManager;
 import com.MIAG.miaggce.app.DownloadFileFromURL;
 import com.MIAG.miaggce.models.ANWSER;
@@ -34,6 +34,7 @@ import com.MIAG.miaggce.models.COMPETITIVE;
 import com.MIAG.miaggce.models.QUESTION;
 import com.MIAG.miaggce.models.REQUIEREMENT;
 import com.MIAG.miaggce.models.SUBJECT;
+import com.MIAG.miaggce.models.TUTORIAL;
 import com.MIAG.miaggce.ui.paper1.Paper1Activity;
 import com.MIAG.miaggce.ui.requierement.RequierementActivity;
 import com.google.android.material.snackbar.Snackbar;
@@ -47,16 +48,13 @@ import static com.MIAG.miaggce.ui.splash.SplashScreen.PREFERENCE;
 
 public class CompetitiveFragment extends Fragment implements CompetitiveView {
     private GridView gridView;
-    private List<String> school;
-    private List<String> subjects;
-    private List<String> chapter;
     private List<CHAPTER> chapters;
     private SharedPreferences mPrefs;
     private ProgressBar progressBar;
     private CompetitivePresenter competitivePresenter;
     private List<COMPETITIVE> competitives = new ArrayList<>();
     private DBManager dbManager;
-    private int position, paperChrono;
+    private int position;
 
     private static final int MENU1 = 0;
     private static final int MENU2 = 1;
@@ -102,45 +100,7 @@ public class CompetitiveFragment extends Fragment implements CompetitiveView {
     }
 
     private void refreshContent() {
-
-        school = new ArrayList<>();
-        for (int i=0; i<competitives.size(); i++){
-            school.add(competitives.get(i).getCOMP_NAME());
-        }
-
-        chapter = new ArrayList<>();
-        for (int i=0; i<chapter.size(); i++){
-            chapter.add(chapters.get(i).getCHAP_NAME());
-        }
-
-        //replace to dynamics
-        if (school.size() == 0){
-            school.add("ENS Maroua");
-            school.add("Polytechnique Yaoundé");
-            school.add("Polytechnique Maroua");
-            school.add("Ecole des Postes");
-            school.add("Ecole des Travaux");
-            school.add("Faculté du Génie Indistruel");
-            school.add("IUT Douala");
-            school.add("IUT Bandjoun");
-            school.add("IUT Ngaoundéré");
-            school.add("Faculté de Médécine Yaoundé");
-            school.add("Faculté de Médécine Douala");
-            school.add("Biomédical de Dschang");
-        }
-
-        if (chapter.size() == 0){
-            chapter.add("chapter 1 : limits");
-            chapter.add("chapter 2 : derivation and primitive");
-            chapter.add("chapter 3 : Equation and inegality");
-            chapter.add("chapter 4 : vector of the space");
-            chapter.add("chapter 5 : Coniques");
-            chapter.add("chapter 6 : arithmetics");
-            chapter.add("chapter 7 : complexe numbers");
-        }
-
-
-        GridAdapterForGCE adapter = new GridAdapterForGCE(this.getContext(), school);
+        GridAdapterForCOMP adapter = new GridAdapterForCOMP(this.getContext(), competitives);
         gridView.setAdapter(adapter);
     }
 
@@ -152,40 +112,49 @@ public class CompetitiveFragment extends Fragment implements CompetitiveView {
         SubMenu menu2 = popupMenu.getMenu().addSubMenu(MENU2, MENU_2_ITEM, 1, getText(R.string.tutorials));
 
         //get subject for range chapter
-        subjects = new ArrayList<>();
-        List<CHAPTER> chaptersofComp = dbManager.getChapterByCompId(competitives.get(i).getCOMP_ID());//get all chapters for this competitive
-        if (chaptersofComp!=null){//if chapter is follow
-            for (int j=0; j<chaptersofComp.size(); j++){
-                List<SUBJECT>  subjectOfComp = dbManager.getSubjectbyId(chaptersofComp.get(j).getSJ_ID());//for all chapter, we get the subject who correspond
-                boolean alReadyUsed = false;
-                int k=0;
-                do{
-                    if (subjectOfComp.get(j).getSJ_ID()==subjectOfComp.get(k).getSJ_ID()){//if this subject is already add on String subject list
-                        alReadyUsed =true;
+        List<SUBJECT> subjects = new ArrayList<>();
+        List<CHAPTER> chapters = dbManager.getChapterByCompId(competitives.get(i).getCOMP_ID());//get all chapters for this competitive
+
+        if (chapters!=null){//if chapter is follow
+            for (int j=0; j<chapters.size(); j++){
+                SUBJECT subject = dbManager.getSubjectById(chapters.get(j).getSJ_ID());
+                //This method add subject awich verify the the current subject is already used
+                if (!subject.equals(new SUBJECT())){
+                    boolean alReadyUsed = false;
+                    int k=1;
+                    if (j==0)
+                        subjects.add(subject);
+                    do{
+                        if (subjects.get(k).getSJ_ID()==subject.getSJ_ID()){//if this subject is already add on String subject list
+                            alReadyUsed =true;
+                        }
+                        k++;
+                    }while (!alReadyUsed && k<j+1);
+                    if (!alReadyUsed){//if never use add then
+                        subjects.add(subject);
                     }
-                    j++;
-                }while (!alReadyUsed && k<j+1);
-                if (!alReadyUsed){//if never use add then
-                    subjects.add(subjectOfComp.get(0).getSJ_NAME());
+                }
+
+            }
+            if (chapters.size()==0)
+                onErrorLoadind(getString(R.string.no_chapter));
+            else {
+                for (int j = 0; j< subjects.size(); j++){
+                    SubMenu menu2sub = menu2.addSubMenu(subjects.get(j).getSJ_NAME());
+                    for (int k =0; k<chapters.size(); k++){
+                        SubMenu menu3sub =menu2sub.addSubMenu(chapters.get(k).getCHAP_NAME());
+                        List<TUTORIAL> tutorials = dbManager.getTutorialByCompAndChapter(i,chapters.get(k).getCHAP_ID());
+                        for (int l=0; l<tutorials.size(); l++){
+                            menu3sub.add(tutorials.get(l).getTUTO_ID(),10000+l,l,tutorials.get(l).getTUTO_NAME());
+                        }
+                        if (tutorials.size()==0)
+                            onErrorLoadind(getString(R.string.no_tutorial));
+                    }
                 }
             }
         }else//if any chapter follow show error message
-            onErrorLoadind("This competitive is not download, please connect your device to internet");
+            onErrorLoadind(getString(R.string.no_chapter));
 
-        if (subjects.size() == 0){
-            subjects.add("Mathematics");
-            subjects.add("Physical");
-            subjects.add("French");
-            subjects.add("General culture");
-        }
-
-        for (int j =0; j<subjects.size(); j++){
-            SubMenu menu2sub = menu2.addSubMenu(MENU2, MENU_2_ITEM+j+1, j, subjects.get(j));
-
-            for (int k =0; k<chapter.size(); k++){
-                menu2sub.add(j, MENU_2_ITEM+subjects.size()+1+k+1, j, chapter.get(k));
-            }
-        }
         popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.KITKAT)
             @Override
@@ -197,23 +166,21 @@ public class CompetitiveFragment extends Fragment implements CompetitiveView {
                     }else if (requierements.size()==0)
                         onErrorLoadind("This requierement is not download, please connect your device to internet");
                     else {
-                        DownloadFileFromURL downloadFileFromURL = new DownloadFileFromURL("Requierement for "+school.get(i),requierements.get(0).getREQ_NAME(),getContext(),CompetitiveFragment.this);
-                        downloadFileFromURL.execute(requierements.get(0).getREQ_URL());
+                        if (requierements.get(0).getREQ_CONTENT().isEmpty()){
+                            DownloadFileFromURL downloadFileFromURL = new DownloadFileFromURL("Requierement for "+competitives.get(i),requierements.get(0).getREQ_NAME(),getContext(),CompetitiveFragment.this);
+                            downloadFileFromURL.execute(requierements.get(0).getREQ_FILE());
+                        }else{
+                            Intent intentReq = new Intent(getActivity(),RequierementActivity.class);
+                            intentReq.putExtra("req",requierements.get(0).getREQ_ID());
+                            intentReq.putExtra("isFile",true);
+                            startActivity(intentReq);
+                        }
                     }
                 }
-                else if(item.getItemId() <= MENU_2_ITEM+subjects.size()){
-                }
-                else{
-                    List<CHAPTER> chapters = dbManager.getChapterByNameAndCompId(competitives.get(i).getCOMP_ID(),item.getTitle().toString());
-                    if (chapters==null){
-                        onErrorLoadind("This requierement is not download, please connect your device to internet");
-                    }else if (chapters.size()==0)
-                        onErrorLoadind("This requierement is not download, please connect your device to internet");
-                    else {
-                        //paperChrono = chapters.get(0).getCHRONO;
-                        paperChrono = 12;
-                        showDialog(item.getTitle().toString(),chapters.get(0).getCHAP_ID(),chapters.get(0).getCOMP_ID());
-                    }
+                else if(item.getItemId() >= 10000){
+                    int tutorialid = item.getItemId()-10000;
+                    TUTORIAL tutorial = dbManager.getTutorialById(tutorialid);
+                    showDialog(tutorial.getTUTO_NAME(),tutorial.getTUTO_ID());
                 }
                 return false;
             }
@@ -222,7 +189,7 @@ public class CompetitiveFragment extends Fragment implements CompetitiveView {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-    private void showDialog(final String title, final int chapterId, final int compId){
+    private void showDialog(final String title, final int tuto_id){
 
         LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
         if (mPrefs.getBoolean(ENABLE, false)) { //get Boolean
@@ -248,10 +215,8 @@ public class CompetitiveFragment extends Fragment implements CompetitiveView {
                 public void onClick(View view) {
                     builder1.cancel();
                     Intent intent = new Intent(getActivity(), Paper1Activity.class);
-                    intent.putExtra("paper",chapterId);
-                    intent.putExtra("comp",compId);
+                    intent.putExtra("tuto",tuto_id);
                     intent.putExtra("title",title);
-                    intent.putExtra("time",paperChrono);
                     intent.putExtra("isChapter",true);
                     startActivity(intent);
                 }

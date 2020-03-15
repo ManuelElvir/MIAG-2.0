@@ -46,7 +46,7 @@ class MainPresenter {
         });
     }
 
-    public void getSubject(){
+    void getSubject(){
         mainView.showLoading();
         Call<List<SUBJECT>> call = apiInterface.listSubject();
         call.enqueue(new Callback<List<SUBJECT>>() {
@@ -69,7 +69,7 @@ class MainPresenter {
 
 
 
-    public void getCompetitive(){
+    void getCompetitive(){
         mainView.showLoading();
         Call<List<COMPETITIVE>> call = apiInterface.listCompetitive();
         call.enqueue(new Callback<List<COMPETITIVE>>() {

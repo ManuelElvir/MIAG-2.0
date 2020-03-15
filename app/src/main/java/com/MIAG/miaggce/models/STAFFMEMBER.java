@@ -5,10 +5,6 @@ import com.google.gson.annotations.SerializedName;
 
 public class STAFFMEMBER {
     @Expose
-    @SerializedName("SM_ID")
-    private int SM_ID;
-
-    @Expose
     @SerializedName("SM_NAME")
     private String SM_NAME;
 
@@ -21,16 +17,8 @@ public class STAFFMEMBER {
     private String SM_NUMBER;
 
     @Expose
-    @SerializedName("SM_DATE")
-    private String SM_DATE;
-
-    public int getSM_ID() {
-        return SM_ID;
-    }
-
-    public void setSM_ID(int SM_ID) {
-        this.SM_ID = SM_ID;
-    }
+    @SerializedName("SM_IMAGE")
+    private String SM_IMAGE;
 
     public String getSM_NAME() {
         return SM_NAME;
@@ -56,11 +44,11 @@ public class STAFFMEMBER {
         this.SM_NUMBER = SM_NUMBER;
     }
 
-    public String getSM_DATE() {
-        return SM_DATE;
+    public String getSM_IMAGE() {
+        return SM_IMAGE;
     }
 
-    public void setSM_DATE(String SM_DATE) {
-        this.SM_DATE = SM_DATE;
+    public void setSM_IMAGE(String SM_IMAGE) {
+        this.SM_IMAGE = SM_IMAGE;
     }
 }

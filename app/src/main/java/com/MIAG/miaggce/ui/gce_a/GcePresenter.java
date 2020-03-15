@@ -110,7 +110,7 @@ public class GcePresenter {
 
             @Override
             public void onFailure(@NotNull Call<List<QUESTION>> call, @NotNull Throwable t) {
-                gceView.onErrorLoadind("UESTIONS:"+t.getLocalizedMessage());
+                gceView.onErrorLoadind("QUESTIONS:"+t.getLocalizedMessage());
                 Log.e("QUESTIONS:",t.getMessage(),t);
                 gceView.HideLoadding();
             }

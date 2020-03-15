@@ -51,7 +51,7 @@ class CompetitivePresenter {
 
     void getQuestions(int tutorial_id) {
         competitiveView.showLoading();
-        Call<List<QUESTION>> call = apiInterface.listQuestionComp(tutorial_id);
+        Call<List<QUESTION>> call = apiInterface.listQuestionTutorial(tutorial_id);
         call.enqueue(new Callback<List<QUESTION>>() {
             @Override
             public void onResponse(@NotNull Call<List<QUESTION>> call, @NotNull Response<List<QUESTION>> response) {

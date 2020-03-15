@@ -15,6 +15,7 @@ import com.MIAG.miaggce.models.RESPONSE;
 import com.MIAG.miaggce.models.STAFFMEMBER;
 import com.MIAG.miaggce.models.SUBJECT;
 import com.MIAG.miaggce.models.SUBJECT_CORRECTION;
+import com.MIAG.miaggce.models.TUTORIAL;
 
 import java.util.List;
 
@@ -49,63 +50,47 @@ public interface ApiInterface {
             @Query("subjectid") int SJ_ID
     );
 
-    @GET("PAPERTREE/LIST")
+    @GET("PAPERTHREE/LIST")
     Call<List<PAPER3>> listPaper3(
             @Query("subjectid") int SJ_ID
     );
 
-    @GET("CHAPTER/LIST")
+    @GET("CHAPTER/GET")
     Call<List<CHAPTER>> listChapter(
-            @Query("Competitiveid") int COMP_ID
+            @Query("competitiveid") int COMP_ID
     );
 
     @GET("REQUIEREMENT/GET")
     Call<List<REQUIEREMENT>> getRequierement(
-            @Query("Competitiveid") int SJ_ID
+            @Query("competitiveid") int SJ_ID
     );
 
-    @GET("FILE/GET")
-    Call<List<FILE>> getFile(
-            @Query("Fileid") int FILE_ID
-    );
+    @GET("FILE/LIST")
+    Call<List<FILE>> listImage();
 
     @GET("QUESTION/PAPERONELIST")
     Call<List<QUESTION>> listQuestionPaper1(
-            @Query("Paperoneid") int PAPER1_ID
+            @Query("paperoneid") int PAPER1_ID
     );
 
-    @GET("QUESTION/PAPERTWOLIST")
-    Call<List<QUESTION>> listQuestionPaper2(
-            @Query("Papertwoid") int PAPER2_ID
+    @GET("TUTORIAL/GET")
+    Call<List<TUTORIAL>> getTutorial(
+            @Query("chapterid") int CHAPTER_ID,
+            @Query("competitiveid") int COMP_ID
     );
 
-    @GET("QUESTION/PAPERTREELIST")
-    Call<List<QUESTION>> listQuestionPaper3(
-            @Query("Papertreeid") int PAPER3_ID
+    @GET("QUESTION/TUTORIALLIST")
+    Call<List<QUESTION>> listQuestionTutorial(
+            @Query("tutorialid") int TUT_ID
     );
 
-    @GET("QUESTION/TUTORIALIST")
-    Call<List<QUESTION>> listQuestionComp(
-            @Query("tutorialid") int TUTORIAL_ID
-    );
-
-    @GET("ANSWER/GET")
+    @GET("ANWSER/GET")
     Call<List<ANWSER>> listAnswer(
-            @Query("question_id") int QUEST_ID
-    );
-
-    @GET("subject_correction/get")
-    Call<List<SUBJECT_CORRECTION>> getSubjectCorrection(
-            @Query("PAPER_ID") int PAPER_ID
+            @Query("questionid") int QUEST_ID
     );
 
     @GET("STAFFMEMBER/LIST")
     Call<List<STAFFMEMBER>> listStaffMember(
-    );
-
-    @GET("image/list")
-    Call<List<FILE>> listImage(
-            @Query("FILE_TYPE") String FILE_TYPE // file_type always image
     );
 
     @FormUrlEncoded
@@ -139,7 +124,7 @@ public interface ApiInterface {
     );
 
     @FormUrlEncoded
-    @POST("student/register")
+    @POST("STUDENT/REGISTER")
     Call<RESPONSE> registerStudent(
             @Field("id") int ID,
             @Field("REGISTER_CODE") String REGISTER_CODE

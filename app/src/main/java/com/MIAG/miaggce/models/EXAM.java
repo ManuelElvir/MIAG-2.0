@@ -13,10 +13,6 @@ public class EXAM {
     private String EXAM_NAME;
 
     @Expose
-    @SerializedName("EXAM_DATE_START")
-    private String EXAM_DATE_START;
-
-    @Expose
     @SerializedName("EXAM_DATE_END")
     private String EXAM_DATE_END;
 
@@ -34,14 +30,6 @@ public class EXAM {
 
     public void setEXAM_NAME(String EXAM_NAME) {
         this.EXAM_NAME = EXAM_NAME;
-    }
-
-    public String getEXAM_DATE_START() {
-        return EXAM_DATE_START;
-    }
-
-    public void setEXAM_DATE_START(String EXAM_DATE_START) {
-        this.EXAM_DATE_START = EXAM_DATE_START;
     }
 
     public String getEXAM_DATE_END() {

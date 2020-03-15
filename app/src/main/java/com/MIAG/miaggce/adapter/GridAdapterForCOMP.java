@@ -9,16 +9,16 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.MIAG.miaggce.R;
-import com.MIAG.miaggce.models.SUBJECT;
+import com.MIAG.miaggce.models.COMPETITIVE;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class GridAdapterForGCE extends BaseAdapter {
-    private List<SUBJECT> list;
+public class GridAdapterForCOMP extends BaseAdapter {
+    private List<COMPETITIVE> list;
     private Context context;
 
-    public GridAdapterForGCE(Context applicationContext, List<SUBJECT> list) {
+    public GridAdapterForCOMP(Context applicationContext, List<COMPETITIVE> list) {
         this.context = applicationContext;
         this.list = new ArrayList<>();
         this.list = list;
@@ -49,19 +49,19 @@ public class GridAdapterForGCE extends BaseAdapter {
             v = inflater.inflate(R.layout.subject_item, null);
         }
 
-        TextView title = v.findViewById(R.id.text);title.setText(list.get(i).getSJ_NAME());
+        TextView title = v.findViewById(R.id.text);title.setText(list.get(i).getCOMP_NAME());
         TextView caps = v.findViewById(R.id.text_caps);
         int lastPosition = 0;
         StringBuilder text_caps = new StringBuilder();
         while (lastPosition>=0){
             if(lastPosition>0){
-                if(list.get(i).getSJ_NAME().substring(lastPosition+1, lastPosition + 2).equals(list.get(i).getSJ_NAME().substring(lastPosition+1, lastPosition + 2).toUpperCase()))
-                    text_caps.append(list.get(i).getSJ_NAME().substring(lastPosition+1, lastPosition + 2));
+                if(list.get(i).getCOMP_NAME().substring(lastPosition+1, lastPosition + 2).equals(list.get(i).getCOMP_NAME().substring(lastPosition+1, lastPosition + 2).toUpperCase()))
+                    text_caps.append(list.get(i).getCOMP_NAME().substring(lastPosition+1, lastPosition + 2));
             }
             else{
-                text_caps.append(list.get(i).getSJ_NAME().substring(lastPosition, lastPosition + 1).toUpperCase());
+                text_caps.append(list.get(i).getCOMP_NAME().substring(lastPosition, lastPosition + 1).toUpperCase());
             }
-            lastPosition = list.get(i).getSJ_NAME().indexOf(" ",lastPosition+1);
+            lastPosition = list.get(i).getCOMP_NAME().indexOf(" ",lastPosition+1);
         }
         caps.setText(text_caps.toString());
         return v;

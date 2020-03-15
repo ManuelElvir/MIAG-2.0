@@ -13,10 +13,6 @@ public class COMPETITIVE {
     @SerializedName("COMP_NAME")
     private String COMP_NAME;
 
-    @Expose
-    @SerializedName("COMP_DATE")
-    private String COMP_DATE;
-
     public int getCOMP_ID() {
         return COMP_ID;
     }
@@ -31,13 +27,5 @@ public class COMPETITIVE {
 
     public void setCOMP_NAME(String COMP_NAME) {
         this.COMP_NAME = COMP_NAME;
-    }
-
-    public String getCOMP_DATE() {
-        return COMP_DATE;
-    }
-
-    public void setCOMP_DATE(String COMP_DATE) {
-        this.COMP_DATE = COMP_DATE;
     }
 }

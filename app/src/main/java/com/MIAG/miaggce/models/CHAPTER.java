@@ -16,11 +16,6 @@ public class CHAPTER {
     @Expose
     @SerializedName("CHAP_NAME")
     private String CHAP_NAME;
-
-    @Expose
-    @SerializedName("CHAP_DATE")
-    private String CHAP_DATE;
-
     @Expose
     @SerializedName("COMP_ID")
     private int COMP_ID;
@@ -55,13 +50,5 @@ public class CHAPTER {
 
     public void setCHAP_NAME(String CHAP_NAME) {
         this.CHAP_NAME = CHAP_NAME;
-    }
-
-    public String getCHAP_DATE() {
-        return CHAP_DATE;
-    }
-
-    public void setCHAP_DATE(String CHAP_DATE) {
-        this.CHAP_DATE = CHAP_DATE;
     }
 }

@@ -13,10 +13,6 @@ public class ANWSER {
     private String ANWS_CONTENT;
 
     @Expose
-    @SerializedName("ANWS_DATE")
-    private String ANWS_DATE;
-
-    @Expose
     @SerializedName("ANWS_STATE")
     private int ANWS_STATE;
 
@@ -38,14 +34,6 @@ public class ANWSER {
 
     public void setANWS_CONTENT(String ANWS_CONTENT) {
         this.ANWS_CONTENT = ANWS_CONTENT;
-    }
-
-    public String getANWS_DATE() {
-        return ANWS_DATE;
-    }
-
-    public void setANWS_DATE(String ANWS_DATE) {
-        this.ANWS_DATE = ANWS_DATE;
     }
 
     public int getANWS_STATE() {

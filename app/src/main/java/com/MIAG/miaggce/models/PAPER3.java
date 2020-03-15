@@ -10,36 +10,19 @@ public class PAPER3 {
     private int PAPER3_ID;
 
     @Expose
-    @SerializedName("TEST_ID")
-    private int TEST_ID;
+    @SerializedName("SJ_ID")
+    private int SJ_ID;
 
     @Expose
     @SerializedName("TEST_NAME")
     private String TEST_NAME;
-
-    @Expose
-    @SerializedName("TEST_CHRONO")
-    private String TEST_CHRONO;
-
-    @Expose
-    @SerializedName("TEST_DATE")
-    private String TEST_DATE;
-
     @Expose
     @SerializedName("TEST_CONTENT")
     private String TEST_CONTENT;
 
     @Expose
-    @SerializedName("SJ_ID")
-    private int SJ_ID;
-
-    public int getSJ_ID() {
-        return SJ_ID;
-    }
-
-    public void setSJ_ID(int SJ_ID) {
-        this.SJ_ID = SJ_ID;
-    }
+    @SerializedName("EXAM_ID")
+    private int EXAM_ID;
 
     public int getPAPER3_ID() {
         return PAPER3_ID;
@@ -49,12 +32,12 @@ public class PAPER3 {
         this.PAPER3_ID = PAPER3_ID;
     }
 
-    public int getTEST_ID() {
-        return TEST_ID;
+    public int getSJ_ID() {
+        return SJ_ID;
     }
 
-    public void setTEST_ID(int TEST_ID) {
-        this.TEST_ID = TEST_ID;
+    public void setSJ_ID(int SJ_ID) {
+        this.SJ_ID = SJ_ID;
     }
 
     public String getTEST_NAME() {
@@ -65,27 +48,19 @@ public class PAPER3 {
         this.TEST_NAME = TEST_NAME;
     }
 
-    public String getTEST_CHRONO() {
-        return TEST_CHRONO;
-    }
-
-    public void setTEST_CHRONO(String TEST_CHRONO) {
-        this.TEST_CHRONO = TEST_CHRONO;
-    }
-
-    public String getTEST_DATE() {
-        return TEST_DATE;
-    }
-
-    public void setTEST_DATE(String TEST_DATE) {
-        this.TEST_DATE = TEST_DATE;
-    }
-
     public String getTEST_CONTENT() {
         return TEST_CONTENT;
     }
 
     public void setTEST_CONTENT(String TEST_CONTENT) {
         this.TEST_CONTENT = TEST_CONTENT;
+    }
+
+    public int getEXAM_ID() {
+        return EXAM_ID;
+    }
+
+    public void setEXAM_ID(int EXAM_ID) {
+        this.EXAM_ID = EXAM_ID;
     }
 }

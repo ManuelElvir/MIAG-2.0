@@ -136,4 +136,8 @@
     <string name="_1">1</string>
     <string name="_00">00</string>
     <string name="title_activity_main2">Main2Activity</string>
+    <string name="no_paper">No Paper for this selection</string>
+    <string name="paper_not_exist">This paper are not download or not exist.</string>
+    <string name="no_chapter">No chapter disponible for this competitive</string>
+    <string name="no_tutorial">No tutorial found to this vhapter. check your internet connection.</string>
 </resources>

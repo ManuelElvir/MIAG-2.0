@@ -13,20 +13,12 @@ public class QUESTION {
     private String QUEST_LABEL;
 
     @Expose
-    @SerializedName("QUEST_TYPE")
-    private String QUEST_TYPE;
-
-    @Expose
-    @SerializedName("QUEST_DATE")
-    private String QUEST_DATE;
-
-    @Expose
     @SerializedName("PAPER1_ID")
-    private int PAPER1_ID;
+    private int PAPER1_ID = 0;
 
     @Expose
     @SerializedName("CHAP_ID")
-    private int CHAP_ID;
+    private int CHAP_ID = 0;
 
     public int getCHAP_ID() {
         return CHAP_ID;
@@ -58,21 +50,5 @@ public class QUESTION {
 
     public void setQUEST_LABEL(String QUEST_LABEL) {
         this.QUEST_LABEL = QUEST_LABEL;
-    }
-
-    public String getQUEST_TYPE() {
-        return QUEST_TYPE;
-    }
-
-    public void setQUEST_TYPE(String QUEST_TYPE) {
-        this.QUEST_TYPE = QUEST_TYPE;
-    }
-
-    public String getQUEST_DATE() {
-        return QUEST_DATE;
-    }
-
-    public void setQUEST_DATE(String QUEST_DATE) {
-        this.QUEST_DATE = QUEST_DATE;
     }
 }
