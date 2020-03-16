@@ -48,11 +48,11 @@ import static com.MIAG.miaggce.ui.splash.SplashScreen.PREFERENCE;
 
 public class CompetitiveFragment extends Fragment implements CompetitiveView {
     private GridView gridView;
-    private List<CHAPTER> chapters;
     private SharedPreferences mPrefs;
     private ProgressBar progressBar;
     private CompetitivePresenter competitivePresenter;
     private List<COMPETITIVE> competitives = new ArrayList<>();
+    private List<TUTORIAL> tutorials = new ArrayList<>();
     private DBManager dbManager;
     private int position;
 
@@ -163,6 +163,7 @@ public class CompetitiveFragment extends Fragment implements CompetitiveView {
                     List<REQUIEREMENT> requierements = dbManager.getRequierementByCompId(competitives.get(i).getCOMP_ID());
                     if (requierements==null){
                         onErrorLoadind("This requierement is not download, please connect your device to internet");
+                        competitivePresenter.getRequierement(competitives.get(i).getCOMP_ID());
                     }else if (requierements.size()==0)
                         onErrorLoadind("This requierement is not download, please connect your device to internet");
                     else {
@@ -188,7 +189,7 @@ public class CompetitiveFragment extends Fragment implements CompetitiveView {
         popupMenu.show();
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+
     private void showDialog(final String title, final int tuto_id){
 
         LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
@@ -262,7 +263,17 @@ public class CompetitiveFragment extends Fragment implements CompetitiveView {
     @Override
     public void onReceiveChapter(List<CHAPTER> chapters) {
         dbManager.insertListChapter(chapters);
-        this.chapters = dbManager.listChapter();
+        competitivePresenter.getTutorial(competitives.get(position).getCOMP_ID());
+    }
+
+    @Override
+    public void onReceiveTutorial(List<TUTORIAL> tutorials){
+        dbManager.insertListTutorial(tutorials);
+        for (int i=0; i<tutorials.size(); i++){
+            TUTORIAL tutorial = tutorials.get(i);
+            if (!this.tutorials.contains(tutorial))
+                this.tutorials.add(tutorial);
+        }
         if (position<competitives.size()-1){
             position++;
             competitivePresenter.getChapter(competitives.get(position).getCOMP_ID());
@@ -272,8 +283,8 @@ public class CompetitiveFragment extends Fragment implements CompetitiveView {
     }
 
     @Override
-    public void onReceiveQuestion(List<QUESTION> questions) {
-        dbManager.insertListQuestion(questions);
+    public void onReceiveQuestion(List<QUESTION> questions, int chapterId) {
+        dbManager.insertListQuestion(questions,0, chapterId);
         for (int i=0; i<questions.size(); i++){
             competitivePresenter.getAnswers(questions.get(i).getQUEST_ID());
         }
@@ -285,6 +296,11 @@ public class CompetitiveFragment extends Fragment implements CompetitiveView {
     }
 
     @Override
+    public void onReceiveRequierement(List<REQUIEREMENT> requierements) {
+        dbManager.insertListRequierement(requierements);
+    }
+
+    @Override
     public void openRequierement(String pathFile, String reqName) {
         Intent intent = new Intent(getActivity(), RequierementActivity.class);
         intent.putExtra("title",reqName);
@@ -293,12 +309,8 @@ public class CompetitiveFragment extends Fragment implements CompetitiveView {
     }
 
     private void starGetQuestion() {
-        for (int i =0; i<competitives.size(); i++){
-            if (chapters !=null){
-                if (chapters.size()>0){
-                    competitivePresenter.getQuestions(competitives.get(i).getCOMP_ID());
-                }
-            }
+        for (int i =0; i<tutorials.size(); i++){
+            competitivePresenter.getQuestions(tutorials.get(i).getTUTO_ID());
         }
     }
 }

@@ -19,11 +19,11 @@ public class SUBJECT_CORRECTION {
 
     @Expose
     @SerializedName("SC_PAPER1_ID")
-    private int SC_PAPER1_ID;
+    private int SC_PAPER1_ID=0;
 
     @Expose
     @SerializedName("SC_PAPER2_ID")
-    private int SC_PAPER2_ID;
+    private int SC_PAPER2_ID=0;
 
     public int getSC_ID() {
         return SC_ID;

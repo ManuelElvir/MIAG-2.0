@@ -75,8 +75,17 @@ public interface ApiInterface {
 
     @GET("TUTORIAL/GET")
     Call<List<TUTORIAL>> getTutorial(
-            @Query("chapterid") int CHAPTER_ID,
             @Query("competitiveid") int COMP_ID
+    );
+
+    @GET("TESTCORRECTION/PAPERTWO")
+    Call<SUBJECT_CORRECTION> getPaper2Correction(
+            @Query("paperid") int PAPER_ID
+    );
+
+    @GET("TESTCORRECTION/PAPERTHREE")
+    Call<SUBJECT_CORRECTION> getPaper3Correction(
+            @Query("paperid") int PAPER_ID
     );
 
     @GET("QUESTION/TUTORIALLIST")
@@ -105,7 +114,7 @@ public interface ApiInterface {
     );
 
     @FormUrlEncoded
-    @POST("STUDENT/update")
+    @POST("STUDENT/UPDATE")
     Call<RESPONSE> updateStudent(
             @Field("id") int STD_ID,
             @Field("name") String STD_NAME,

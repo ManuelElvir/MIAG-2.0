@@ -31,6 +31,7 @@ import com.MIAG.miaggce.models.PAPER2;
 import com.MIAG.miaggce.models.PAPER3;
 import com.MIAG.miaggce.models.QUESTION;
 import com.MIAG.miaggce.models.SUBJECT;
+import com.MIAG.miaggce.models.SUBJECT_CORRECTION;
 import com.MIAG.miaggce.ui.paper2.Paper2Activity;
 import com.MIAG.miaggce.ui.paper1.Paper1Activity;
 import com.google.android.material.snackbar.Snackbar;
@@ -51,7 +52,7 @@ public class GceAFragment extends Fragment implements GceView{
     private GcePresenter presenter;
     private List<SUBJECT> subjects_list;
     private DBManager dbManager;
-    private int position;
+    private int position, paperSize =0;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -242,7 +243,15 @@ public class GceAFragment extends Fragment implements GceView{
 
     @Override
     public void onErrorLoadind(String cause) {
-        Snackbar.make(progressBar,cause,Snackbar.LENGTH_SHORT).show();
+        Snackbar.make(progressBar,cause,Snackbar.LENGTH_SHORT)
+        .setAction("Download", new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getData();
+                Snackbar snackbar1 = Snackbar.make(progressBar, "wait download finish...", Snackbar.LENGTH_SHORT);
+                snackbar1.show();
+            }
+        }).show();
     }
 
     @Override
@@ -254,12 +263,23 @@ public class GceAFragment extends Fragment implements GceView{
     @Override
     public void onReceivePaper2(List<PAPER2> paper2s) {
         dbManager.insertListPaper2(paper2s);
+        for (int i=0; i<paper2s.size(); i++){
+            presenter.getPaper2Correction(paper2s.get(i).getPAPER2_ID());
+        }
         presenter.getPaper3(subjects_list.get(position).getSJ_ID());
+    }
+
+    @Override
+    public void onReceivePaper2Correction(SUBJECT_CORRECTION correction){
+        dbManager.insertListSubjectCorrection(correction);
     }
 
     @Override
     public void onReceivePaper3(List<PAPER3> paper3s) {
         dbManager.insertListPaper3(paper3s);
+        for (int i=0; i<paper3s.size(); i++){
+            presenter.getPaper3Correction(paper3s.get(i).getPAPER3_ID());
+        }
         if (position<subjects_list.size()-1){
             position++;
             presenter.getPaper1(subjects_list.get(position).getSJ_ID());
@@ -269,8 +289,13 @@ public class GceAFragment extends Fragment implements GceView{
     }
 
     @Override
-    public void onReceiveQuestion(List<QUESTION> questions) {
-        dbManager.insertListQuestion(questions);
+    public void onReceivePaper3Correction(SUBJECT_CORRECTION correction){
+        dbManager.insertListSubjectCorrection(correction);
+    }
+
+    @Override
+    public void onReceiveQuestion(List<QUESTION> questions, int paperId) {
+        dbManager.insertListQuestion(questions, paperId,0);
         for (int i=0; i<questions.size(); i++){
             presenter.getAnswers(questions.get(i).getQUEST_ID());
         }
