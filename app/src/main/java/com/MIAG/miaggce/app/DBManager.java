@@ -529,7 +529,7 @@ public class DBManager {
     public void insertListRequierement(List<REQUIEREMENT> requierements) {
         for (int i=0; i<requierements.size(); i++)
         {
-            Cursor cursor = database.rawQuery("SELECT * FROM "+DatabaseHelper.SUBJECT_CORRECTION+" WHERE REQ_ID = "+requierements.get(i).getREQ_ID(), null);
+            Cursor cursor = database.rawQuery("SELECT * FROM "+DatabaseHelper.REQUIEREMENT+" WHERE REQ_ID = "+requierements.get(i).getREQ_ID(), null);
             if (cursor == null) {
                 ContentValues contentValue = new ContentValues();
                 contentValue.put("REQ_ID",requierements.get(i).getREQ_ID());
@@ -622,52 +622,38 @@ public class DBManager {
      *  get collect of SUBJECT_CORRECTION
      * @return subject_corrections Collection of SUBJECT_CORRECTION object
      */
-    public List<SUBJECT_CORRECTION> getSubjectCorrectionByPaper3Id(int SC_PAPER3_ID) {
-        List<SUBJECT_CORRECTION> subject_corrections;
-        subject_corrections = new ArrayList<>();
+    public SUBJECT_CORRECTION getSubjectCorrectionByPaper3Id(int SC_PAPER3_ID) {
+        SUBJECT_CORRECTION subject_correction = new SUBJECT_CORRECTION();
         Cursor cursor = database.rawQuery("SELECT * FROM "+DatabaseHelper.SUBJECT_CORRECTION+" WHERE SC_PAPER3_ID = "+SC_PAPER3_ID, null);
         if (cursor != null) {
             cursor.moveToFirst();
-            do{
-                if (cursor.getColumnCount()<=2) {
-                    SUBJECT_CORRECTION subject_correction = new SUBJECT_CORRECTION();
-                    subject_correction.setSC_ID(cursor.getInt(0));
-                    subject_correction.setSC_CONTENT(cursor.getString(1));
-                    subject_correction.setSC_DATE(cursor.getString(2));
-                    subject_correction.setSC_PAPER1_ID(cursor.getInt(3));
-                    subject_correction.setSC_PAPER2_ID(cursor.getInt(4));
-                    subject_corrections.add(subject_correction);
-                }
-            }while(cursor.moveToNext());
+            subject_correction.setSC_ID(cursor.getInt(0));
+            subject_correction.setSC_CONTENT(cursor.getString(1));
+            subject_correction.setSC_DATE(cursor.getString(2));
+            subject_correction.setSC_PAPER1_ID(cursor.getInt(3));
+            subject_correction.setSC_PAPER2_ID(cursor.getInt(4));
             cursor.close();
         }
-        return subject_corrections;
+        return subject_correction;
     }
 
     /**
      *  get collect of SUBJECT_CORRECTION
      * @return subject_corrections Collection of SUBJECT_CORRECTION object
      */
-    public List<SUBJECT_CORRECTION> getSubjectCorrectionByPaper2Id(int SC_PAPER2_ID) {
-        List<SUBJECT_CORRECTION> subject_corrections;
-        subject_corrections = new ArrayList<>();
+    public SUBJECT_CORRECTION getSubjectCorrectionByPaper2Id(int SC_PAPER2_ID) {
+        SUBJECT_CORRECTION subject_correction = new SUBJECT_CORRECTION();
         Cursor cursor = database.rawQuery("SELECT * FROM "+DatabaseHelper.SUBJECT_CORRECTION+" WHERE SC_PAPER2_ID = "+SC_PAPER2_ID, null);
         if (cursor != null) {
             cursor.moveToFirst();
-            do{
-                if (cursor.getColumnCount()<=2) {
-                    SUBJECT_CORRECTION subject_correction = new SUBJECT_CORRECTION();
-                    subject_correction.setSC_ID(cursor.getInt(0));
-                    subject_correction.setSC_CONTENT(cursor.getString(1));
-                    subject_correction.setSC_DATE(cursor.getString(2));
-                    subject_correction.setSC_PAPER1_ID(cursor.getInt(3));
-                    subject_correction.setSC_PAPER2_ID(cursor.getInt(4));
-                    subject_corrections.add(subject_correction);
-                }
-            }while(cursor.moveToNext());
+            subject_correction.setSC_ID(cursor.getInt(0));
+            subject_correction.setSC_CONTENT(cursor.getString(1));
+            subject_correction.setSC_DATE(cursor.getString(2));
+            subject_correction.setSC_PAPER1_ID(cursor.getInt(3));
+            subject_correction.setSC_PAPER2_ID(cursor.getInt(4));
             cursor.close();
         }
-        return subject_corrections;
+        return subject_correction;
     }
 
     /**

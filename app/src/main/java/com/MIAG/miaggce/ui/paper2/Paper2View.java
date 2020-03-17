@@ -10,7 +10,5 @@ interface Paper2View {
     void showLoading();
     void hideLoadding();
     void onErrorLoadind(String cause);
-    void onReceivePaper2(List<PAPER2> paper2);
-    void onReceivePaper3(List<PAPER3> paper3);
-    void onReceiveCorrection(List<SUBJECT_CORRECTION> corrections);
+    void onReceiveCorrection(SUBJECT_CORRECTION corrections);
 }

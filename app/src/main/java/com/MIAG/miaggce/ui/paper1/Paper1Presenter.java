@@ -13,7 +13,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class Paper1Presenter {
+class Paper1Presenter {
     private Paper1View paper1View;
     private ApiInterface apiInterface;
 
@@ -43,9 +43,9 @@ public class Paper1Presenter {
         });
     }
 
-    void getQuestionByChapterId(int chapterId, int compId){
+    void getQuestionByChapterId(int tutorialId){
         paper1View.showLoading();
-        Call<List<QUESTION>> call = apiInterface.listQuestionComp(compId);
+        Call<List<QUESTION>> call = apiInterface.listQuestionTutorial(tutorialId);
         call.enqueue(new Callback<List<QUESTION>>() {
             @Override
             public void onResponse(@NotNull Call<List<QUESTION>> call, @NotNull Response<List<QUESTION>> response) {

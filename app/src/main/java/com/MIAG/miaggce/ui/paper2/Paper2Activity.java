@@ -16,7 +16,6 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.MIAG.miaggce.MainActivity;
 import com.MIAG.miaggce.R;
 import com.MIAG.miaggce.app.AudioPlayer;
@@ -27,13 +26,7 @@ import com.MIAG.miaggce.models.PAPER3;
 import com.MIAG.miaggce.models.SUBJECT_CORRECTION;
 import com.MIAG.miaggce.ui.paper2_correction.Paper2CorrectionActivity;
 import com.google.android.material.snackbar.Snackbar;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Objects;
 
 public class Paper2Activity extends AppCompatActivity implements View.OnClickListener, Paper2View {
 
@@ -56,7 +49,7 @@ public class Paper2Activity extends AppCompatActivity implements View.OnClickLis
         setContentView(R.layout.activity_paper2);
 
         String htmlTitle = "<span style=\"font-size:12px\">"+getIntent().getStringExtra("title")+"</span>";
-        getSupportActionBar().setTitle(Html.fromHtml(htmlTitle));
+        Objects.requireNonNull(getSupportActionBar()).setTitle(Html.fromHtml(htmlTitle));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
 
@@ -72,62 +65,36 @@ public class Paper2Activity extends AppCompatActivity implements View.OnClickLis
         correction.setOnClickListener(this);
         card = findViewById(R.id.card_timer);
 
-        getData();
-        refreshContent();
-
-    }
-
-    private void getData() {
-        dbManager = new DBManager(this);
-        dbManager.open();
-
-        if (appConfig.isInternetAvailable()){
-            presenter = new Paper2Presenter(this, MainActivity.userKey);
-            if (getIntent().getBooleanExtra("no_timer",false)){
-                presenter.getPaper3(getIntent().getIntExtra("subject",0));
-            }else {
-                presenter.getPaper2(getIntent().getIntExtra("subject",0));
-            }
-        }else {
-            getDataToDataBase();
-        }
+        getDataToDataBase();
     }
 
     private void getDataToDataBase() {
         showLoading();
-        if (getIntent().getBooleanExtra("isChapter",false)){
-            List<PAPER3> paper3 = dbManager.getPaper3BySubjectId(getIntent().getIntExtra("subject",0));
-            if (paper3!=null)
-                if (paper3.size()>0)
-                    message = paper3.get(0).getTEST_CONTENT();
+        dbManager = new DBManager(this);
+        dbManager.open();
+        if (getIntent().getBooleanExtra("no_timer",false)){
+            PAPER3 paper3 = dbManager.getPaper3ById(paperId);
+            message = paper3.getTEST_CONTENT();
         }else {
-            List<PAPER2> paper2 = dbManager.getPaper2BySubjectId(getIntent().getIntExtra("subject",0));
-            if (paper2!=null)
-                if (paper2.size()>0){
-                    message = paper2.get(0).getTEST_CONTENT();
-                    int heure = Integer.valueOf(paper2.get(0).getTEST_CHRONO().substring(0,2));
-                    int minutes = Integer.valueOf(paper2.get(0).getTEST_CHRONO().substring(3,5));
-                    paperTime = (heure*60)+minutes;
-                }
-        }
-
-        if (message.isEmpty()){
-            getPaperText();
-            paperTime = 12*60000;
+            PAPER2 paper2 = dbManager.getPaper2ById(paperId);
+            message = paper2.getTEST_CONTENT();
+            int heure = Integer.valueOf(paper2.getTEST_CHRONO().substring(0,2));
+            int minutes = Integer.valueOf(paper2.getTEST_CHRONO().substring(3,5));
+            paperTime = (heure*60)+minutes;
         }
         hideLoadding();
+
+        refreshContent();
     }
 
     private void refreshContent() {
         webView.loadDataWithBaseURL(null,message,"text/html","utf-8",null);
 
         if (getIntent().getBooleanExtra("no_timer",false)){
-
             card.setVisibility(View.GONE);
         }
         else {
             timeTotal= timeleftinmillisecond = paperTime;
-
 
             hour = findViewById(R.id.text_hour);
             minute = findViewById(R.id.text_minute);
@@ -135,8 +102,6 @@ public class Paper2Activity extends AppCompatActivity implements View.OnClickLis
             progressHour = findViewById(R.id.progress_hour);
             progressMinute = findViewById(R.id.progress_minute);
             progressSecond =  findViewById(R.id.progress_second);
-
-
 
             int time_hours = (int) timeTotal/3600000;
             int time_minutes = (int) (timeTotal - (time_hours)*3600000)/60000;
@@ -158,20 +123,6 @@ public class Paper2Activity extends AppCompatActivity implements View.OnClickLis
             progressSecond.setProgress(0);
 
             startCount();
-        }
-    }
-
-    private void getPaperText() {
-        InputStream is = this.getResources().openRawResource(R.raw.epreuve);
-        BufferedReader br = new BufferedReader(new InputStreamReader(is));
-        String readLine;
-
-        try {
-            while ((readLine = br.readLine()) != null) {
-                message += readLine;
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
         }
     }
 
@@ -273,7 +224,6 @@ public class Paper2Activity extends AppCompatActivity implements View.OnClickLis
 
     @Override
     public void onClick(View view) {
-
         Snackbar snackbar = Snackbar
                 .make(card, getString(R.string.finish_test), Snackbar.LENGTH_LONG)
                 .setAction("Yes", new View.OnClickListener() {
@@ -283,22 +233,23 @@ public class Paper2Activity extends AppCompatActivity implements View.OnClickLis
                             countDownTimer.cancel();
                             countDownTimer = null;
                         }
-                        List<SUBJECT_CORRECTION> corrections = dbManager.getSubjectCorrectionByPaper2Id(getIntent().getIntExtra("paper",0));
-                        if (corrections!=null){
-                            if (corrections.size()>0){
-                                Intent intent = new Intent(Paper2Activity.this, Paper2CorrectionActivity.class);
-                                intent.putExtra("title","Correction : "+getIntent().getStringExtra("title"));
-                                intent.putExtra("paper",paperId);
-                                startActivity(intent);
-                            }
+                        SUBJECT_CORRECTION corrections = dbManager.getSubjectCorrectionByPaper2Id(paperId);
+                        if (!corrections.equals(new SUBJECT_CORRECTION())){
+                            Intent intent = new Intent(Paper2Activity.this, Paper2CorrectionActivity.class);
+                            intent.putExtra("title","Correction : "+getIntent().getStringExtra("title"));
+                            intent.putExtra("paper",paperId);
+                            startActivity(intent);
                         }
                         else {
+                            if (appConfig.isInternetAvailable()){
+                                presenter = new Paper2Presenter(Paper2Activity.this, MainActivity.userKey);
+                                presenter.getPaperCorrection(paperId,getIntent().getBooleanExtra("no_timer",false));
+                            }
                             onErrorLoadind("The correction is not download, please connect your device to internet");
                         }
                     }
                 });
         snackbar.show();
-
     }
 
     @Override
@@ -318,34 +269,13 @@ public class Paper2Activity extends AppCompatActivity implements View.OnClickLis
     }
 
     @Override
-    public void onReceivePaper2(List<PAPER2> paper2) {
-        dbManager.insertListPaper2(paper2);
-        List<PAPER2> paper2s = dbManager.getPaper2BySubjectId(getIntent().getIntExtra("subject",0));
-        if (paper2s!=null)
-            if (paper2s.size()>0){
-                message = paper2s.get(0).getTEST_CONTENT();
-                int heure = Integer.valueOf(paper2s.get(0).getTEST_CHRONO().substring(0,2));
-                int minutes = Integer.valueOf(paper2s.get(0).getTEST_CHRONO().substring(3,5));
-                paperTime = (heure*60)+minutes;
-                paperId = paper2s.get(0).getPAPER2_ID();
-                presenter.getPaperCorrection(paper2s.get(0).getPAPER2_ID());
-            }
-    }
-
-    @Override
-    public void onReceivePaper3(List<PAPER3> paper3) {
-        dbManager.insertListPaper3(paper3);
-        List<PAPER3> paper3s = dbManager.getPaper3BySubjectId(getIntent().getIntExtra("subject",0));
-        if (paper3s!=null)
-            if (paper3s.size()>0){
-                message = paper3s.get(0).getTEST_CONTENT();
-                paperId = paper3s.get(0).getPAPER3_ID();
-                presenter.getPaperCorrection(paper3s.get(0).getPAPER3_ID());
-            }
-    }
-
-    @Override
-    public void onReceiveCorrection(List<SUBJECT_CORRECTION> corrections) {
+    public void onReceiveCorrection(SUBJECT_CORRECTION corrections) {
         dbManager.insertListSubjectCorrection(corrections);
+
+        //when download finish, show correction
+        Intent intent = new Intent(Paper2Activity.this, Paper2CorrectionActivity.class);
+        intent.putExtra("title","Correction : "+getIntent().getStringExtra("title"));
+        intent.putExtra("paper",paperId);
+        startActivity(intent);
     }
 }

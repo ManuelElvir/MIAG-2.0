@@ -33,6 +33,7 @@ import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class Paper1Activity extends AppCompatActivity implements View.OnClickListener, Paper1View {
 
@@ -42,7 +43,7 @@ public class Paper1Activity extends AppCompatActivity implements View.OnClickLis
     TextView hour, minute, second;
     private ProgressBar progressHour, progressMinute, progressSecond, progressBar;
     LinearLayout card;
-    int paperId, paperTime;
+    int paperId, tutoId;
     private long timeleftinmillisecond = 0, timeTotal, timeUsedMilliSecond=0;
     private CountDownTimer countDownTimer;
     private AudioPlayer audioPlayer = new AudioPlayer();
@@ -57,10 +58,11 @@ public class Paper1Activity extends AppCompatActivity implements View.OnClickLis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_paper1);
         String htmlTitle = "<p style=\"font-size:10px\">"+getIntent().getStringExtra("title")+"</p>";
-        getSupportActionBar().setTitle(Html.fromHtml(htmlTitle));
+        Objects.requireNonNull(getSupportActionBar()).setTitle(Html.fromHtml(htmlTitle));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
-        paperId = getIntent().getIntExtra("paper",1);
+        paperId = getIntent().getIntExtra("paper",0);
+        tutoId = getIntent().getIntExtra("tuto",0);
 
         progressBar = findViewById(R.id.progressBar);
         list = findViewById(R.id.listView);
@@ -74,7 +76,6 @@ public class Paper1Activity extends AppCompatActivity implements View.OnClickLis
         button.setOnClickListener(this);
 
         getData();
-        refreshContent();
     }
 
     private void getData() {
@@ -86,7 +87,7 @@ public class Paper1Activity extends AppCompatActivity implements View.OnClickLis
         if (appConfig.isInternetAvailable()){
             presenter = new Paper1Presenter(this, MainActivity.userKey);
             if (getIntent().getBooleanExtra("isChapter",false)){
-                presenter.getQuestionByChapterId(paperId,getIntent().getIntExtra("comp",0));
+                presenter.getQuestionByChapterId(tutoId);
             }else {
                 presenter.getQuestionByPaperId(paperId);
             }
@@ -128,14 +129,8 @@ public class Paper1Activity extends AppCompatActivity implements View.OnClickLis
                     }
                     qcms.add(qcm);
                 }
-
-        if (qcms.size()==0){
-            for (int i=0; i<40; i++){
-                qcms.add(new QCM(i,"Parmi la liste suivante, quel nombre n’est pas premier :","2","31","27","41",paperId,3));
-                results.add(new Answer_test(5));
-            }
-        }
         HideLoadding();
+        refreshContent();
     }
 
     private void refreshContent() {
@@ -144,7 +139,15 @@ public class Paper1Activity extends AppCompatActivity implements View.OnClickLis
             card.setVisibility(View.GONE);
         }
         else {
-            timeTotal = timeleftinmillisecond = 60000*getIntent().getIntExtra("time",12);
+            String chrono;
+            if (getIntent().getBooleanExtra("isChapter",false)){
+                chrono = dbManager.getPaper1ById(paperId).getTEST_CHRONO();
+                int heure = Integer.valueOf(chrono.substring(0,2));
+                int minutes = Integer.valueOf(chrono.substring(3,5));
+                timeTotal = timeleftinmillisecond = 60000*((heure*60)*minutes);
+            }else {
+                timeTotal = timeleftinmillisecond = 60000*(2*60);
+            }
 
             card = findViewById(R.id.card_timer);
             hour = findViewById(R.id.text_hour);
@@ -405,7 +408,7 @@ public class Paper1Activity extends AppCompatActivity implements View.OnClickLis
 
     @Override
     public void onReceiveQuestion(List<QUESTION> questions) {
-        dbManager.insertListQuestion(questions);
+        dbManager.insertListQuestion(questions,paperId,tutoId);
         if (getIntent().getBooleanExtra("isChapter",false)){
             this.questions =  dbManager.getQuestionByChapId(paperId);
         }else {
@@ -423,28 +426,10 @@ public class Paper1Activity extends AppCompatActivity implements View.OnClickLis
     @Override
     public void onReceiveAnwser(List<ANWSER> anwsers) {
         dbManager.insertListAnwser(anwsers);
-        QCM qcm = new QCM(questions.get(position).getQUEST_ID(),questions.get(position).getQUEST_LABEL());
-        for (int i =0; i<anwsers.size(); i++){
-            switch (i){
-                case 0:
-                    qcm.setAnswer1(anwsers.get(i).getANWS_CONTENT());
-                    break;
-                case 1:
-                    qcm.setAnswer2(anwsers.get(i).getANWS_CONTENT());
-                    break;
-                case 2:
-                    qcm.setAnswer3(anwsers.get(i).getANWS_CONTENT());
-                    break;
-                case 4:
-                    qcm.setAnswer4(anwsers.get(i).getANWS_CONTENT());
-                    break;
-            }
-            if (anwsers.get(i).getANWS_STATE()==1)
-                qcm.setCorrect_answer(i);
-        }
-        qcms.add(qcm);
         position++;
         if (position<questions.size()-1)
             presenter.getAnswer(questions.get(position).getQUEST_ID());
+        else
+            getDataToDataBase();
     }
 }
