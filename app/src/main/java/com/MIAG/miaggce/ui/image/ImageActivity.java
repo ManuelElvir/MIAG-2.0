@@ -5,18 +5,18 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.widget.ImageView;
-import android.widget.Toast;
-
 import com.MIAG.miaggce.R;
+import com.MIAG.miaggce.app.DBManager;
 import com.MIAG.miaggce.app.SimpleGestureFilter;
+import com.MIAG.miaggce.models.FILE;
 import com.squareup.picasso.Picasso;
-
-import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 public class ImageActivity extends AppCompatActivity implements
         SimpleGestureFilter.SimpleGestureListener{
     private SimpleGestureFilter detector;
-    private ArrayList<String> images;
+    private List<FILE> images;
     ImageView image;
     int position;
 
@@ -25,17 +25,18 @@ public class ImageActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_image);
 
-        getSupportActionBar().setTitle(getText(R.string.galerie));
+        Objects.requireNonNull(getSupportActionBar()).setTitle(getText(R.string.galerie));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
         position = getIntent().getIntExtra("position", 0);
-
-        images = getIntent().getStringArrayListExtra("images");
+        DBManager dbManager = new DBManager(this);
+        dbManager.open();
+        images = dbManager.listFileByType();
         image = findViewById(R.id.image);
 
         // Detect touched area
         detector = new SimpleGestureFilter(this, this);
-        Picasso.get().load(images.get(position).replace("s.jpg",".jpg")).into(image);
+        Picasso.get().load(images.get(position).getFILE_URL()).into(image);
     }
 
     @Override
@@ -61,7 +62,7 @@ public class ImageActivity extends AppCompatActivity implements
                 break;
 
         }
-        Picasso.get().load(images.get(position)).into(image);
+        Picasso.get().load(images.get(position).getFILE_URL()).into(image);
     }
 
 

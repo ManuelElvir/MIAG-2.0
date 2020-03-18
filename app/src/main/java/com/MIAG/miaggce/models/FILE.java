@@ -10,7 +10,7 @@ public class FILE {
     //private String FILE_NAME;
 
     @Expose
-    @SerializedName("FILE_URL")
+    @SerializedName("FILE_NAME")
     private String FILE_URL;
 
    // public String getFILE_NAME() {

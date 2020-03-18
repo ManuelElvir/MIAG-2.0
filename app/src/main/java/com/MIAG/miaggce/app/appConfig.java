@@ -11,7 +11,7 @@ import java.net.URL;
 
 public class appConfig {
     public static String SITE_URL = "https://miag.vitteck.com/api/";
-    public static String DEFAULT_KEY = "FgnUq8LCGnqclp8et6MfkTRiH4J71p";
+    public static String DEFAULT_KEY = "AVZakpq5CNWqCx2Z3LINeGefwuBqbP";
 
     public static boolean isInternetAvailable() {
         try {

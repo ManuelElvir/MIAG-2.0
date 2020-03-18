@@ -32,6 +32,7 @@ import com.MIAG.miaggce.models.PAPER2;
 import com.MIAG.miaggce.models.PAPER3;
 import com.MIAG.miaggce.models.QUESTION;
 import com.MIAG.miaggce.models.SUBJECT;
+import com.MIAG.miaggce.models.SUBJECT_CORRECTION;
 import com.MIAG.miaggce.ui.gce_a.GcePresenter;
 import com.MIAG.miaggce.ui.gce_a.GceView;
 import com.MIAG.miaggce.ui.paper2.Paper2Activity;
@@ -270,12 +271,23 @@ public class GceOFragment extends Fragment  implements GceView {
     }
 
     @Override
-    public void onReceiveQuestion(List<QUESTION> questions) {
-        dbManager.insertListQuestion(questions);
+    public void onReceiveQuestion(List<QUESTION> questions, int paperId) {
+        dbManager.insertListQuestion(questions, paperId,0);
         for (int i=0; i<questions.size(); i++){
             presenter.getAnswers(questions.get(i).getQUEST_ID());
         }
     }
+
+    @Override
+    public void onReceivePaper2Correction(SUBJECT_CORRECTION correction) {
+
+    }
+
+    @Override
+    public void onReceivePaper3Correction(SUBJECT_CORRECTION correction) {
+
+    }
+
 
     @Override
     public void onReceiveAnwser(List<ANWSER> anwsers) {

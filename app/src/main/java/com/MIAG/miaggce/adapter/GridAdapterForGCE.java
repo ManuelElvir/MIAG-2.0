@@ -53,7 +53,7 @@ public class GridAdapterForGCE extends BaseAdapter {
         TextView caps = v.findViewById(R.id.text_caps);
         int lastPosition = 0;
         StringBuilder text_caps = new StringBuilder();
-        while (lastPosition>=0){
+        while (lastPosition>=0 && list.get(i).getSJ_NAME().length()>lastPosition+2){
             if(lastPosition>0){
                 if(list.get(i).getSJ_NAME().substring(lastPosition+1, lastPosition + 2).equals(list.get(i).getSJ_NAME().substring(lastPosition+1, lastPosition + 2).toUpperCase()))
                     text_caps.append(list.get(i).getSJ_NAME().substring(lastPosition+1, lastPosition + 2));

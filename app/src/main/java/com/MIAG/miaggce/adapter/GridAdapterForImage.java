@@ -2,27 +2,26 @@ package com.MIAG.miaggce.adapter;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.MIAG.miaggce.R;
+import com.MIAG.miaggce.models.FILE;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class GridAdapterForImage extends BaseAdapter {
-    private List<String> images;
+    private List<FILE> images;
     private Context context;
 
-    public GridAdapterForImage(Context applicationContext, List<String> images) {
+    public GridAdapterForImage(Context applicationContext, List<FILE> images) {
         this.context = applicationContext;
-        this.images = new ArrayList<String>();
+        this.images = new ArrayList<>();
         this.images = images;
 
     }
@@ -51,7 +50,7 @@ public class GridAdapterForImage extends BaseAdapter {
             v = inflater.inflate(R.layout.image_grid_item, null);
         }
         ImageView imageViewBackground = v.findViewById(R.id.image);
-        Picasso.get().load(images.get(i)).into(imageViewBackground);
+        Picasso.get().load(images.get(i).getFILE_URL()).into(imageViewBackground);
         return v;
     }
 }

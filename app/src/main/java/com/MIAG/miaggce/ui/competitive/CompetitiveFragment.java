@@ -79,7 +79,6 @@ public class CompetitiveFragment extends Fragment implements CompetitiveView {
             }
         });
 
-        refreshContent();
         getData();
         return root;
     }
