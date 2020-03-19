@@ -6,7 +6,7 @@ import com.google.gson.annotations.SerializedName;
 public class PAPER2 {
     @Expose
     @SerializedName("PAPER2_ID")
-    private int PAPER2_ID;
+    private int PAPER2_ID = 0;
 
     @Expose
     @SerializedName("SJ_ID")

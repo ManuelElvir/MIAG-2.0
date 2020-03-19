@@ -21,6 +21,7 @@ import android.widget.GridView;
 import android.widget.PopupMenu;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.MIAG.miaggce.MainActivity;
 import com.MIAG.miaggce.R;
@@ -125,36 +126,39 @@ public class GceOFragment extends Fragment  implements GceView {
                 }
                 else{
                     if(item.getTitle() == getText(R.string.paper_1)){
-                        List<PAPER1> paper1s = dbManager.getPaper1BySubjectAndExam(subject,exam);
-                        if(paper1s==null){
+                        final PAPER1 paper1 = dbManager.getPaper1BySubjectAndExam(subject,exam);
+                        if(paper1.getPAPER1_ID()==0){
                             onErrorLoadind(getString(R.string.paper_not_exist));
                         }else {
-                            if (paper1s.isEmpty())
-                                onErrorLoadind(getString(R.string.paper_not_exist));
-                            else
-                                showDialog(paper1s.get(0).getTEST_NAME(),PAPER.PAPER1,paper1s.get(0).getPAPER1_ID());
+                            if(dbManager.getQuestionCountForPaper1(paper1.getPAPER1_ID())>0)
+                                showDialog(paper1.getTEST_NAME(),PAPER.PAPER1,paper1.getPAPER1_ID());
+                            else{
+                                Snackbar snackbar = Snackbar
+                                        .make(progressBar, "The Question are not Downloaded", Snackbar.LENGTH_LONG)
+                                        .setAction("Download", new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View view) {
+                                                presenter.getQuestions(paper1.getPAPER1_ID());
+                                            }
+                                        });
+                                snackbar.show();
+                            }
                         }
                     }
                     else if(item.getTitle() == getText(R.string.paper_2)){
-                        List<PAPER2> paper2s = dbManager.getPaper2BySubjectAndExam(subject,exam);
-                        if(paper2s==null){
+                        PAPER2 paper2 = dbManager.getPaper2BySubjectAndExam(subject,exam);
+                        if(paper2.getPAPER2_ID()==0){
                             onErrorLoadind(getString(R.string.paper_not_exist));
                         }else {
-                            if (paper2s.isEmpty())
-                                onErrorLoadind(getString(R.string.paper_not_exist));
-                            else
-                                showDialog(paper2s.get(0).getTEST_NAME(),PAPER.PAPER2,paper2s.get(0).getPAPER2_ID());
+                            showDialog(paper2.getTEST_NAME(),PAPER.PAPER2,paper2.getPAPER2_ID());
                         }
                     }
                     else if(item.getTitle() == getText(R.string.paper_3)){
-                        List<PAPER3> paper3s = dbManager.getPaper3BySubjectAndExam(subject,exam);
-                        if(paper3s==null){
+                        PAPER3 paper3 = dbManager.getPaper3BySubjectAndExam(subject,exam);
+                        if(paper3.getPAPER3_ID()==0){
                             onErrorLoadind(getString(R.string.paper_not_exist));
                         }else {
-                            if (paper3s.isEmpty())
-                                onErrorLoadind(getString(R.string.paper_not_exist));
-                            else
-                                showDialog(paper3s.get(0).getTEST_NAME(),PAPER.PAPER3,paper3s.get(0).getPAPER3_ID());
+                            showDialog(paper3.getTEST_NAME(),PAPER.PAPER3,paper3.getPAPER3_ID());
                         }
                     }
                 }
@@ -244,7 +248,7 @@ public class GceOFragment extends Fragment  implements GceView {
 
     @Override
     public void onErrorLoadind(String cause) {
-        Snackbar.make(progressBar,cause,Snackbar.LENGTH_SHORT).show();
+        Toast.makeText(getContext(), cause, Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -295,13 +299,9 @@ public class GceOFragment extends Fragment  implements GceView {
     }
 
     private void starGetQuestion() {
-        for (int i =0; i<subjects_list.size(); i++){
-            List<PAPER1> paper1s = dbManager.getPaper1BySubjectAndExam(subjects_list.get(i).getSJ_ID(),0);
-            if (paper1s !=null){
-                if (paper1s.size()>0){
-                    presenter.getQuestions(paper1s.get(0).getPAPER1_ID());
-                }
-            }
+        List<PAPER1> paper1s = dbManager.fetchPaper1();
+        for (int i =0; i<paper1s.size(); i++){
+            presenter.getQuestions(paper1s.get(i).getPAPER1_ID());
         }
     }
 }

@@ -7,7 +7,7 @@ public class PAPER1 {
 
     @Expose
     @SerializedName("PAPER1_ID")
-    private int PAPER1_ID;
+    private int PAPER1_ID =0;
     @Expose
     @SerializedName("TEST_NAME")
     private String TEST_NAME;

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:paddingStart="40dp"
     android:paddingEnd="40dp"
     android:background="@color/color_edittext_background"
@@ -25,7 +26,7 @@
                 android:layout_height="120dp"
                 android:layout_marginTop="20dp"
                 app:civ_border_width="0dp"
-                android:src="@drawable/ic_user_profile_default"/>
+                android:src="@drawable/default_student"/>
 
             <TextView
                 android:id="@+id/textName"
@@ -64,7 +65,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
                 android:orientation="horizontal">
-                <com.google.android.material.card.MaterialCardView
+                <androidx.cardview.widget.CardView
                     android:layout_width="35dp"
                     android:layout_height="35dp"
                     app:cardCornerRadius="20dp">
@@ -74,7 +75,7 @@
                         android:layout_height="20dp"
                         android:src="@drawable/ic_person"
                         android:contentDescription="@string/username" />
-                </com.google.android.material.card.MaterialCardView>
+                </androidx.cardview.widget.CardView>
                 <EditText
                     android:id="@+id/name"
                     android:layout_width="match_parent"
@@ -87,7 +88,9 @@
                     android:textColor="@color/text_color"
                     android:hint="@string/username"
                     android:inputType="textPersonName"
-                    android:layout_marginLeft="20dp" />
+                    android:layout_marginLeft="20dp"
+                    tools:ignore="RtlHardcoded"
+                    android:importantForAutofill="no" />
             </LinearLayout>
 
             <LinearLayout
@@ -95,7 +98,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
                 android:orientation="horizontal">
-                <com.google.android.material.card.MaterialCardView
+                <androidx.cardview.widget.CardView
                     android:layout_width="35dp"
                     android:layout_height="35dp"
                     app:cardCornerRadius="20dp">
@@ -105,8 +108,9 @@
                         android:layout_height="20dp"
                         android:src="@drawable/ic_password"
                         android:contentDescription="@string/password" />
-                </com.google.android.material.card.MaterialCardView>
+                </androidx.cardview.widget.CardView>
                 <EditText
+                    android:importantForAutofill="no"
                     android:id="@+id/password"
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
@@ -117,8 +121,7 @@
                     android:textColorHint="@color/text_color"
                     android:textColor="@color/text_color"
                     android:hint="@string/password"
-                    android:inputType="textPassword"
-                    android:layout_marginLeft="20dp" />
+                    android:inputType="textPassword" />
             </LinearLayout>
 
             <LinearLayout
@@ -126,7 +129,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
                 android:orientation="horizontal">
-                <com.google.android.material.card.MaterialCardView
+                <androidx.cardview.widget.CardView
                     android:layout_width="35dp"
                     android:layout_height="35dp"
                     app:cardCornerRadius="20dp">
@@ -136,7 +139,7 @@
                         android:layout_height="20dp"
                         android:src="@drawable/ic_email"
                         android:contentDescription="@string/email" />
-                </com.google.android.material.card.MaterialCardView>
+                </androidx.cardview.widget.CardView>
 
                 <EditText
                     android:id="@+id/email"
@@ -150,7 +153,9 @@
                     android:inputType="textWebEmailAddress"
                     android:textColor="@color/text_color"
                     android:textColorHint="@color/text_color"
-                    android:textSize="15sp" />
+                    android:textSize="15sp"
+                    tools:ignore="RtlHardcoded"
+                    android:importantForAutofill="no" />
             </LinearLayout>
 
             <View
@@ -167,17 +172,18 @@
                 android:layout_marginTop="20dp"
                 android:layout_marginBottom="10dp"
                 android:fontFamily="sans-serif-light"
-                android:text="Contact details"
+                android:text="@string/contact_details"
                 android:layout_gravity="start"
                 android:textSize="13sp"
-                android:textStyle="bold"/>
+                android:textStyle="bold"
+                android:importantForAutofill="no"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
                 android:orientation="horizontal">
-                <com.google.android.material.card.MaterialCardView
+                <androidx.cardview.widget.CardView
                     android:layout_width="35dp"
                     android:layout_height="35dp"
                     app:cardCornerRadius="20dp">
@@ -185,8 +191,9 @@
                         android:layout_gravity="center"
                         android:layout_width="20dp"
                         android:layout_height="20dp"
-                        android:src="@drawable/ic_phone"/>
-                </com.google.android.material.card.MaterialCardView>
+                        android:src="@drawable/ic_phone"
+                        android:contentDescription="@string/phone_number" />
+                </androidx.cardview.widget.CardView>
                 <EditText
                     android:id="@+id/number"
                     android:layout_width="match_parent"
@@ -199,7 +206,9 @@
                     android:textColor="@color/text_color"
                     android:hint="@string/phone_number"
                     android:inputType="numberSigned"
-                    android:layout_marginLeft="20dp" />
+                    android:layout_marginLeft="20dp"
+                    tools:ignore="RtlHardcoded"
+                    android:importantForAutofill="no" />
             </LinearLayout>
 
             <View
@@ -216,7 +225,7 @@
                 android:layout_marginTop="20dp"
                 android:layout_marginBottom="10dp"
                 android:fontFamily="sans-serif-light"
-                android:text="Parents"
+                android:text="@string/parents"
                 android:layout_gravity="start"
                 android:textSize="13sp"
                 android:textStyle="bold"/>
@@ -226,7 +235,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
                 android:orientation="horizontal">
-                <com.google.android.material.card.MaterialCardView
+                <androidx.cardview.widget.CardView
                     android:layout_width="35dp"
                     android:layout_height="35dp"
                     app:cardCornerRadius="20dp">
@@ -234,8 +243,9 @@
                         android:layout_gravity="center"
                         android:layout_width="20dp"
                         android:layout_height="20dp"
-                        android:src="@drawable/ic_perm_phone"/>
-                </com.google.android.material.card.MaterialCardView>
+                        android:src="@drawable/ic_perm_phone"
+                        android:contentDescription="@string/phone_number"/>
+                </androidx.cardview.widget.CardView>
                 <EditText
                     android:id="@+id/parent1"
                     android:layout_width="match_parent"
@@ -248,7 +258,9 @@
                     android:textColor="@color/text_color"
                     android:hint="@string/name_of_parent_1"
                     android:inputType="numberSigned"
-                    android:layout_marginLeft="20dp" />
+                    android:layout_marginLeft="20dp"
+                    tools:ignore="RtlHardcoded"
+                    android:importantForAutofill="no" />
             </LinearLayout>
 
             <LinearLayout
@@ -256,7 +268,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
                 android:orientation="horizontal">
-                <com.google.android.material.card.MaterialCardView
+                <androidx.cardview.widget.CardView
                     android:layout_width="35dp"
                     android:layout_height="35dp"
                     app:cardCornerRadius="20dp">
@@ -264,8 +276,9 @@
                         android:layout_gravity="center"
                         android:layout_width="20dp"
                         android:layout_height="20dp"
-                        android:src="@drawable/ic_perm_phone"/>
-                </com.google.android.material.card.MaterialCardView>
+                        android:src="@drawable/ic_perm_phone"
+                        android:contentDescription="@string/phone_number"/>
+                </androidx.cardview.widget.CardView>
                 <EditText
                     android:id="@+id/parent2"
                     android:layout_width="match_parent"
@@ -278,7 +291,9 @@
                     android:textColor="@color/text_color"
                     android:hint="@string/name_of_parent_2"
                     android:inputType="numberSigned"
-                    android:layout_marginLeft="20dp" />
+                    android:layout_marginLeft="20dp"
+                    tools:ignore="RtlHardcoded"
+                    android:importantForAutofill="no" />
             </LinearLayout>
 
             <View
@@ -302,7 +317,8 @@
                     android:text="@string/save"
                     android:textAllCaps="false"
                     android:textColor="@color/color_white"
-                    android:background="@drawable/button_background"/>
+                    android:background="@drawable/button_background"
+                    tools:ignore="ButtonStyle" />
                 <Button
                     android:id="@+id/discard"
                     android:layout_width="70dp"
@@ -312,7 +328,8 @@
                     android:textAllCaps="false"
                     android:textColor="@color/text_color"
                     android:background="@drawable/background_button_white"
-                    android:layout_marginLeft="10dp" />
+                    android:layout_marginLeft="10dp"
+                    tools:ignore="ButtonStyle,RtlHardcoded" />
             </LinearLayout>
 
             <LinearLayout
@@ -335,7 +352,7 @@
                     android:layout_marginTop="20dp"
                     android:layout_marginBottom="10dp"
                     android:fontFamily="sans-serif-light"
-                    android:text="Registration"
+                    android:text="@string/registration"
                     android:textSize="13sp"
                     android:textStyle="bold" />
 
@@ -344,7 +361,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="10dp"
                     android:orientation="horizontal">
-                    <com.google.android.material.card.MaterialCardView
+                    <androidx.cardview.widget.CardView
                         android:layout_width="35dp"
                         android:layout_height="35dp"
                         app:cardCornerRadius="20dp">
@@ -352,8 +369,9 @@
                             android:layout_gravity="center"
                             android:layout_width="20dp"
                             android:layout_height="20dp"
-                            android:src="@drawable/ic_key"/>
-                    </com.google.android.material.card.MaterialCardView>
+                            android:src="@drawable/ic_key"
+                            android:contentDescription="@string/registration" />
+                    </androidx.cardview.widget.CardView>
                     <EditText
                         android:id="@+id/code"
                         android:layout_width="match_parent"
@@ -366,7 +384,9 @@
                         android:textColor="@color/text_color"
                         android:hint="@string/enter_registration_code"
                         android:inputType="text"
-                        android:layout_marginLeft="20dp" />
+                        android:layout_marginLeft="20dp"
+                        tools:ignore="RtlHardcoded"
+                        android:importantForAutofill="no" />
                 </LinearLayout>
 
                 <Button
@@ -380,7 +400,8 @@
                     android:drawableLeft="@drawable/ic_key"
                     android:text="@string/register"
                     android:textAllCaps="false"
-                    android:textColor="@color/text_color" />
+                    android:textColor="@color/text_color"
+                    tools:ignore="RtlHardcoded" />
             </LinearLayout>
 
 

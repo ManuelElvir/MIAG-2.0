@@ -17,15 +17,15 @@ public class QUESTION {
     private int PAPER1_ID = 0;
 
     @Expose
-    @SerializedName("CHAP_ID")
-    private int CHAP_ID = 0;
+    @SerializedName("TUT_ID")
+    private int TUT_ID = 0;
 
-    public int getCHAP_ID() {
-        return CHAP_ID;
+    public int getTUT_ID() {
+        return TUT_ID;
     }
 
-    public void setCHAP_ID(int CHAP_ID) {
-        this.CHAP_ID = CHAP_ID;
+    public void setTUT_ID(int TUT_ID) {
+        this.TUT_ID = TUT_ID;
     }
 
     public int getPAPER1_ID() {

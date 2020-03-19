@@ -37,8 +37,8 @@ import static com.MIAG.miaggce.MainActivity.userKey;
 
 public class GalleryFragment extends Fragment {
 
-    private List<FILE> images;
     private ExpandableHeightGridView gridView;
+    private SliderView sliderView;
     private DBManager dbManager;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -48,11 +48,7 @@ public class GalleryFragment extends Fragment {
 
         //for slide
 
-        SliderView sliderView = root.findViewById(R.id.imageSlider);
-
-        SliderAdapterImage adapter = new SliderAdapterImage(getContext());
-
-        sliderView.setSliderAdapter(adapter);
+        sliderView = root.findViewById(R.id.imageSlider);
 
         sliderView.setIndicatorAnimation(IndicatorAnimations.WORM); //set indicator animation by using SliderLayout.IndicatorAnimations. :WORM or THIN_WORM or COLOR or DROP or FILL or NONE or SCALE or SCALE_DOWN or SLIDE and SWAP!!
         sliderView.setSliderTransformAnimation(SliderAnimations.SIMPLETRANSFORMATION);
@@ -87,7 +83,10 @@ public class GalleryFragment extends Fragment {
     }
 
     private void refreshContent() {
-        images = dbManager.listFileByType();
+        List<FILE> images = dbManager.listFileByType();
+
+        SliderAdapterImage adapter = new SliderAdapterImage(getContext(), images);
+        sliderView.setSliderAdapter(adapter);
 
         GridAdapterForImage gridAdapter = new GridAdapterForImage(this.getContext(), images);
         gridView.setAdapter(gridAdapter);

@@ -2,19 +2,14 @@ package com.MIAG.miaggce.adapter;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
-import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.MIAG.miaggce.R;
-import com.MIAG.miaggce.models.TeamMember;
+import com.MIAG.miaggce.models.STAFFMEMBER;
 import com.mikhaellopez.circularimageview.CircularImageView;
 import com.squareup.picasso.Picasso;
 
@@ -22,11 +17,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ListAdapterForStaff extends BaseAdapter {
-    private List<TeamMember> list;
+    private List<STAFFMEMBER> list;
     private Context context;
     private ItemClicklistener itemClicklistener;
 
-    public ListAdapterForStaff(Context applicationContext, List<TeamMember> list, ItemClicklistener itemClicklistener) {
+    public ListAdapterForStaff(Context applicationContext, List<STAFFMEMBER> list, ItemClicklistener itemClicklistener) {
         this.context = applicationContext;
         this.list = new ArrayList<>();
         this.list = list;
@@ -60,12 +55,12 @@ public class ListAdapterForStaff extends BaseAdapter {
         TextView function = v.findViewById(R.id.function);
         Button whatsapp = v.findViewById(R.id.contact);
         Button facebook = v.findViewById(R.id.contact_2);
-        CircularImageView image = (CircularImageView) v.findViewById(R.id.image);
+        CircularImageView image = v.findViewById(R.id.image);
 
-        name.setText(list.get(i).getName());
-        function.setText(list.get(i).getFunction());
-        function.setText(list.get(i).getFunction());
-        //Picasso.get().load("https://i.imgur.com/oW1dGDI.jpg").into(image);
+        name.setText(list.get(i).getSM_NAME());
+        function.setText(list.get(i).getSM_FUNCTION());
+        if (list.get(i).getSM_IMAGE()!=null&&  !list.get(i).getSM_IMAGE().isEmpty())
+            Picasso.get().load(list.get(i).getSM_IMAGE()).into(image);
         final int position = i;
         whatsapp.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -85,7 +80,7 @@ public class ListAdapterForStaff extends BaseAdapter {
 
 
     public interface ItemClicklistener {
-        public void onItemClick(View view, int position);
-        public void onItemClick2(View view, int position);
+        void onItemClick(View view, int position);
+        void onItemClick2(View view, int position);
     }
 }

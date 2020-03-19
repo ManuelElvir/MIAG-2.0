@@ -17,6 +17,7 @@ import android.widget.GridView;
 import android.widget.PopupMenu;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
@@ -256,7 +257,7 @@ public class CompetitiveFragment extends Fragment implements CompetitiveView {
 
     @Override
     public void onErrorLoadind(String cause) {
-        Snackbar.make(progressBar,cause,Snackbar.LENGTH_SHORT).show();
+        Toast.makeText(getContext(), cause, Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -282,8 +283,8 @@ public class CompetitiveFragment extends Fragment implements CompetitiveView {
     }
 
     @Override
-    public void onReceiveQuestion(List<QUESTION> questions, int chapterId) {
-        dbManager.insertListQuestion(questions,0, chapterId);
+    public void onReceiveQuestion(List<QUESTION> questions, int tutId) {
+        dbManager.insertListQuestion(questions,0, tutId);
         for (int i=0; i<questions.size(); i++){
             competitivePresenter.getAnswers(questions.get(i).getQUEST_ID());
         }

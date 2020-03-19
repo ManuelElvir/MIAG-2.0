@@ -167,9 +167,6 @@ public class AccountFragment extends Fragment implements AccountView {
 
     @Override
     public void onRegisterSuccess() {
-        //NestedScrollView scrollView = root.findViewById(R.id.scrollView);
-        //scrollView.invalidate();
-        //scrollView.requestLayout();
         SharedPreferences.Editor editor = pref.edit();
         editor.putBoolean(ENABLE, true);
         editor.apply();
