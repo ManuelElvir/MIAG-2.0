@@ -20,9 +20,9 @@ import retrofit2.Response;
         apiInterface = ApiClient.getApiClient(userKey).create(ApiInterface.class);
     }
 
-    void updateUser(int STD_ID, String STD_NAME, String STD_NUMBER, String STD_PASSWORD, String STD_EMAIL, String STD_TEL_PARENT1, String STD_TEL_PARENT2){
+    void updateUser(int STD_ID, String STD_NAME, String STD_NUMBER, String STD_PASSWORD, String STD_EMAIL, String STD_TEL_PARENT1, String STD_TEL_PARENT2, int STATE){
         view.onShowLoading();
-        Call<RESPONSE> call = apiInterface.updateStudent(STD_ID,STD_NAME,STD_NUMBER,STD_PASSWORD,STD_EMAIL,STD_TEL_PARENT1,STD_TEL_PARENT2);
+        Call<RESPONSE> call = apiInterface.updateStudent(STD_ID,STD_NAME,STD_NUMBER,STD_PASSWORD,STD_EMAIL,STD_TEL_PARENT1,STD_TEL_PARENT2, STATE);
         call.enqueue(new Callback<RESPONSE>() {
             @Override
             public void onResponse(@NotNull Call<RESPONSE> call, @NotNull Response<RESPONSE> response) {

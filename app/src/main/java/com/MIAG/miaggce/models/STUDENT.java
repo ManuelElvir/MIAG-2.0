@@ -32,6 +32,10 @@ public class STUDENT {
     @SerializedName("STD_STATE")
     private String STD_STATE;
 
+    @Expose
+    @SerializedName("ALL_FUNC_KEY")
+    private String ALL_FUNC_KEY;
+
     public String getSTD_ID() {
         return STD_ID;
     }
@@ -86,5 +90,13 @@ public class STUDENT {
 
     public void setSTD_STATE(String STD_STATE) {
         this.STD_STATE = STD_STATE;
+    }
+
+    public String getALL_FUNC_KEY() {
+        return ALL_FUNC_KEY;
+    }
+
+    public void setALL_FUNC_KEY(String ALL_FUNC_KEY) {
+        this.ALL_FUNC_KEY = ALL_FUNC_KEY;
     }
 }

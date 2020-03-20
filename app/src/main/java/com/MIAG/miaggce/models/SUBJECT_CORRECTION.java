@@ -6,23 +6,19 @@ import com.google.gson.annotations.SerializedName;
 public class SUBJECT_CORRECTION {
 
     @Expose
-    @SerializedName("SC_ID")
+    @SerializedName("TC_ID")
     private int SC_ID;
 
     @Expose
-    @SerializedName("SC_CONTENT")
+    @SerializedName("TC_CONTENT")
     private String SC_CONTENT;
 
     @Expose
-    @SerializedName("SC_DATE")
-    private String SC_DATE;
-
-    @Expose
-    @SerializedName("SC_PAPER1_ID")
+    @SerializedName("PAPER2_ID")
     private int SC_PAPER1_ID=0;
 
     @Expose
-    @SerializedName("SC_PAPER2_ID")
+    @SerializedName("PAPER3_ID")
     private int SC_PAPER2_ID=0;
 
     public int getSC_ID() {
@@ -39,14 +35,6 @@ public class SUBJECT_CORRECTION {
 
     public void setSC_CONTENT(String SC_CONTENT) {
         this.SC_CONTENT = SC_CONTENT;
-    }
-
-    public String getSC_DATE() {
-        return SC_DATE;
-    }
-
-    public void setSC_DATE(String SC_DATE) {
-        this.SC_DATE = SC_DATE;
     }
 
     public int getSC_PAPER1_ID() {

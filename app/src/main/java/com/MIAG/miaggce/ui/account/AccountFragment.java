@@ -3,6 +3,7 @@ package com.MIAG.miaggce.ui.account;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +17,7 @@ import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import com.MIAG.miaggce.MainActivity;
 import com.MIAG.miaggce.R;
+import com.MIAG.miaggce.app.appConfig;
 import com.MIAG.miaggce.models.RESPONSE;
 import com.google.android.material.snackbar.Snackbar;
 import java.util.Objects;
@@ -28,6 +30,7 @@ import static com.MIAG.miaggce.ui.splash.SplashScreen.PARENT1;
 import static com.MIAG.miaggce.ui.splash.SplashScreen.PARENT2;
 import static com.MIAG.miaggce.ui.splash.SplashScreen.PASSWORD;
 import static com.MIAG.miaggce.ui.splash.SplashScreen.PREFERENCE;
+import static com.MIAG.miaggce.ui.splash.SplashScreen.REGISTER_KEY;
 
 public class AccountFragment extends Fragment implements AccountView {
 
@@ -81,18 +84,36 @@ public class AccountFragment extends Fragment implements AccountView {
         register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                presenter.register(pref.getInt(ID,0),code.getText().toString());
+                if(appConfig.isInternetAvailable())
+                    presenter.register(pref.getInt(ID,0),code.getText().toString());
+                else {
+                    if(pref.getString(REGISTER_KEY,"").equals(code.getText().toString()))
+                        onRegisterSuccess();
+                    else
+                        onReceiveError("This register key is not correct");
+                }
             }
         });
         save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                presenter.updateUser(pref.getInt(ID,0),name.getText().toString(),
+                int state = 0;
+                if(pref.getBoolean(ENABLE,false))
+                    state = 1;
+
+                StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
+                        .permitAll().build();
+                StrictMode.setThreadPolicy(policy);
+                if(appConfig.isInternetAvailable())
+                    presenter.updateUser(pref.getInt(ID,0),name.getText().toString(),
                         number.getText().toString(),
                         password.getText().toString(),
                         email.getText().toString(),
                         parent1.getText().toString(),
-                        parent2.getText().toString());
+                        parent2.getText().toString(), state);
+                else {
+                    onUpdateSuccess(null);
+                }
             }
         });
 

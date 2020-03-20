@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -29,6 +30,7 @@ import com.MIAG.miaggce.R;
 import com.MIAG.miaggce.adapter.GridAdapterForCOMP;
 import com.MIAG.miaggce.app.DBManager;
 import com.MIAG.miaggce.app.DownloadFileFromURL;
+import com.MIAG.miaggce.app.appConfig;
 import com.MIAG.miaggce.models.ANWSER;
 import com.MIAG.miaggce.models.CHAPTER;
 import com.MIAG.miaggce.models.COMPETITIVE;
@@ -160,19 +162,18 @@ public class CompetitiveFragment extends Fragment implements CompetitiveView {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
                 if (item.getItemId() == MENU_1_ITEM){
-                    List<REQUIEREMENT> requierements = dbManager.getRequierementByCompId(competitives.get(i).getCOMP_ID());
-                    if (requierements==null){
+                    REQUIEREMENT requierement = dbManager.getRequierementByCompId(competitives.get(i).getCOMP_ID());
+                    if (requierement.getREQ_ID()==0){
                         onErrorLoadind("This requierement is not download, please connect your device to internet");
                         competitivePresenter.getRequierement(competitives.get(i).getCOMP_ID());
-                    }else if (requierements.size()==0)
-                        onErrorLoadind("This requierement is not download, please connect your device to internet");
+                    }
                     else {
-                        if (requierements.get(0).getREQ_CONTENT().isEmpty()){
-                            DownloadFileFromURL downloadFileFromURL = new DownloadFileFromURL("Requierement for "+competitives.get(i),requierements.get(0).getREQ_NAME(),getContext(),CompetitiveFragment.this);
-                            downloadFileFromURL.execute(requierements.get(0).getREQ_FILE());
+                        if (requierement.getREQ_CONTENT().isEmpty()){
+                            DownloadFileFromURL downloadFileFromURL = new DownloadFileFromURL("Requierement for "+competitives.get(i),requierement.getREQ_NAME(),getContext(),CompetitiveFragment.this);
+                            downloadFileFromURL.execute(requierement.getREQ_FILE());
                         }else{
                             Intent intentReq = new Intent(getActivity(),RequierementActivity.class);
-                            intentReq.putExtra("req",requierements.get(0).getREQ_ID());
+                            intentReq.putExtra("req",requierement.getREQ_ID());
                             intentReq.putExtra("isFile",true);
                             startActivity(intentReq);
                         }
@@ -181,7 +182,16 @@ public class CompetitiveFragment extends Fragment implements CompetitiveView {
                 else if(item.getItemId() >= 10000){
                     int tutorialid = item.getItemId()-10000;
                     TUTORIAL tutorial = dbManager.getTutorialById(tutorialid);
-                    showDialog(tutorial.getTUTO_NAME(),tutorial.getTUTO_ID());
+                    if(dbManager.getQuestionCountTuto(tutorial.getTUTO_ID())>0)
+                        showDialog(tutorial.getTUTO_NAME(),tutorial.getTUTO_ID());
+                    else {
+                        onErrorLoadind("No question for this tutorial");
+                        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
+                                .permitAll().build();
+                        StrictMode.setThreadPolicy(policy);
+                        if(appConfig.isInternetAvailable())
+                            competitivePresenter.getQuestions(tutorial.getTUTO_ID());
+                    }
                 }
                 return false;
             }

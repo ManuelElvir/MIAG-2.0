@@ -7,7 +7,7 @@ public class REQUIEREMENT {
 
     @Expose
     @SerializedName("REQ_ID")
-    private int REQ_ID;
+    private int REQ_ID=0;
 
     @Expose
     @SerializedName("COMP_ID")

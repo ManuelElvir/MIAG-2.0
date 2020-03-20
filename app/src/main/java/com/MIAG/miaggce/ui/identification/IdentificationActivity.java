@@ -37,6 +37,7 @@ import static com.MIAG.miaggce.ui.splash.SplashScreen.NUMBER;
 import static com.MIAG.miaggce.ui.splash.SplashScreen.PARENT1;
 import static com.MIAG.miaggce.ui.splash.SplashScreen.PARENT2;
 import static com.MIAG.miaggce.ui.splash.SplashScreen.PASSWORD;
+import static com.MIAG.miaggce.ui.splash.SplashScreen.REGISTER_KEY;
 import static com.MIAG.miaggce.ui.splash.SplashScreen.USERKEY;
 
 /**
@@ -161,7 +162,7 @@ public class IdentificationActivity extends AppCompatActivity {
                         boolean enable = false;
                         if (response.body().getStudent().getSTD_STATE()=="1")
                             enable =true;
-                        saveConnexion(response.body().getStudent().getSTD_ID(),response.body().getStudent().getSTD_NAME(), response.body().getStudent().getSTD_EMAIL(), password,response.body().getStudent().getSTD_EMAIL(), response.body().getStudent().getSTD_TEL_PARENT1(),response.body().getStudent().getSTD_TEL_PARENT2(),enable, response.body().getUser_Key());
+                        saveConnexion(response.body().getStudent().getSTD_ID(),response.body().getStudent().getSTD_NAME(), response.body().getStudent().getSTD_EMAIL(), password,response.body().getStudent().getSTD_EMAIL(), response.body().getStudent().getSTD_TEL_PARENT1(),response.body().getStudent().getSTD_TEL_PARENT2(),enable, response.body().getUser_Key(), response.body().getStudent().getALL_FUNC_KEY());
                     }
                     else{
                         errorReponse(response.body().getCause());
@@ -189,7 +190,7 @@ public class IdentificationActivity extends AppCompatActivity {
                 revertAnimation();
                 if (response.isSuccessful() && response.body()!=null){
                     if (response.body().getSuccess()){
-                        saveConnexion(response.body().getStudent().getSTD_ID(),name, number, password,"", "","",false, response.body().getUser_Key());
+                        saveConnexion(response.body().getStudent().getSTD_ID(),name, number, password,"", "","",false, response.body().getUser_Key(), response.body().getStudent().getALL_FUNC_KEY());
                     }
                     else
                         errorReponse(response.body().getCause());
@@ -229,7 +230,7 @@ public class IdentificationActivity extends AppCompatActivity {
         snackbar.show();
     }
 
-    private void saveConnexion(String id, String name, String number, String password, String email, String parent1, String parent2, boolean enable, String key){
+    private void saveConnexion(String id, String name, String number, String password, String email, String parent1, String parent2, boolean enable, String key, String registerKey){
         SharedPreferences pref = getApplicationContext().getSharedPreferences(PREFERENCE, 0); // 0 - for private mode
         @SuppressLint("CommitPrefEdits") SharedPreferences.Editor editor = pref.edit();
         editor.putString(ID, id);
@@ -241,6 +242,7 @@ public class IdentificationActivity extends AppCompatActivity {
         editor.putString(PARENT1, parent1);
         editor.putString(PARENT2, parent2);
         editor.putBoolean(ENABLE, enable);
+        editor.putString(REGISTER_KEY, registerKey);
         editor.apply();
 
 

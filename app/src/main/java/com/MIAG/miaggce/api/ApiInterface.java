@@ -75,7 +75,7 @@ public interface ApiInterface {
 
     @GET("TUTORIAL/GET")
     Call<List<TUTORIAL>> getTutorial(
-            @Query("competitiveid") int COMP_ID
+            @Query("compid") int COMP_ID
     );
 
     @GET("TESTCORRECTION/PAPERTWO")
@@ -114,15 +114,16 @@ public interface ApiInterface {
     );
 
     @FormUrlEncoded
-    @POST("STUDENT/UPDATE")
+    @POST("STUDENT/UPD")
     Call<RESPONSE> updateStudent(
-            @Field("id") int STD_ID,
+            @Field("std_id") int STD_ID,
             @Field("name") String STD_NAME,
             @Field("number") String STD_NUMBER,
             @Field("password") String STD_PASSWORD,
             @Field("email") String STD_EMAIL,
-            @Field("tel_parent1") String STD_PARENT1,
-            @Field("tel_parent2") String STD_PARENT2
+            @Field("parent1") String STD_PARENT1,
+            @Field("parent2") String STD_PARENT2,
+            @Field("state") int STATE
     );
 
     @FormUrlEncoded
@@ -135,7 +136,7 @@ public interface ApiInterface {
     @FormUrlEncoded
     @POST("STUDENT/REGISTER")
     Call<RESPONSE> registerStudent(
-            @Field("id") int ID,
-            @Field("REGISTER_CODE") String REGISTER_CODE
+            @Field("studentid") int ID,
+            @Field("registration_key") String REGISTER_CODE
     );
 }

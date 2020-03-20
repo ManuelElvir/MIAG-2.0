@@ -34,7 +34,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String DB_NAME = "MIAG.DB";
 
     // database version
-    private static final int DB_VERSION = 4;
+    private static final int DB_VERSION = 7;
 
     // Creating table query
     private static final String CREATE_TABLE_EXAM = "create table " + EXAM + "( EXAM_ID INTEGER  PRIMARY KEY, EXAM_NAME TEXT, EXAM_DATE_END TEXT);";
@@ -46,9 +46,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String CREATE_TABLE_PAPER3 = "create table " + PAPER3 + "( PAPER3_ID INTEGER PRIMARY KEY, SJ_ID INTEGER, TEST_NAME TEXT, TEST_CONTENT TEXT, EXAM_ID INTEGER);";
     private static final String CREATE_TABLE_REQUIEREMENT = "create table " + REQUIEREMENT + "( REQ_ID INTEGER PRIMARY KEY, COMP_ID INTEGER, REQ_NAME TEXT, REQ_FILE TEXT, REQ_CONTENT TEXT);";
     private static final String CREATE_TABLE_QUESTION = "create table " + QUESTION + "( QUEST_ID INTEGER PRIMARY KEY, QUEST_LABEL  TEXT, PAPER1_ID INTEGER, COMP_ID INTEGER);";
-    private static final String CREATE_TABLE_TUTORIAL = "create table " + TUTORIAL + "( TUTO_ID INTEGER PRIMARY KEY, TUTO_NAME TEXT, CHAPT_ID INTEGER, TUTO_ID INTEGER);";
+    private static final String CREATE_TABLE_TUTORIAL = "create table " + TUTORIAL + "( TUTO_ID INTEGER PRIMARY KEY, TUTO_NAME TEXT, CHAPT_ID INTEGER, COMP_ID INTEGER);";
     private static final String CREATE_TABLE_ANWSER = "create table " + ANWSER + "( ANWS_ID INTEGER PRIMARY KEY, ANWS_CONTENT  TEXT, ANWS_STATE INTEGER, QUEST_ID INTEGER);";
-    private static final String CREATE_TABLE_SUBJECT_CORRECTION = "create table " + SUBJECT_CORRECTION + "( SJC_ID INTEGER PRIMARY KEY, SJC_CONTENT  TEXT NOT NULL, SJC_FILE INTEGER, PAPER1_ID INTEGER, CHAP_ID INTEGER);";
+    private static final String CREATE_TABLE_SUBJECT_CORRECTION = "create table " + SUBJECT_CORRECTION + "( SC_ID INTEGER PRIMARY KEY, SC_CONTENT  TEXT, PAPER2_ID INTEGER, PAPER3_ID INTEGER);";
     private static final String CREATE_TABLE_STAFFMEMBER = "create table " + STAFFMEMBER + "( SM_ID INTEGER PRIMARY KEY AUTOINCREMENT, SM_NAME  TEXT, SM_FUNCTION TEXT, SM_NUMBER TEXT, SM_IMAGE TEXT);";
     private static final String CREATE_TABLE_FILE = "create table " + FILE + "( FILE_ID INTEGER PRIMARY KEY AUTOINCREMENT, FILE_URL TEXT);";
 

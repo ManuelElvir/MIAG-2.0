@@ -21,14 +21,21 @@ import com.MIAG.miaggce.R;
 import com.MIAG.miaggce.app.AudioPlayer;
 import com.MIAG.miaggce.app.DBManager;
 import com.MIAG.miaggce.app.appConfig;
+import com.MIAG.miaggce.models.ANWSER;
+import com.MIAG.miaggce.models.PAPER1;
 import com.MIAG.miaggce.models.PAPER2;
 import com.MIAG.miaggce.models.PAPER3;
+import com.MIAG.miaggce.models.QUESTION;
 import com.MIAG.miaggce.models.SUBJECT_CORRECTION;
+import com.MIAG.miaggce.ui.gce_a.GcePresenter;
+import com.MIAG.miaggce.ui.gce_a.GceView;
 import com.MIAG.miaggce.ui.paper2_correction.Paper2CorrectionActivity;
 import com.google.android.material.snackbar.Snackbar;
+
+import java.util.List;
 import java.util.Objects;
 
-public class Paper2Activity extends AppCompatActivity implements View.OnClickListener, Paper2View {
+public class Paper2Activity extends AppCompatActivity implements View.OnClickListener, GceView {
 
     TextView hour, minute, second;
     ProgressBar progressHour, progressMinute, progressSecond, progressBar;
@@ -40,7 +47,7 @@ public class Paper2Activity extends AppCompatActivity implements View.OnClickLis
     private AudioPlayer audioPlayer = new AudioPlayer();
     String message = "";
     private DBManager dbManager;
-    private Paper2Presenter presenter;
+    private GcePresenter presenter;
 
     @SuppressLint("SetJavaScriptEnabled")
     @Override
@@ -82,7 +89,7 @@ public class Paper2Activity extends AppCompatActivity implements View.OnClickLis
             int minutes = Integer.valueOf(paper2.getTEST_CHRONO().substring(3,5));
             paperTime = (heure*60)+minutes;
         }
-        hideLoadding();
+        HideLoadding();
 
         refreshContent();
     }
@@ -233,7 +240,13 @@ public class Paper2Activity extends AppCompatActivity implements View.OnClickLis
                             countDownTimer.cancel();
                             countDownTimer = null;
                         }
-                        SUBJECT_CORRECTION corrections = dbManager.getSubjectCorrectionByPaper2Id(paperId);
+                        SUBJECT_CORRECTION corrections;
+                        if (getIntent().getBooleanExtra("no_timer",false)){
+                            corrections = dbManager.getSubjectCorrectionByPaper3Id(paperId);
+                        }else {
+                            corrections = dbManager.getSubjectCorrectionByPaper2Id(paperId);
+                        }
+
                         if (!corrections.equals(new SUBJECT_CORRECTION())){
                             Intent intent = new Intent(Paper2Activity.this, Paper2CorrectionActivity.class);
                             intent.putExtra("title","Correction : "+getIntent().getStringExtra("title"));
@@ -242,10 +255,14 @@ public class Paper2Activity extends AppCompatActivity implements View.OnClickLis
                         }
                         else {
                             if (appConfig.isInternetAvailable()){
-                                presenter = new Paper2Presenter(Paper2Activity.this, MainActivity.userKey);
-                                presenter.getPaperCorrection(paperId,getIntent().getBooleanExtra("no_timer",false));
-                            }
-                            onErrorLoadind("The correction is not download, please connect your device to internet");
+                                presenter = new GcePresenter(Paper2Activity.this, MainActivity.userKey);
+                                if (getIntent().getBooleanExtra("no_timer",false)){
+                                    presenter.getPaper3Correction(paperId);
+                                }else {
+                                    presenter.getPaper2Correction(paperId);
+                                }
+                            }else
+                                onErrorLoadind("The correction is not download, please connect your device to internet");
                         }
                     }
                 });
@@ -258,8 +275,9 @@ public class Paper2Activity extends AppCompatActivity implements View.OnClickLis
     }
 
     @Override
-    public void hideLoadding() {
+    public void HideLoadding() {
         progressBar.setVisibility(View.GONE);
+
     }
 
     @Override
@@ -269,13 +287,46 @@ public class Paper2Activity extends AppCompatActivity implements View.OnClickLis
     }
 
     @Override
-    public void onReceiveCorrection(SUBJECT_CORRECTION corrections) {
-        dbManager.insertListSubjectCorrection(corrections);
+    public void onReceivePaper1(List<PAPER1> paper1s) {
 
-        //when download finish, show correction
+    }
+
+    @Override
+    public void onReceivePaper2(List<PAPER2> paper2s) {
+
+    }
+
+    @Override
+    public void onReceivePaper3(List<PAPER3> paper3s) {
+
+    }
+
+    @Override
+    public void onReceiveQuestion(List<QUESTION> questions, int paperId) {
+
+    }
+
+    @Override
+    public void onReceivePaper2Correction(SUBJECT_CORRECTION correction) {
+        dbManager.insertListSubjectCorrection(correction);
         Intent intent = new Intent(Paper2Activity.this, Paper2CorrectionActivity.class);
         intent.putExtra("title","Correction : "+getIntent().getStringExtra("title"));
-        intent.putExtra("paper",paperId);
+        intent.putExtra("sc_id",paperId);
         startActivity(intent);
+    }
+
+    @Override
+    public void onReceivePaper3Correction(SUBJECT_CORRECTION correction) {
+        dbManager.insertListSubjectCorrection(correction);
+        Intent intent = new Intent(Paper2Activity.this, Paper2CorrectionActivity.class);
+        intent.putExtra("title","Correction : "+getIntent().getStringExtra("title"));
+        intent.putExtra("isPaper3",true);
+        intent.putExtra("sc_id",paperId);
+        startActivity(intent);
+    }
+
+    @Override
+    public void onReceiveAnwser(List<ANWSER> anwsers) {
+
     }
 }

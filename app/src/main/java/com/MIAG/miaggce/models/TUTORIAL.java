@@ -7,7 +7,7 @@ public class TUTORIAL {
 
     @Expose
     @SerializedName("TUTO_ID")
-    private int TUTO_ID;
+    private int TUTO_ID = 0;
 
     @Expose
     @SerializedName("TUTO_NAME")

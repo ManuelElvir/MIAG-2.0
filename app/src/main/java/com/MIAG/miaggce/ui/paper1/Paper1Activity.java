@@ -99,7 +99,7 @@ public class Paper1Activity extends AppCompatActivity implements View.OnClickLis
     private void getDataToDataBase() {
         showLoading();
         if (getIntent().getBooleanExtra("isChapter",false)){
-            questions = dbManager.getQuestionByChapId(paperId);
+            questions = dbManager.getQuestionByTutoId(tutoId);
         }else {
             questions = dbManager.getQuestionByPaper1Id(paperId);
         }
@@ -409,11 +409,6 @@ public class Paper1Activity extends AppCompatActivity implements View.OnClickLis
     @Override
     public void onReceiveQuestion(List<QUESTION> questions) {
         dbManager.insertListQuestion(questions,paperId,tutoId);
-        if (getIntent().getBooleanExtra("isChapter",false)){
-            this.questions =  dbManager.getQuestionByChapId(paperId);
-        }else {
-            this.questions =  dbManager.getQuestionByPaper1Id(paperId);
-        }
 
         if (this.questions!=null)
             if (questions.size()>0){
