@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
+import android.os.StrictMode;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -27,6 +28,7 @@ import com.MIAG.miaggce.MainActivity;
 import com.MIAG.miaggce.R;
 import com.MIAG.miaggce.adapter.GridAdapterForGCE;
 import com.MIAG.miaggce.app.DBManager;
+import com.MIAG.miaggce.app.appConfig;
 import com.MIAG.miaggce.models.ANWSER;
 import com.MIAG.miaggce.models.PAPER1;
 import com.MIAG.miaggce.models.PAPER2;
@@ -75,11 +77,11 @@ public class GceOFragment extends Fragment  implements GceView {
 
         getData();
         years = new ArrayList<>();
+        years.add("2020");
         years.add("2019");
         years.add("2018");
         years.add("2017");
         years.add("2016");
-        years.add("2015");
 
         return root;
     }
@@ -91,7 +93,10 @@ public class GceOFragment extends Fragment  implements GceView {
 
         subjects_list = dbManager.fetchSubject();
         refreshContent();
-        if (subjects_list!=null){
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
+                .permitAll().build();
+        StrictMode.setThreadPolicy(policy);
+        if(appConfig.isInternetAvailable()){
             if (subjects_list.size()>0){
                 position = 0;
                 presenter.getPaper1(subjects_list.get(position).getSJ_ID());
@@ -120,7 +125,7 @@ public class GceOFragment extends Fragment  implements GceView {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
                 int subject = subjects_list.get(i).getSJ_ID();
-                int exam = dbManager.getExamByNameAndDate("olevel",years.get(item.getGroupId()));
+                int exam = dbManager.getExamByNameAndDate("o",years.get(item.getGroupId()));
                 if (exam==0){
                     onErrorLoadind(getString(R.string.no_paper));
                 }
@@ -294,8 +299,8 @@ public class GceOFragment extends Fragment  implements GceView {
 
 
     @Override
-    public void onReceiveAnwser(List<ANWSER> anwsers) {
-        dbManager.insertListAnwser(anwsers);
+    public void onReceiveAnwser(List<ANWSER> anwsers, int questId) {
+        dbManager.insertListAnwser(anwsers, questId);
     }
 
     private void starGetQuestion() {

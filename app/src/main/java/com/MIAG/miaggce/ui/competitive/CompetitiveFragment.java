@@ -93,7 +93,10 @@ public class CompetitiveFragment extends Fragment implements CompetitiveView {
 
         this.competitives = dbManager.fetchCompetitive();
         refreshContent();
-        if (this.competitives!=null){
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
+                .permitAll().build();
+        StrictMode.setThreadPolicy(policy);
+        if(appConfig.isInternetAvailable()){
             if (this.competitives.size()>0){
                 position = 0;
                 competitivePresenter.getChapter(competitives.get(position).getCOMP_ID());
@@ -126,17 +129,18 @@ public class CompetitiveFragment extends Fragment implements CompetitiveView {
                     int k=1;
                     if (j==0)
                         subjects.add(subject);
-                    do{
-                        if (subjects.get(k).getSJ_ID()==subject.getSJ_ID()){//if this subject is already add on String subject list
-                            alReadyUsed =true;
+                    else{
+                        do{
+                            if (subjects.get(k).getSJ_ID()==subject.getSJ_ID()){//if this subject is already add on String subject list
+                                alReadyUsed =true;
+                            }
+                            k++;
+                        }while (!alReadyUsed && k<j+1);
+                        if (!alReadyUsed){//if never use add then
+                            subjects.add(subject);
                         }
-                        k++;
-                    }while (!alReadyUsed && k<j+1);
-                    if (!alReadyUsed){//if never use add then
-                        subjects.add(subject);
                     }
                 }
-
             }
             if (chapters.size()==0)
                 onErrorLoadind(getString(R.string.no_chapter));
@@ -145,7 +149,7 @@ public class CompetitiveFragment extends Fragment implements CompetitiveView {
                     SubMenu menu2sub = menu2.addSubMenu(subjects.get(j).getSJ_NAME());
                     for (int k =0; k<chapters.size(); k++){
                         SubMenu menu3sub =menu2sub.addSubMenu(chapters.get(k).getCHAP_NAME());
-                        List<TUTORIAL> tutorials = dbManager.getTutorialByCompAndChapter(i,chapters.get(k).getCHAP_ID());
+                        List<TUTORIAL> tutorials = dbManager.getTutorialByChapter(i,chapters.get(k).getCHAP_ID());
                         for (int l=0; l<tutorials.size(); l++){
                             menu3sub.add(tutorials.get(l).getTUTO_ID(),10000+l,l,tutorials.get(l).getTUTO_NAME());
                         }
@@ -168,15 +172,7 @@ public class CompetitiveFragment extends Fragment implements CompetitiveView {
                         competitivePresenter.getRequierement(competitives.get(i).getCOMP_ID());
                     }
                     else {
-                        if (requierement.getREQ_CONTENT().isEmpty()){
-                            DownloadFileFromURL downloadFileFromURL = new DownloadFileFromURL("Requierement for "+competitives.get(i),requierement.getREQ_NAME(),getContext(),CompetitiveFragment.this);
-                            downloadFileFromURL.execute(requierement.getREQ_FILE());
-                        }else{
-                            Intent intentReq = new Intent(getActivity(),RequierementActivity.class);
-                            intentReq.putExtra("req",requierement.getREQ_ID());
-                            intentReq.putExtra("isFile",true);
-                            startActivity(intentReq);
-                        }
+                        startRequierement(requierement);
                     }
                 }
                 else if(item.getItemId() >= 10000){
@@ -301,13 +297,27 @@ public class CompetitiveFragment extends Fragment implements CompetitiveView {
     }
 
     @Override
-    public void onReceiveAnwser(List<ANWSER> anwsers) {
-        dbManager.insertListAnwser(anwsers);
+    public void onReceiveAnwser(List<ANWSER> anwsers, int questId) {
+        dbManager.insertListAnwser(anwsers, questId);
     }
 
     @Override
     public void onReceiveRequierement(List<REQUIEREMENT> requierements) {
         dbManager.insertListRequierement(requierements);
+
+        startRequierement(requierements.get(0));
+    }
+
+    private  void startRequierement (REQUIEREMENT requierement){
+        if (requierement.getREQ_CONTENT().contains("http") && requierement.getREQ_CONTENT().contains(".pdf")){
+            DownloadFileFromURL downloadFileFromURL = new DownloadFileFromURL("Requierement for "+requierement.getCOMP_ID(),requierement.getREQ_NAME(),getContext(),CompetitiveFragment.this);
+            downloadFileFromURL.execute(requierement.getREQ_CONTENT());
+        }else{
+            Intent intentReq = new Intent(getActivity(),RequierementActivity.class);
+            intentReq.putExtra("title",requierement.getREQ_NAME());
+            intentReq.putExtra("req_content",requierement.getREQ_CONTENT());
+            startActivity(intentReq);
+        }
     }
 
     @Override
@@ -315,6 +325,7 @@ public class CompetitiveFragment extends Fragment implements CompetitiveView {
         Intent intent = new Intent(getActivity(), RequierementActivity.class);
         intent.putExtra("title",reqName);
         intent.putExtra("pathFile",pathFile);
+        intent.putExtra("isFile",true);
         startActivity(intent);
     }
 

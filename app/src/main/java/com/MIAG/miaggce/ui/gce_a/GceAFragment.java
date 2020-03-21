@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -26,6 +27,7 @@ import com.MIAG.miaggce.MainActivity;
 import com.MIAG.miaggce.R;
 import com.MIAG.miaggce.adapter.GridAdapterForGCE;
 import com.MIAG.miaggce.app.DBManager;
+import com.MIAG.miaggce.app.appConfig;
 import com.MIAG.miaggce.models.ANWSER;
 import com.MIAG.miaggce.models.PAPER1;
 import com.MIAG.miaggce.models.PAPER2;
@@ -72,11 +74,11 @@ public class GceAFragment extends Fragment implements GceView{
         //get data
         getData();
         years = new ArrayList<>();
+        years.add("2020");
         years.add("2019");
         years.add("2018");
         years.add("2017");
         years.add("2016");
-        years.add("2015");
 
         return root;
     }
@@ -88,12 +90,16 @@ public class GceAFragment extends Fragment implements GceView{
         //get list of subject to data base
         subjects_list = dbManager.fetchSubject();
         refreshContent();
-        if (subjects_list!=null){
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
+                .permitAll().build();
+        StrictMode.setThreadPolicy(policy);
+        if(appConfig.isInternetAvailable()){
             if (subjects_list.size()>0){
                 position = 0;
                 presenter.getPaper1(subjects_list.get(position).getSJ_ID());
             }
         }
+
     }
 
     private void refreshContent() {
@@ -117,7 +123,7 @@ public class GceAFragment extends Fragment implements GceView{
             @Override
             public boolean onMenuItemClick(MenuItem item) {
                 int subject = subjects_list.get(i).getSJ_ID();
-                int exam = dbManager.getExamByNameAndDate("alevel",years.get(item.getGroupId()));
+                int exam = dbManager.getExamByNameAndDate("a",years.get(item.getGroupId()));
                 if (exam==0){
                     onErrorLoadind(getString(R.string.no_paper));
                 }
@@ -298,8 +304,8 @@ public class GceAFragment extends Fragment implements GceView{
     }
 
     @Override
-    public void onReceiveAnwser(List<ANWSER> anwsers) {
-        dbManager.insertListAnwser(anwsers);
+    public void onReceiveAnwser(List<ANWSER> anwsers, int questId) {
+        dbManager.insertListAnwser(anwsers, questId);
     }
 
     private void starGetQuestion() {

@@ -72,14 +72,13 @@ public class DBManager {
      * @return exams Collection of EXAM
      */
     public int getExamByNameAndDate(String name, String date) {
-        Cursor cursor = database.rawQuery("SELECT EXAM_ID FROM "+DatabaseHelper.EXAM+" WHERE EXAM_NAME LIKE %"+name+"% AND EXAM_DATE LIKE %"+date+"%", null);
-        if (cursor != null) {
+        Cursor cursor = database.rawQuery("SELECT EXAM_ID FROM "+DatabaseHelper.EXAM+" WHERE EXAM_NAME LIKE '%"+name+"%' AND EXAM_DATE_END LIKE '%"+date+"%'", null);
+        if (cursor.getCount()>0) {
             cursor.moveToFirst();
             int id = cursor.getInt(0);
             cursor.close();
             return id;
         }else{
-            //if no exam found
             return 0;
         }
     }
@@ -236,7 +235,7 @@ public class DBManager {
                 ContentValues contentValue = new ContentValues();
                 contentValue.put("TUTO_ID",tutorials.get(i).getTUTO_ID());
                 contentValue.put("TUTO_NAME",tutorials.get(i).getTUTO_NAME());
-                contentValue.put("CHAP_ID",tutorials.get(i).getCHAP_ID());
+                contentValue.put("CHAPT_ID",tutorials.get(i).getCHAP_ID());
                 contentValue.put("COMP_ID",tutorials.get(i).getCOMP_ID());
                 database.insert(DatabaseHelper.TUTORIAL, null, contentValue);
             }
@@ -249,24 +248,21 @@ public class DBManager {
      *  get collect of TUTORIAL
      * @return tutorials Collection of TUTORIAL object
      */
-    public List<TUTORIAL> getTutorialByCompAndChapter(int COMP_ID, int CHAP_ID) {
+    public List<TUTORIAL> getTutorialByChapter(int COMP_ID, int CHAP_ID) {
         List<TUTORIAL> tutorials;
         tutorials = new ArrayList<>();
-        Cursor cursor = database.rawQuery("SELECT * FROM "+DatabaseHelper.CHAPTER+" WHERE COMP_ID = " + COMP_ID +" AND WHERE CHAP_ID = "+CHAP_ID, null);
-        if (cursor != null) {
-            cursor.moveToFirst();
-            do{
-                if (cursor.getColumnCount()>3) {
-                    TUTORIAL tutorial = new TUTORIAL();
-                    tutorial.setTUTO_ID(cursor.getInt(0));
-                    tutorial.setTUTO_NAME(cursor.getString(1));
-                    tutorial.setCHAP_ID(cursor.getInt(2));
-                    tutorial.setCOMP_ID(cursor.getInt(3));
-                    tutorials.add(tutorial);
-                }
-            }while(cursor.moveToNext());
-            cursor.close();
+        Cursor cursor = database.rawQuery("SELECT * FROM "+DatabaseHelper.TUTORIAL+" WHERE COMP_ID = " + COMP_ID +" AND CHAPT_ID = "+CHAP_ID, null);
+        cursor.moveToFirst();
+        for(int i=0; i<cursor.getCount(); i++){
+            TUTORIAL tutorial = new TUTORIAL();
+            tutorial.setTUTO_ID(cursor.getInt(0));
+            tutorial.setTUTO_NAME(cursor.getString(1));
+            tutorial.setCHAP_ID(cursor.getInt(2));
+            tutorial.setCOMP_ID(cursor.getInt(3));
+            tutorials.add(tutorial);
+            cursor.moveToNext();
         }
+        cursor.close();
         return tutorials;
     }
 
@@ -325,7 +321,7 @@ public class DBManager {
                 Log.e("INSERT PAPER 1 ", ""+i+"/"+paper1s.size() );
                 ContentValues contentValue = new ContentValues();
                 contentValue.put("PAPER1_ID",paper1s.get(i).getPAPER1_ID());
-                contentValue.put("SJ_ID",paper1s.get(i).getEXAM_ID());
+                contentValue.put("SJ_ID",paper1s.get(i).getSJ_ID());
                 contentValue.put("TEST_NAME",paper1s.get(i).getTEST_NAME());
                 contentValue.put("TEST_CHRONO",paper1s.get(i).getTEST_CHRONO());
                 contentValue.put("EXAM_ID",paper1s.get(i).getEXAM_ID());
@@ -344,10 +340,10 @@ public class DBManager {
         Cursor cursor;
         PAPER1 paper1 = new PAPER1();
         if (EXAM_ID>0)
-            cursor= database.rawQuery("SELECT * FROM "+DatabaseHelper.PAPER1+" WHERE SJ_ID = "+SJ_ID+" AND WHERE EXAM_ID = "+EXAM_ID, null);
+            cursor= database.rawQuery("SELECT * FROM "+DatabaseHelper.PAPER1+" WHERE SJ_ID = "+SJ_ID+" AND EXAM_ID = "+EXAM_ID, null);
         else
             cursor= database.rawQuery("SELECT * FROM "+DatabaseHelper.PAPER1+" WHERE SJ_ID = "+SJ_ID, null);
-        if (cursor != null) {
+        if (cursor.getCount() > 0) {
             cursor.moveToFirst();
             paper1.setPAPER1_ID(cursor.getInt(0));
             paper1.setSJ_ID(cursor.getInt(1));
@@ -355,7 +351,6 @@ public class DBManager {
             paper1.setTEST_CHRONO(cursor.getString(3));
             paper1.setEXAM_ID(cursor.getInt(4));
             cursor.close();
-            Log.e("GET PAPER 1", "By Exam and Subject" );
         }
         return paper1;
     }
@@ -388,20 +383,19 @@ public class DBManager {
     public List<PAPER1> fetchPaper1(){
         List<PAPER1> paper1s = new ArrayList<>();
         Cursor cursor= database.rawQuery("SELECT * FROM "+DatabaseHelper.PAPER1, null);
-        if (cursor != null) {
-            cursor.moveToFirst();
-            for (int i=0; i<cursor.getCount(); i++){
-                PAPER1 paper1 = new PAPER1();
-                paper1.setPAPER1_ID(cursor.getInt(0));
-                paper1.setSJ_ID(cursor.getInt(1));
-                paper1.setTEST_NAME(cursor.getString(2));
-                paper1.setTEST_CHRONO(cursor.getString(3));
-                paper1.setEXAM_ID(cursor.getInt(4));
-                paper1s.add(paper1);
-                Log.e("FECTCH PAPER 1 ", ""+i+"/"+paper1s.size() );
-            }
-            cursor.close();
+        cursor.moveToFirst();
+        for (int i=0; i<cursor.getCount(); i++){
+            PAPER1 paper1 = new PAPER1();
+            paper1.setPAPER1_ID(cursor.getInt(0));
+            paper1.setSJ_ID(cursor.getInt(1));
+            paper1.setTEST_NAME(cursor.getString(2));
+            paper1.setTEST_CHRONO(cursor.getString(3));
+            paper1.setEXAM_ID(cursor.getInt(4));
+            paper1s.add(paper1);
+            Log.e("FECTCH PAPER 1 ", "ID = "+cursor.getInt(0) + "SJ_ID = " + cursor.getInt(1) + " NAME = "+ cursor.getString(2) + "CHRONO = "+ cursor.getString(3) + "EXAM = "+cursor.getString(4) );
+            cursor.moveToNext();
         }
+        cursor.close();
         return paper1s;
     }
 
@@ -410,7 +404,6 @@ public class DBManager {
      * @param paper2s PAPER2
      */
     public void insertListPaper2(List<PAPER2> paper2s) {
-        database.delete(DatabaseHelper.PAPER2,"1=1", null);
         for (int i=0; i<paper2s.size(); i++)
         {
             Cursor cursor = database.rawQuery("SELECT * FROM "+DatabaseHelper.PAPER2+" WHERE PAPER2_ID = " + paper2s.get(i).getPAPER2_ID(), null);
@@ -436,21 +429,19 @@ public class DBManager {
      */
     public PAPER2 getPaper2BySubjectAndExam(int SJ_ID, int EXAM_ID) {
         PAPER2 paper2 = new PAPER2();
-        Cursor cursor = database.rawQuery("SELECT * FROM "+DatabaseHelper.PAPER2+" WHERE SJ_ID = "+SJ_ID+" AND WHERE EXAM_ID = "+EXAM_ID, null);
-        if (cursor != null) {
-            cursor.moveToFirst();
-            if (cursor.getCount()>0) {
+        Cursor cursor = database.rawQuery("SELECT * FROM "+DatabaseHelper.PAPER2+" WHERE SJ_ID = "+SJ_ID+" AND EXAM_ID = "+EXAM_ID, null);
+        cursor.moveToFirst();
+        if (cursor.getCount()>0) {
 
-                Log.e("GET PAPER 2:", "By Subject and exam" );
-                paper2.setPAPER2_ID(cursor.getInt(0));
-                paper2.setSJ_ID(cursor.getInt(1));
-                paper2.setTEST_NAME(cursor.getString(2));
-                paper2.setTEST_CHRONO(cursor.getString(3));
-                paper2.setTEST_CONTENT(cursor.getString(4));
-                paper2.setEXAM_ID(cursor.getInt(5));
-            }
-            cursor.close();
+            Log.e("GET PAPER 2:", "By Subject and exam" );
+            paper2.setPAPER2_ID(cursor.getInt(0));
+            paper2.setSJ_ID(cursor.getInt(1));
+            paper2.setTEST_NAME(cursor.getString(2));
+            paper2.setTEST_CHRONO(cursor.getString(3));
+            paper2.setTEST_CONTENT(cursor.getString(4));
+            paper2.setEXAM_ID(cursor.getInt(5));
         }
+        cursor.close();
         return paper2;
     }
 
@@ -480,7 +471,6 @@ public class DBManager {
      * @param paper3s PAPER3
      */
     public void insertListPaper3(List<PAPER3> paper3s) {
-        database.delete(DatabaseHelper.PAPER3,"1=1", null);
         for (int i=0; i<paper3s.size(); i++)
         {
             Cursor cursor = database.rawQuery("SELECT * FROM "+DatabaseHelper.PAPER3+" WHERE PAPER3_ID = " + paper3s.get(i).getPAPER3_ID(), null);
@@ -505,7 +495,7 @@ public class DBManager {
      */
     public PAPER3 getPaper3BySubjectAndExam(int SJ_ID, int EXAM_ID) {
         PAPER3 paper3 = new PAPER3();
-        Cursor cursor = database.rawQuery("SELECT * FROM "+DatabaseHelper.PAPER3+" WHERE SJ_ID = "+SJ_ID+" AND WHERE EXAM_ID = "+EXAM_ID, null);
+        Cursor cursor = database.rawQuery("SELECT * FROM "+DatabaseHelper.PAPER3+" WHERE SJ_ID = "+SJ_ID+" AND EXAM_ID = "+EXAM_ID, null);
         if (cursor != null) {
             cursor.moveToFirst();
             if (cursor.getCount()>0) {
@@ -570,17 +560,15 @@ public class DBManager {
     public REQUIEREMENT getRequierementByCompId(int COMP_ID) {
         REQUIEREMENT requierement = new REQUIEREMENT();
         Cursor cursor = database.rawQuery("SELECT * FROM "+DatabaseHelper.REQUIEREMENT+" WHERE COMP_ID = "+COMP_ID, null);
-        if (cursor != null) {
-            cursor.moveToFirst();
-            if (cursor.getColumnCount()>4) {
-                requierement.setREQ_ID(cursor.getInt(0));
-                requierement.setCOMP_ID(cursor.getInt(1));
-                requierement.setREQ_NAME(cursor.getString(2));
-                requierement.setREQ_FILE(cursor.getString(3));
-                requierement.setREQ_CONTENT(cursor.getString(4));
-            }
-            cursor.close();
+        cursor.moveToFirst();
+        if (cursor.getCount()>0) {
+            requierement.setREQ_ID(cursor.getInt(0));
+            requierement.setCOMP_ID(cursor.getInt(1));
+            requierement.setREQ_NAME(cursor.getString(2));
+            requierement.setREQ_FILE(cursor.getString(3));
+            requierement.setREQ_CONTENT(cursor.getString(4));
         }
+        cursor.close();
         return requierement;
     }
 
@@ -634,7 +622,7 @@ public class DBManager {
     public SUBJECT_CORRECTION getSubjectCorrectionByPaper3Id(int SC_PAPER3_ID) {
         SUBJECT_CORRECTION subject_correction = new SUBJECT_CORRECTION();
         Cursor cursor = database.rawQuery("SELECT * FROM "+DatabaseHelper.SUBJECT_CORRECTION+" WHERE PAPER3_ID = "+SC_PAPER3_ID, null);
-        if (cursor != null) {
+        if (cursor.getCount()>0) {
             cursor.moveToFirst();
             subject_correction.setSC_ID(cursor.getInt(0));
             subject_correction.setSC_CONTENT(cursor.getString(1));
@@ -807,18 +795,17 @@ public class DBManager {
      *  insert new list of ANWSER in database
      * @param anwsers ANWSER
      */
-    public void insertListAnwser(List<ANWSER> anwsers) {
-        database.delete(DatabaseHelper.ANWSER, "1=1", null);
+    public void insertListAnwser(List<ANWSER> anwsers, int questId) {
         for (int i=0; i<anwsers.size(); i++)
         {
-            Cursor cursor = database.rawQuery("SELECT * FROM "+DatabaseHelper.ANWSER+" WHERE ANWS_ID = " + anwsers.get(i).getANWS_ID(), null);
+            Cursor cursor = database.rawQuery("SELECT * FROM "+DatabaseHelper.ANWSER+" WHERE ANWS_CONTENT = '" + anwsers.get(i).getANWS_CONTENT()+"'", null);
+            Log.e(" INSERT ANSWER", "FOR "+ i);
             if (cursor.getCount()==0) {
                 Log.e(" INSERT ANSWER", i+"/"+anwsers.size());
                 ContentValues contentValue = new ContentValues();
-                contentValue.put("ANWS_ID",anwsers.get(i).getANWS_ID());
                 contentValue.put("ANWS_CONTENT",anwsers.get(i).getANWS_CONTENT());
                 contentValue.put("ANWS_STATE",anwsers.get(i).getANWS_STATE());
-                contentValue.put("QUEST_ID",anwsers.get(i).getQUEST_ID());
+                contentValue.put("QUEST_ID",questId);
                 database.insert(DatabaseHelper.ANWSER, null, contentValue);
             }
             else

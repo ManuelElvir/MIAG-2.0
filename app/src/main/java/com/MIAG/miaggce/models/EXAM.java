@@ -13,7 +13,7 @@ public class EXAM {
     private String EXAM_NAME;
 
     @Expose
-    @SerializedName("EXAM_DATE_END")
+    @SerializedName("EXAM_YEAR_END")
     private String EXAM_DATE_END;
 
     public int getEXAM_ID() {

@@ -162,7 +162,7 @@ public class IdentificationActivity extends AppCompatActivity {
                         boolean enable = false;
                         if (response.body().getStudent().getSTD_STATE()=="1")
                             enable =true;
-                        saveConnexion(response.body().getStudent().getSTD_ID(),response.body().getStudent().getSTD_NAME(), response.body().getStudent().getSTD_EMAIL(), password,response.body().getStudent().getSTD_EMAIL(), response.body().getStudent().getSTD_TEL_PARENT1(),response.body().getStudent().getSTD_TEL_PARENT2(),enable, response.body().getUser_Key(), response.body().getStudent().getALL_FUNC_KEY());
+                        saveConnexion(response.body().getStudent().getSTD_ID(),response.body().getStudent().getSTD_NAME(), response.body().getStudent().getSTD_NUMBER(), password,response.body().getStudent().getSTD_EMAIL(), response.body().getStudent().getSTD_TEL_PARENT1(),response.body().getStudent().getSTD_TEL_PARENT2(),enable, response.body().getUser_Key(), response.body().getStudent().getALL_FUNC_KEY());
                     }
                     else{
                         errorReponse(response.body().getCause());
@@ -183,7 +183,7 @@ public class IdentificationActivity extends AppCompatActivity {
     private void SinginToServer(final String name, final String number, final String password) {
         startAnimation();
         ApiInterface apiInterface = ApiClient.getApiClient(appConfig.DEFAULT_KEY).create(ApiInterface.class);
-        Call<RESPONSE> call = apiInterface.addStudent(name,number,password,"njiakimjules20@gmail.com",number,number);
+        Call<RESPONSE> call = apiInterface.addStudent(name,number,password,"contact@miag.com",number,number);
         call.enqueue(new Callback<RESPONSE>() {
             @Override
             public void onResponse(@NotNull Call<RESPONSE> call, @NotNull Response<RESPONSE> response) {

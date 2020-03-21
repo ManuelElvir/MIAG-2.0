@@ -84,8 +84,11 @@ public class AccountFragment extends Fragment implements AccountView {
         register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
+                        .permitAll().build();
+                StrictMode.setThreadPolicy(policy);
                 if(appConfig.isInternetAvailable())
-                    presenter.register(pref.getInt(ID,0),code.getText().toString());
+                    presenter.register(Integer.valueOf(pref.getString(ID,"0")),code.getText().toString());
                 else {
                     if(pref.getString(REGISTER_KEY,"").equals(code.getText().toString()))
                         onRegisterSuccess();
@@ -105,7 +108,7 @@ public class AccountFragment extends Fragment implements AccountView {
                         .permitAll().build();
                 StrictMode.setThreadPolicy(policy);
                 if(appConfig.isInternetAvailable())
-                    presenter.updateUser(pref.getInt(ID,0),name.getText().toString(),
+                    presenter.updateUser(Integer.valueOf(pref.getString(ID,"0")),name.getText().toString(),
                         number.getText().toString(),
                         password.getText().toString(),
                         email.getText().toString(),
@@ -179,6 +182,7 @@ public class AccountFragment extends Fragment implements AccountView {
         editor.putString(PARENT2,parent2.getText().toString());
         editor.apply();
         textName.setText(name.getText().toString());
+        Snackbar.make(root,"Update success",Snackbar.LENGTH_SHORT).show();
     }
 
     @Override

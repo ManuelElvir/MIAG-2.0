@@ -6,11 +6,11 @@ import com.google.gson.annotations.SerializedName;
 public class TUTORIAL {
 
     @Expose
-    @SerializedName("TUTO_ID")
-    private int TUTO_ID = 0;
+    @SerializedName("TUT_ID")
+    private int TUTO_ID;
 
     @Expose
-    @SerializedName("TUTO_NAME")
+    @SerializedName("TUT_NAME")
     private String TUTO_NAME;
 
     @Expose
@@ -20,6 +20,10 @@ public class TUTORIAL {
     @Expose
     @SerializedName("COMP_ID")
     private int COMP_ID;
+
+    public TUTORIAL() {
+        this.TUTO_ID = 0;
+    }
 
     public int getTUTO_ID() {
         return TUTO_ID;

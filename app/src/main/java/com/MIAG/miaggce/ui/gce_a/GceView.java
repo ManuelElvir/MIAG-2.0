@@ -20,5 +20,5 @@ public interface GceView {
     void onReceiveQuestion(List<QUESTION> questions, int paperId);
     void onReceivePaper2Correction(SUBJECT_CORRECTION correction);
     void onReceivePaper3Correction(SUBJECT_CORRECTION correction);
-    void onReceiveAnwser(List<ANWSER> anwsers);
+    void onReceiveAnwser(List<ANWSER> anwsers, int questId);
 }

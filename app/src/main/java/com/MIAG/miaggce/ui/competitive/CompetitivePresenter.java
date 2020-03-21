@@ -93,14 +93,14 @@ class CompetitivePresenter {
         });
     }
 
-    void getAnswers(int QUEST_ID) {
+    void getAnswers(final int QUEST_ID) {
         competitiveView.showLoading();
         Call<List<ANWSER>> call = apiInterface.listAnswer(QUEST_ID);
         call.enqueue(new Callback<List<ANWSER>>() {
             @Override
             public void onResponse(@NotNull Call<List<ANWSER>> call, @NotNull Response<List<ANWSER>> response) {
                 if (response.isSuccessful() && response.body()!=null)
-                    competitiveView.onReceiveAnwser(response.body());
+                    competitiveView.onReceiveAnwser(response.body(), QUEST_ID);
                 else
                     competitiveView.onErrorLoadind("Error when get Question Answer");
                 competitiveView.HideLoadding();

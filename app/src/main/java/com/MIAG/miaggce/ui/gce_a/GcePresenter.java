@@ -5,12 +5,10 @@ import android.util.Log;
 import com.MIAG.miaggce.api.ApiClient;
 import com.MIAG.miaggce.api.ApiInterface;
 import com.MIAG.miaggce.models.ANWSER;
-import com.MIAG.miaggce.models.EXAM;
 import com.MIAG.miaggce.models.PAPER1;
 import com.MIAG.miaggce.models.PAPER2;
 import com.MIAG.miaggce.models.PAPER3;
 import com.MIAG.miaggce.models.QUESTION;
-import com.MIAG.miaggce.models.SUBJECT;
 import com.MIAG.miaggce.models.SUBJECT_CORRECTION;
 
 import org.jetbrains.annotations.NotNull;
@@ -162,14 +160,14 @@ public class GcePresenter {
         });
     }
 
-    public void getAnswers(int QUEST_ID) {
+    public void getAnswers(final int QUEST_ID) {
         gceView.showLoading();
         Call<List<ANWSER>> call = apiInterface.listAnswer(QUEST_ID);
         call.enqueue(new Callback<List<ANWSER>>() {
             @Override
             public void onResponse(@NotNull Call<List<ANWSER>> call, @NotNull Response<List<ANWSER>> response) {
                 if (response.isSuccessful() && response.body()!=null)
-                    gceView.onReceiveAnwser(response.body());
+                    gceView.onReceiveAnwser(response.body(),QUEST_ID);
                 else
                     gceView.onErrorLoadind("Error when get Question Answer");
                 gceView.HideLoadding();

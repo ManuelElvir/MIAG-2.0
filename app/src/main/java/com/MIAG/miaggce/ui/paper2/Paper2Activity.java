@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.text.Html;
+import android.util.Log;
 import android.view.View;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
@@ -101,7 +102,7 @@ public class Paper2Activity extends AppCompatActivity implements View.OnClickLis
             card.setVisibility(View.GONE);
         }
         else {
-            timeTotal= timeleftinmillisecond = paperTime;
+            timeTotal= timeleftinmillisecond = paperTime*60000;
 
             hour = findViewById(R.id.text_hour);
             minute = findViewById(R.id.text_minute);
@@ -143,6 +144,7 @@ public class Paper2Activity extends AppCompatActivity implements View.OnClickLis
 
             @Override
             public void onFinish() {
+                Log.e("TIMES FINISH","");
                 Snackbar snackbar = Snackbar
                         .make(card, getString(R.string.time_over), Snackbar.LENGTH_LONG);
                 snackbar.show();
@@ -326,7 +328,7 @@ public class Paper2Activity extends AppCompatActivity implements View.OnClickLis
     }
 
     @Override
-    public void onReceiveAnwser(List<ANWSER> anwsers) {
+    public void onReceiveAnwser(List<ANWSER> anwsers, int questId) {
 
     }
 }

@@ -17,7 +17,7 @@
         android:paddingTop="5dp"
         android:paddingBottom="5dp"
         android:layout_gravity="center_horizontal"
-        android:background="@drawable/edittext_background2"
+        android:background="@drawable/timer_background"
         android:gravity="center"
         android:orientation="vertical"
         tools:targetApi="lollipop">

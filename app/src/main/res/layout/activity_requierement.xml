@@ -6,11 +6,18 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".ui.requierement.RequierementActivity">
 
+
     <com.github.barteksc.pdfviewer.PDFView
         android:id="@+id/pdfView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 
+
+
+    <WebView
+        android:id="@+id/webview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
     <ProgressBar
         app:layout_constraintLeft_toLeftOf="parent"

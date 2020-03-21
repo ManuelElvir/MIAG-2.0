@@ -97,6 +97,7 @@ public class Paper1Activity extends AppCompatActivity implements View.OnClickLis
     }
 
     private void getDataToDataBase() {
+        Log.e("Load","Database");
         showLoading();
         if (getIntent().getBooleanExtra("isChapter",false)){
             questions = dbManager.getQuestionByTutoId(tutoId);
@@ -104,31 +105,27 @@ public class Paper1Activity extends AppCompatActivity implements View.OnClickLis
             questions = dbManager.getQuestionByPaper1Id(paperId);
         }
 
-        if (this.questions!=null)
-            if (questions.size()>0)
-                for (int i=0; i<questions.size(); i++){
-                    QCM qcm = new QCM(questions.get(i).getQUEST_ID(),questions.get(i).getQUEST_LABEL());
-                    List<ANWSER> anwsers = dbManager.getAnwserByQuestionId(questions.get(i).getQUEST_ID());
-                    for (int j =0; j<anwsers.size(); j++){
-                        switch (j){
-                            case 0:
-                                qcm.setAnswer1(anwsers.get(j).getANWS_CONTENT());
-                                break;
-                            case 1:
-                                qcm.setAnswer2(anwsers.get(j).getANWS_CONTENT());
-                                break;
-                            case 2:
-                                qcm.setAnswer3(anwsers.get(j).getANWS_CONTENT());
-                                break;
-                            case 4:
-                                qcm.setAnswer4(anwsers.get(j).getANWS_CONTENT());
-                                break;
-                        }
-                        if (anwsers.get(j).getANWS_STATE()==1)
-                            qcm.setCorrect_answer(j);
+        if (questions.size()>0)
+            for (int i=0; i<questions.size(); i++){
+                QCM qcm = new QCM(questions.get(i).getQUEST_ID(),questions.get(i).getQUEST_LABEL());
+                List<ANWSER> anwsers = dbManager.getAnwserByQuestionId(questions.get(i).getQUEST_ID());
+                for (int j =0; j<anwsers.size(); j++){
+                    switch (j){
+                        case 0:
+                            qcm.setAnswer1(anwsers.get(j).getANWS_CONTENT());
+                            break;
+                        case 1: qcm.setAnswer2(anwsers.get(j).getANWS_CONTENT());
+                            break;
+                        case 2: qcm.setAnswer3(anwsers.get(j).getANWS_CONTENT());
+                            break;
+                        case 4: qcm.setAnswer4(anwsers.get(j).getANWS_CONTENT());
+                            break;
                     }
-                    qcms.add(qcm);
+                    if (anwsers.get(j).getANWS_STATE()==1)
+                        qcm.setCorrect_answer(j);
                 }
+                qcms.add(qcm);
+            }
         HideLoadding();
         refreshContent();
     }
@@ -409,22 +406,24 @@ public class Paper1Activity extends AppCompatActivity implements View.OnClickLis
     @Override
     public void onReceiveQuestion(List<QUESTION> questions) {
         dbManager.insertListQuestion(questions,paperId,tutoId);
-
-        if (this.questions!=null)
-            if (questions.size()>0){
-                position =0;
-                presenter.getAnswer(questions.get(position).getQUEST_ID());
-            }
-
+        this.questions = dbManager.getQuestionByPaper1Id(paperId);
+        Log.e("Questions For Paper "+paperId, String.valueOf(questions));
+        if (questions.size()>0){
+            position =0;
+            presenter.getAnswer(questions.get(position).getQUEST_ID());
+        }
     }
 
     @Override
     public void onReceiveAnwser(List<ANWSER> anwsers) {
-        dbManager.insertListAnwser(anwsers);
+        dbManager.insertListAnwser(anwsers,questions.get(position).getQUEST_ID());
+        Log.e("RECEIVE","ANSWER");
         position++;
-        if (position<questions.size()-1)
+        if (position<questions.size())
             presenter.getAnswer(questions.get(position).getQUEST_ID());
-        else
+        else{
             getDataToDataBase();
+        }
+
     }
 }
