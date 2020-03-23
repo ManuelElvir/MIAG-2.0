@@ -13,7 +13,7 @@ public class ANWSER {
     private String ANWS_CONTENT;
 
     @Expose
-    @SerializedName("ANWS_STATE")
+    @SerializedName("ANWSER_STATE")
     private int ANWS_STATE;
 
     @Expose

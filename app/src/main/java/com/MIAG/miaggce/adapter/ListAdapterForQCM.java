@@ -68,6 +68,15 @@ public class ListAdapterForQCM extends BaseAdapter {
 
         question.setText(qcms.get(i).getQuestion());
         numero.setText(""+(i+1));
+        if(qcms.get(i).getAnswer1()!=null)
+            answer1.setVisibility(View.VISIBLE);
+        if(qcms.get(i).getAnswer2()!=null)
+            answer2.setVisibility(View.VISIBLE);
+        if(qcms.get(i).getAnswer3()!=null)
+            answer3.setVisibility(View.VISIBLE);
+        if(qcms.get(i).getAnswer4()!=null)
+            answer4.setVisibility(View.VISIBLE);
+
         answer1.setText(qcms.get(i).getAnswer1());
         answer2.setText(qcms.get(i).getAnswer2());
         answer3.setText(qcms.get(i).getAnswer3());

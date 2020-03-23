@@ -214,7 +214,7 @@ public class GceOFragment extends Fragment  implements GceView {
                             break;
                     }
                     i.putExtra("title",title);
-                    i.putExtra("subject",paperId);
+                    i.putExtra("paper",paperId);
                     startActivity(i);
                     builder1.dismiss();
                 }

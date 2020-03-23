@@ -86,7 +86,7 @@ class CompetitivePresenter {
 
             @Override
             public void onFailure(@NotNull Call<List<QUESTION>> call, @NotNull Throwable t) {
-                competitiveView.onErrorLoadind("UESTIONS:"+t.getLocalizedMessage());
+                competitiveView.onErrorLoadind("QUESTIONS:"+t.getLocalizedMessage());
                 Log.e("QUESTIONS:",t.getMessage(),t);
                 competitiveView.HideLoadding();
             }

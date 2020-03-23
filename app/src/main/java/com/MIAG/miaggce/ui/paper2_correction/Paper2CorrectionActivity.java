@@ -40,7 +40,10 @@ public class Paper2CorrectionActivity extends AppCompatActivity{
 
         getPaperText();
 
-        webView.loadDataWithBaseURL(null,message,"text/html","utf-8",null);
+        if (message.contains(".pdf"))//if content is a pdf url
+            webView.loadUrl("https://docs.google.com/gview?embedded=true&url="+ message);
+        else
+            webView.loadDataWithBaseURL(null,message,"text/html","utf-8",null);
 
         Button correction = findViewById(R.id.correction);
         correction.setOnClickListener(new View.OnClickListener() {
@@ -54,8 +57,13 @@ public class Paper2CorrectionActivity extends AppCompatActivity{
     private void getPaperText() {
         DBManager dbManager = new DBManager(this);
         dbManager.open();
-        SUBJECT_CORRECTION corrections = dbManager.getSubjectCorrectionByPaper2Id(getIntent().getIntExtra("paper",0));
-        message = corrections.getSC_CONTENT();
+        SUBJECT_CORRECTION corrections;
+        if (getIntent().getBooleanExtra("isPaper3",false)){
+            corrections = dbManager.getSubjectCorrectionByPaper3Id(getIntent().getIntExtra("paper",0));
+        }else {
+            corrections = dbManager.getSubjectCorrectionByPaper2Id(getIntent().getIntExtra("paper",0));
+        }
+        message = ""+corrections.getSC_CONTENT();
     }
 
     @Override

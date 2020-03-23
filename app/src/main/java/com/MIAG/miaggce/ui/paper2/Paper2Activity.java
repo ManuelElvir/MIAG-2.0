@@ -32,7 +32,6 @@ import com.MIAG.miaggce.ui.gce_a.GcePresenter;
 import com.MIAG.miaggce.ui.gce_a.GceView;
 import com.MIAG.miaggce.ui.paper2_correction.Paper2CorrectionActivity;
 import com.google.android.material.snackbar.Snackbar;
-
 import java.util.List;
 import java.util.Objects;
 
@@ -96,7 +95,10 @@ public class Paper2Activity extends AppCompatActivity implements View.OnClickLis
     }
 
     private void refreshContent() {
-        webView.loadDataWithBaseURL(null,message,"text/html","utf-8",null);
+        if (message.contains(".pdf"))//if content is a pdf url
+            webView.loadUrl("https://docs.google.com/gview?embedded=true&url="+ message);
+        else
+            webView.loadDataWithBaseURL(null,message,"text/html","utf-8",null);
 
         if (getIntent().getBooleanExtra("no_timer",false)){
             card.setVisibility(View.GONE);
@@ -155,6 +157,7 @@ public class Paper2Activity extends AppCompatActivity implements View.OnClickLis
                 Intent intent = new Intent(Paper2Activity.this, Paper2CorrectionActivity.class);
                 intent.putExtra("title","Correction : "+getIntent().getStringExtra("title"));
                 startActivity(intent);
+                Paper2Activity.this.finish();
             }
         }.start();
     }
@@ -253,7 +256,9 @@ public class Paper2Activity extends AppCompatActivity implements View.OnClickLis
                             Intent intent = new Intent(Paper2Activity.this, Paper2CorrectionActivity.class);
                             intent.putExtra("title","Correction : "+getIntent().getStringExtra("title"));
                             intent.putExtra("paper",paperId);
+                            intent.putExtra("isPaper3",getIntent().getBooleanExtra("no_timer",false));
                             startActivity(intent);
+                            Paper2Activity.this.finish();
                         }
                         else {
                             if (appConfig.isInternetAvailable()){
@@ -315,6 +320,7 @@ public class Paper2Activity extends AppCompatActivity implements View.OnClickLis
         intent.putExtra("title","Correction : "+getIntent().getStringExtra("title"));
         intent.putExtra("sc_id",paperId);
         startActivity(intent);
+        Paper2Activity.this.finish();
     }
 
     @Override
@@ -325,6 +331,7 @@ public class Paper2Activity extends AppCompatActivity implements View.OnClickLis
         intent.putExtra("isPaper3",true);
         intent.putExtra("sc_id",paperId);
         startActivity(intent);
+        Paper2Activity.this.finish();
     }
 
     @Override

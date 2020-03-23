@@ -34,7 +34,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String DB_NAME = "MIAG.DB";
 
     // database version
-    private static final int DB_VERSION = 11;
+    private static final int DB_VERSION = 15;
 
     // Creating table query
     private static final String CREATE_TABLE_EXAM = "create table " + EXAM + "( EXAM_ID INTEGER  PRIMARY KEY, EXAM_NAME TEXT, EXAM_DATE_END TEXT);";

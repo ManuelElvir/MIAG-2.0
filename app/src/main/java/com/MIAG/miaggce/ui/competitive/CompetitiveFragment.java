@@ -29,7 +29,6 @@ import com.MIAG.miaggce.MainActivity;
 import com.MIAG.miaggce.R;
 import com.MIAG.miaggce.adapter.GridAdapterForCOMP;
 import com.MIAG.miaggce.app.DBManager;
-import com.MIAG.miaggce.app.DownloadFileFromURL;
 import com.MIAG.miaggce.app.appConfig;
 import com.MIAG.miaggce.models.ANWSER;
 import com.MIAG.miaggce.models.CHAPTER;
@@ -40,7 +39,6 @@ import com.MIAG.miaggce.models.SUBJECT;
 import com.MIAG.miaggce.models.TUTORIAL;
 import com.MIAG.miaggce.ui.paper1.Paper1Activity;
 import com.MIAG.miaggce.ui.requierement.RequierementActivity;
-import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -149,7 +147,7 @@ public class CompetitiveFragment extends Fragment implements CompetitiveView {
                     SubMenu menu2sub = menu2.addSubMenu(subjects.get(j).getSJ_NAME());
                     for (int k =0; k<chapters.size(); k++){
                         SubMenu menu3sub =menu2sub.addSubMenu(chapters.get(k).getCHAP_NAME());
-                        List<TUTORIAL> tutorials = dbManager.getTutorialByChapter(i,chapters.get(k).getCHAP_ID());
+                        List<TUTORIAL> tutorials = dbManager.getTutorialByChapter(chapters.get(k).getCOMP_ID(),chapters.get(k).getCHAP_ID());
                         for (int l=0; l<tutorials.size(); l++){
                             menu3sub.add(tutorials.get(l).getTUTO_ID(),10000+l,l,tutorials.get(l).getTUTO_NAME());
                         }
@@ -158,7 +156,8 @@ public class CompetitiveFragment extends Fragment implements CompetitiveView {
                     }
                 }
             }
-        }else//if any chapter follow show error message
+        }
+        else//if any chapter follow show error message
             onErrorLoadind(getString(R.string.no_chapter));
 
         popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
@@ -169,14 +168,19 @@ public class CompetitiveFragment extends Fragment implements CompetitiveView {
                     REQUIEREMENT requierement = dbManager.getRequierementByCompId(competitives.get(i).getCOMP_ID());
                     if (requierement.getREQ_ID()==0){
                         onErrorLoadind("This requierement is not download, please connect your device to internet");
-                        competitivePresenter.getRequierement(competitives.get(i).getCOMP_ID());
+                        onErrorLoadind("No question for this tutorial");
+                        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
+                                .permitAll().build();
+                        StrictMode.setThreadPolicy(policy);
+                        if(appConfig.isInternetAvailable())
+                            competitivePresenter.getRequierement(competitives.get(i).getCOMP_ID());
                     }
                     else {
                         startRequierement(requierement);
                     }
                 }
                 else if(item.getItemId() >= 10000){
-                    int tutorialid = item.getItemId()-10000;
+                    int tutorialid = item.getGroupId();
                     TUTORIAL tutorial = dbManager.getTutorialById(tutorialid);
                     if(dbManager.getQuestionCountTuto(tutorial.getTUTO_ID())>0)
                         showDialog(tutorial.getTUTO_NAME(),tutorial.getTUTO_ID());
@@ -309,24 +313,10 @@ public class CompetitiveFragment extends Fragment implements CompetitiveView {
     }
 
     private  void startRequierement (REQUIEREMENT requierement){
-        if (requierement.getREQ_CONTENT().contains("http") && requierement.getREQ_CONTENT().contains(".pdf")){
-            DownloadFileFromURL downloadFileFromURL = new DownloadFileFromURL("Requierement for "+requierement.getCOMP_ID(),requierement.getREQ_NAME(),getContext(),CompetitiveFragment.this);
-            downloadFileFromURL.execute(requierement.getREQ_CONTENT());
-        }else{
-            Intent intentReq = new Intent(getActivity(),RequierementActivity.class);
-            intentReq.putExtra("title",requierement.getREQ_NAME());
-            intentReq.putExtra("req_content",requierement.getREQ_CONTENT());
-            startActivity(intentReq);
-        }
-    }
-
-    @Override
-    public void openRequierement(String pathFile, String reqName) {
-        Intent intent = new Intent(getActivity(), RequierementActivity.class);
-        intent.putExtra("title",reqName);
-        intent.putExtra("pathFile",pathFile);
-        intent.putExtra("isFile",true);
-        startActivity(intent);
+        Intent intentReq = new Intent(getActivity(),RequierementActivity.class);
+        intentReq.putExtra("title",requierement.getREQ_NAME());
+        intentReq.putExtra("req_content",requierement.getREQ_CONTENT());
+        startActivity(intentReq);
     }
 
     private void starGetQuestion() {

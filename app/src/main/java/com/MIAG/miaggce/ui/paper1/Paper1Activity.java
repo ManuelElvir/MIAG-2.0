@@ -118,11 +118,11 @@ public class Paper1Activity extends AppCompatActivity implements View.OnClickLis
                             break;
                         case 2: qcm.setAnswer3(anwsers.get(j).getANWS_CONTENT());
                             break;
-                        case 4: qcm.setAnswer4(anwsers.get(j).getANWS_CONTENT());
+                        case 3: qcm.setAnswer4(anwsers.get(j).getANWS_CONTENT());
                             break;
                     }
                     if (anwsers.get(j).getANWS_STATE()==1)
-                        qcm.setCorrect_answer(j);
+                        qcm.setCorrect_answer(j+1);
                 }
                 qcms.add(qcm);
             }
@@ -138,12 +138,14 @@ public class Paper1Activity extends AppCompatActivity implements View.OnClickLis
         else {
             String chrono;
             if (getIntent().getBooleanExtra("isChapter",false)){
+                timeTotal = timeleftinmillisecond = 60000*(2*60);
+            }else {
                 chrono = dbManager.getPaper1ById(paperId).getTEST_CHRONO();
                 int heure = Integer.valueOf(chrono.substring(0,2));
                 int minutes = Integer.valueOf(chrono.substring(3,5));
-                timeTotal = timeleftinmillisecond = 60000*((heure*60)*minutes);
-            }else {
-                timeTotal = timeleftinmillisecond = 60000*(2*60);
+                timeTotal = timeleftinmillisecond = 60000*((heure*60)+minutes);
+
+                Log.e("CHRONO"+chrono,heure+":"+minutes);
             }
 
             card = findViewById(R.id.card_timer);
@@ -198,7 +200,7 @@ public class Paper1Activity extends AppCompatActivity implements View.OnClickLis
                     countDownTimer.cancel();
                     countDownTimer = null;
                 }
-                showDialog(getIntent().getStringExtra("title"),getIntent().getIntExtra("paper",1));
+                showDialogBox(getIntent().getStringExtra("title"));
             }
         }.start();
     }
@@ -295,7 +297,7 @@ public class Paper1Activity extends AppCompatActivity implements View.OnClickLis
                             countDownTimer.cancel();
                             countDownTimer = null;
                         }
-                        showDialog(getIntent().getStringExtra("title"),getIntent().getIntExtra("paper",1));
+                        showDialogBox(getIntent().getStringExtra("title"));
                     }
                 }
             });
@@ -314,7 +316,7 @@ public class Paper1Activity extends AppCompatActivity implements View.OnClickLis
         return note;
     }
 
-    private void showDialog(final String title, final int paperId){
+    private void showDialogBox(final String title){
         LayoutInflater layoutInflater = LayoutInflater.from(this);
         @SuppressLint("InflateParams") View promptView = layoutInflater.inflate(R.layout.layout_result, null);
 
@@ -365,7 +367,13 @@ public class Paper1Activity extends AppCompatActivity implements View.OnClickLis
             public void onClick(View v) {
                 Intent i = new Intent(Paper1Activity.this, Paper1Activity.class);
                 i.putExtra("title","Correction : " +title);
-                i.putExtra("paper",paperId);
+                if (getIntent().getBooleanExtra("isChapter",false)){
+                    i.putExtra("tuto",tutoId);
+                    i.putExtra("isChapter",true);
+                }else {
+                    i.putExtra("paper",paperId);
+                }
+
                 i.putExtra("isCorrection",true);
                 startActivity(i);
                 Paper1Activity.this.finish();

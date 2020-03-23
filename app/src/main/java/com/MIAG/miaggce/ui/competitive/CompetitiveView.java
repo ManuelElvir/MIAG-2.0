@@ -17,5 +17,4 @@ public interface CompetitiveView {
     void onReceiveAnwser(List<ANWSER> anwsers, int questId);
     void onReceiveRequierement(List<REQUIEREMENT> requierements);
     void onReceiveTutorial(List<TUTORIAL> tutorials);
-    void openRequierement(String pathFile, String reqName);
 }

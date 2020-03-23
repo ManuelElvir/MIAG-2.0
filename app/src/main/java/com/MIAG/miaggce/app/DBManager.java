@@ -6,7 +6,6 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
-
 import com.MIAG.miaggce.models.ANWSER;
 import com.MIAG.miaggce.models.CHAPTER;
 import com.MIAG.miaggce.models.COMPETITIVE;
@@ -21,7 +20,6 @@ import com.MIAG.miaggce.models.STAFFMEMBER;
 import com.MIAG.miaggce.models.SUBJECT;
 import com.MIAG.miaggce.models.SUBJECT_CORRECTION;
 import com.MIAG.miaggce.models.TUTORIAL;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -106,7 +104,7 @@ public class DBManager {
         List<COMPETITIVE> competitives;
         competitives = new ArrayList<>();
         Cursor cursor = database.query(DatabaseHelper.COMPETITIVE, null, null, null, null, null, null);
-        if (cursor != null) {
+        if (cursor.getCount()>0) {
             cursor.moveToFirst();
             do{
                 if (cursor.getColumnCount()>1) {
@@ -144,7 +142,7 @@ public class DBManager {
         List<SUBJECT> subjects;
         subjects = new ArrayList<>();
         Cursor cursor = database.rawQuery("SELECT * FROM "+DatabaseHelper.SUBJECT, null);
-        if (cursor != null) {
+        if (cursor.getCount()>0) {
             cursor.moveToFirst();
             for(int i=0; i<cursor.getCount(); i++){
                 if (cursor.getColumnCount()>1) {
@@ -167,7 +165,7 @@ public class DBManager {
     public SUBJECT getSubjectById(int SJ_ID) {
         SUBJECT subject = new SUBJECT();
         Cursor cursor = database.rawQuery("SELECT * FROM "+DatabaseHelper.SUBJECT + " WHERE SJ_ID = "+SJ_ID, null);
-        if (cursor != null) {
+        if (cursor.getCount()>0) {
             cursor.moveToFirst();
             subject.setSJ_ID(cursor.getInt(0));
             subject.setSJ_NAME(cursor.getString(1));
@@ -206,15 +204,15 @@ public class DBManager {
         List<CHAPTER> chapters;
         chapters = new ArrayList<>();
         Cursor cursor = database.rawQuery("SELECT * FROM "+DatabaseHelper.CHAPTER+" WHERE COMP_ID = "+COMP_ID, null);
-        if (cursor != null) {
+        if (cursor.getCount()>0) {
             cursor.moveToFirst();
             do{
                 if (cursor.getColumnCount()>3) {
                     CHAPTER chapter = new CHAPTER();
                     chapter.setCHAP_ID(cursor.getInt(0));
                     chapter.setSJ_ID(cursor.getInt(1));
-                    chapter.setCHAP_NAME(cursor.getString(2));
-                    chapter.setCOMP_ID(cursor.getInt(3));
+                    chapter.setCOMP_ID(cursor.getInt(2));
+                    chapter.setCHAP_NAME(cursor.getString(3));
                     chapters.add(chapter);
                 }
             }while(cursor.moveToNext());
@@ -253,6 +251,7 @@ public class DBManager {
         tutorials = new ArrayList<>();
         Cursor cursor = database.rawQuery("SELECT * FROM "+DatabaseHelper.TUTORIAL+" WHERE COMP_ID = " + COMP_ID +" AND CHAPT_ID = "+CHAP_ID, null);
         cursor.moveToFirst();
+        Log.e("Try to get TUTORIAL : ", "COMP_ID = "+COMP_ID + " CHAP_ID = "+CHAP_ID);
         for(int i=0; i<cursor.getCount(); i++){
             TUTORIAL tutorial = new TUTORIAL();
             tutorial.setTUTO_ID(cursor.getInt(0));
@@ -260,6 +259,7 @@ public class DBManager {
             tutorial.setCHAP_ID(cursor.getInt(2));
             tutorial.setCOMP_ID(cursor.getInt(3));
             tutorials.add(tutorial);
+            Log.e("GET TUTORIAL : "+i +"/"+cursor.getCount(), "TUT_ID = "+tutorial.getTUTO_ID() + " TUT_NAME = "+tutorial.getTUTO_NAME() + " CHAP_ID = "+ tutorial.getCHAP_ID() + " COMP_ID = "+tutorial.getCOMP_ID());
             cursor.moveToNext();
         }
         cursor.close();
@@ -272,41 +272,17 @@ public class DBManager {
      */
     public TUTORIAL getTutorialById(int TUTO_ID) {
         TUTORIAL tutorial = new TUTORIAL();
-        Cursor cursor = database.rawQuery("SELECT * FROM "+DatabaseHelper.CHAPTER+" WHERE TUTO_ID = " + TUTO_ID, null);
-        if (cursor != null) {
+        Cursor cursor = database.rawQuery("SELECT * FROM "+DatabaseHelper.TUTORIAL+" WHERE TUTO_ID = " + TUTO_ID, null);
+        if (cursor.getCount()>0) {
             cursor.moveToFirst();
             tutorial.setTUTO_ID(cursor.getInt(0));
             tutorial.setTUTO_NAME(cursor.getString(1));
             tutorial.setCHAP_ID(cursor.getInt(2));
             tutorial.setCOMP_ID(cursor.getInt(3));
+            Log.e("GET TUTORIAL : "+cursor.getCount(), "TUT_ID = "+tutorial.getTUTO_ID() + " TUT_NAME = "+tutorial.getTUTO_NAME() + " CHAP_ID = "+ tutorial.getCHAP_ID() + " COMP_ID = "+tutorial.getCOMP_ID());
             cursor.close();
         }
         return tutorial;
-    }
-
-    /**
-     *  get collect of CHAPTER
-     * @return chapters Collection of CHAPTER object
-     */
-    public List<CHAPTER> listChapter() {
-        List<CHAPTER> chapters;
-        chapters = new ArrayList<>();
-        Cursor cursor = database.rawQuery("SELECT * FROM "+DatabaseHelper.CHAPTER, null);
-        if (cursor != null) {
-            cursor.moveToFirst();
-            do{
-                if (cursor.getColumnCount()>3) {
-                    CHAPTER chapter = new CHAPTER();
-                    chapter.setCHAP_ID(cursor.getInt(0));
-                    chapter.setSJ_ID(cursor.getInt(1));
-                    chapter.setCHAP_NAME(cursor.getString(2));
-                    chapter.setCOMP_ID(cursor.getInt(3));
-                    chapters.add(chapter);
-                }
-            }while(cursor.moveToNext());
-            cursor.close();
-        }
-        return chapters;
     }
 
     /**
@@ -362,7 +338,7 @@ public class DBManager {
     public PAPER1 getPaper1ById(int PAPER1_ID) {
         Cursor cursor = database.rawQuery("SELECT * FROM "+DatabaseHelper.PAPER1+" WHERE PAPER1_ID = "+PAPER1_ID, null);
         PAPER1 paper1 = new PAPER1();
-        if (cursor != null) {
+        if (cursor.getCount()>0) {
             cursor.moveToFirst();
             if (cursor.getCount()>0) {
                 paper1.setPAPER1_ID(cursor.getInt(0));
@@ -452,7 +428,7 @@ public class DBManager {
     public PAPER2 getPaper2ById(int PAPER2_ID) {
         Cursor cursor = database.rawQuery("SELECT * FROM "+DatabaseHelper.PAPER2+" WHERE PAPER2_ID = "+PAPER2_ID, null);
         PAPER2 paper2 = new PAPER2();
-        if (cursor != null) {
+        if (cursor.getCount()>0) {
             cursor.moveToFirst();
             Log.e("GET PAPER 2", "by Id" );
             paper2.setPAPER2_ID(cursor.getInt(0));
@@ -496,7 +472,7 @@ public class DBManager {
     public PAPER3 getPaper3BySubjectAndExam(int SJ_ID, int EXAM_ID) {
         PAPER3 paper3 = new PAPER3();
         Cursor cursor = database.rawQuery("SELECT * FROM "+DatabaseHelper.PAPER3+" WHERE SJ_ID = "+SJ_ID+" AND EXAM_ID = "+EXAM_ID, null);
-        if (cursor != null) {
+        if (cursor.getCount()>0) {
             cursor.moveToFirst();
             if (cursor.getCount()>0) {
                 Log.e("GET PAPER 3 ", "by EXAM and Subject" );
@@ -518,7 +494,7 @@ public class DBManager {
     public PAPER3 getPaper3ById(int PAPER3_ID) {
         PAPER3 paper3 = new PAPER3();
         Cursor cursor = database.rawQuery("SELECT * FROM "+DatabaseHelper.PAPER3+" WHERE PAPER3_ID = "+PAPER3_ID, null);
-        if (cursor != null) {
+        if (cursor.getCount()>0) {
             cursor.moveToFirst();
             Log.e("GET PAPER 3", "by ID" );
             paper3.setPAPER3_ID(cursor.getInt(0));
@@ -597,7 +573,7 @@ public class DBManager {
         List<STAFFMEMBER> staffmembers;
         staffmembers = new ArrayList<>();
         Cursor cursor = database.rawQuery("SELECT * FROM "+DatabaseHelper.STAFFMEMBER, null);
-        if (cursor != null) {
+        if (cursor.getCount()>0) {
             cursor.moveToFirst();
             for (int i=0; i<cursor.getCount(); i++){
                 if (cursor.getColumnCount()>4) {
@@ -622,6 +598,7 @@ public class DBManager {
     public SUBJECT_CORRECTION getSubjectCorrectionByPaper3Id(int SC_PAPER3_ID) {
         SUBJECT_CORRECTION subject_correction = new SUBJECT_CORRECTION();
         Cursor cursor = database.rawQuery("SELECT * FROM "+DatabaseHelper.SUBJECT_CORRECTION+" WHERE PAPER3_ID = "+SC_PAPER3_ID, null);
+        Log.e("TRY GET CORRECTION : ", "PAPER 3 : "+SC_PAPER3_ID);
         if (cursor.getCount()>0) {
             cursor.moveToFirst();
             subject_correction.setSC_ID(cursor.getInt(0));
@@ -640,7 +617,8 @@ public class DBManager {
     public SUBJECT_CORRECTION getSubjectCorrectionByPaper2Id(int SC_PAPER2_ID) {
         SUBJECT_CORRECTION subject_correction = new SUBJECT_CORRECTION();
         Cursor cursor = database.rawQuery("SELECT * FROM "+DatabaseHelper.SUBJECT_CORRECTION+" WHERE PAPER2_ID = "+SC_PAPER2_ID, null);
-        if (cursor != null) {
+        Log.e("TRY GET CORRECTION : ", "PAPER 2 : "+SC_PAPER2_ID);
+        if (cursor.getCount()>0) {
             cursor.moveToFirst();
             subject_correction.setSC_ID(cursor.getInt(0));
             subject_correction.setSC_CONTENT(cursor.getString(1));
@@ -657,14 +635,15 @@ public class DBManager {
      */
     public void insertListSubjectCorrection(SUBJECT_CORRECTION correction) {
         Cursor cursor = database.rawQuery("SELECT * FROM "+DatabaseHelper.SUBJECT_CORRECTION+" WHERE SC_ID = "+correction.getSC_ID(), null);
+        Log.e(" GET CORRECTION", "ID = "+correction.getSC_ID() +" PAPER2_ID = "+correction.getSC_PAPER1_ID() +" PAPER3_ID = "+correction.getSC_PAPER2_ID());
         if (cursor.getCount()==0) {
-            Log.e(" INSERT CORRECTION", ""+correction.getSC_ID());
             ContentValues contentValue = new ContentValues();
             contentValue.put("SC_ID",correction.getSC_ID());
             contentValue.put("SC_CONTENT",correction.getSC_CONTENT());
             contentValue.put("PAPER2_ID",correction.getSC_PAPER1_ID());
             contentValue.put("PAPER3_ID",correction.getSC_PAPER2_ID());
             database.insert(DatabaseHelper.SUBJECT_CORRECTION, null, contentValue);
+            Log.e("INSERT CORRECTION",contentValue.toString());
         }
         cursor.close();
     }
@@ -680,7 +659,6 @@ public class DBManager {
         Cursor cursor = database.rawQuery("SELECT * FROM "+DatabaseHelper.QUESTION+" WHERE PAPER1_ID = "+PAPER1_ID, null);
         cursor.moveToFirst();
         for (int i=0; i<cursor.getCount(); i++){
-            Log.e(" GET QUESTION", i+"/"+cursor.getCount());
             QUESTION question = new QUESTION();
             question.setQUEST_ID(cursor.getInt(0));
             question.setQUEST_LABEL(cursor.getString(1));
@@ -688,6 +666,7 @@ public class DBManager {
             question.setTUT_ID(cursor.getInt(3));
             questions.add(question);
             cursor.moveToNext();
+            Log.e(" GET QUESTION"+i+"/"+cursor.getCount(), "ID = "+question.getQUEST_ID() + " LABEL = "+question.getQUEST_LABEL() + " PAPER1 ="+ question.getPAPER1_ID()+ " TUTO ="+ question.getTUT_ID());
         }
         cursor.close();
         return questions;
@@ -701,10 +680,11 @@ public class DBManager {
     public int getQuestionCountForPaper1(int PAPER1_ID) {
         Cursor cursor = database.rawQuery("SELECT * FROM "+DatabaseHelper.QUESTION+" WHERE PAPER1_ID = "+PAPER1_ID, null);
         int size = 0;
-        if (cursor != null) {
+        if (cursor.getCount()>0) {
             size = cursor.getCount();
             cursor.close();
         }
+        Log.e("QUESTION FOR PAPER1 :", ""+size);
         return size;
     }
 
@@ -726,6 +706,7 @@ public class DBManager {
             question.setTUT_ID(cursor.getInt(3));
             questions.add(question);
             cursor.moveToNext();
+            Log.e(" GET QUESTION"+i+"/"+cursor.getCount(), "ID = "+question.getQUEST_ID() + " LABEL = "+question.getQUEST_LABEL() + " PAPER1 ="+ question.getPAPER1_ID()+ " TUTO ="+ question.getTUT_ID());
         }
         cursor.close();
         return questions;
@@ -739,10 +720,11 @@ public class DBManager {
     public int getQuestionCountTuto(int tuto_id) {
         int size =0;
         Cursor cursor = database.rawQuery("SELECT * FROM "+DatabaseHelper.QUESTION+" WHERE TUTO_ID = "+tuto_id, null);
-        if (cursor != null) {
+        if (cursor.getCount()>0) {
             size = cursor.getCount();
             cursor.close();
         }
+        Log.e("QUESTION FOR TUTO 1 :", ""+size);
         return size;
     }
 
@@ -755,7 +737,7 @@ public class DBManager {
         {
             Cursor cursor = database.rawQuery("SELECT * FROM "+DatabaseHelper.QUESTION+" WHERE QUEST_ID = " + questions.get(i).getQUEST_ID(), null);
             if (cursor.getCount()==0) {
-                Log.e(" INSERT QUESTION", i+"/"+questions.size());
+                Log.e(" GET QUESTION"+i+"/"+questions.size(), "ID = "+questions.get(i).getQUEST_ID() + " LABEL = "+questions.get(i).getQUEST_LABEL() + " PAPER1 ="+ questions.get(i).getPAPER1_ID()+ " TUTO ="+ questions.get(i).getTUT_ID());
                 ContentValues contentValue = new ContentValues();
                 contentValue.put("QUEST_ID",questions.get(i).getQUEST_ID());
                 contentValue.put("QUEST_LABEL",questions.get(i).getQUEST_LABEL());
@@ -778,7 +760,6 @@ public class DBManager {
         Cursor cursor = database.rawQuery("SELECT * FROM "+DatabaseHelper.ANWSER+" WHERE QUEST_ID = "+QUEST_ID, null);
         cursor.moveToFirst();
         for (int i=0; i<cursor.getCount(); i++){
-            Log.e(" GET ANSWER", i+"/"+cursor.getCount());
             ANWSER anwser = new ANWSER();
             anwser.setANWS_ID(cursor.getInt(0));
             anwser.setANWS_CONTENT(cursor.getString(1));
@@ -786,6 +767,7 @@ public class DBManager {
             anwser.setQUEST_ID(cursor.getInt(3));
             anwsers.add(anwser);
             cursor.moveToNext();
+            Log.e(" GET ANSWER"+i+"/"+cursor.getCount(),"CONTENT = "+anwser.getANWS_CONTENT() + " STATE =" + anwser.getANWS_STATE() + " QUEST_ID "+anwser.getQUEST_ID());
         }
         cursor.close();
         return anwsers;
@@ -798,10 +780,10 @@ public class DBManager {
     public void insertListAnwser(List<ANWSER> anwsers, int questId) {
         for (int i=0; i<anwsers.size(); i++)
         {
-            Cursor cursor = database.rawQuery("SELECT * FROM "+DatabaseHelper.ANWSER+" WHERE ANWS_CONTENT = '" + anwsers.get(i).getANWS_CONTENT()+"'", null);
-            Log.e(" INSERT ANSWER", "FOR "+ i);
+            Cursor cursor = database.rawQuery("SELECT * FROM "+DatabaseHelper.ANWSER+" WHERE ANWS_CONTENT = '" + anwsers.get(i).getANWS_CONTENT()+"' AND QUEST_ID = "+questId, null);
+            Log.e(" INSERT ANSWER"+i+"/"+cursor.getCount(),"CONTENT = "+anwsers.get(i).getANWS_CONTENT() + " STATE =" + anwsers.get(i).getANWS_STATE() + " QUEST_ID ="+questId);
             if (cursor.getCount()==0) {
-                Log.e(" INSERT ANSWER", i+"/"+anwsers.size());
+                Log.e(" INSERT ANSWER", "IF "+ i);
                 ContentValues contentValue = new ContentValues();
                 contentValue.put("ANWS_CONTENT",anwsers.get(i).getANWS_CONTENT());
                 contentValue.put("ANWS_STATE",anwsers.get(i).getANWS_STATE());
@@ -821,7 +803,7 @@ public class DBManager {
         List<FILE> files;
         files = new ArrayList<>();
         Cursor cursor = database.rawQuery("SELECT * FROM "+DatabaseHelper.FILE, null);
-        if (cursor != null) {
+        if (cursor.getCount()>0) {
             cursor.moveToFirst();
             for (int i=0; i<cursor.getCount(); i++){
                 FILE file = new FILE();
