@@ -1,4 +1,4 @@
-package com.MIAG.miaggce.ui.gce_a;
+package com.MIAG.miaggce.ui.gce;
 
 import android.util.Log;
 

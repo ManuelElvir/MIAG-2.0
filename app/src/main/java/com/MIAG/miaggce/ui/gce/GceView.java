@@ -1,11 +1,10 @@
-package com.MIAG.miaggce.ui.gce_a;
+package com.MIAG.miaggce.ui.gce;
 
 import com.MIAG.miaggce.models.ANWSER;
 import com.MIAG.miaggce.models.PAPER1;
 import com.MIAG.miaggce.models.PAPER2;
 import com.MIAG.miaggce.models.PAPER3;
 import com.MIAG.miaggce.models.QUESTION;
-import com.MIAG.miaggce.models.SUBJECT;
 import com.MIAG.miaggce.models.SUBJECT_CORRECTION;
 
 import java.util.List;

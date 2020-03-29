@@ -15,10 +15,9 @@ import com.MIAG.miaggce.R;
 import com.MIAG.miaggce.adapter.ListAdapterForStaff;
 import com.MIAG.miaggce.api.ApiClient;
 import com.MIAG.miaggce.api.ApiInterface;
+import com.MIAG.miaggce.app.AsyncTaskRunner;
 import com.MIAG.miaggce.app.DBManager;
-import com.MIAG.miaggce.app.appConfig;
 import com.MIAG.miaggce.models.STAFFMEMBER;
-import com.google.android.material.snackbar.Snackbar;
 import org.jetbrains.annotations.NotNull;
 import java.util.List;
 import retrofit2.Call;
@@ -42,11 +41,14 @@ public class StaffFragment extends Fragment implements ListAdapterForStaff.ItemC
         dbManager.open();
 
         refreshContent();
-        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
-                .permitAll().build();
-        StrictMode.setThreadPolicy(policy);
-        if (appConfig.isInternetAvailable())
-            LoadStaffToServer();
+        AsyncTaskRunner.AsyncTaskListener asyncTaskListener = new AsyncTaskRunner.AsyncTaskListener() {
+            @Override
+            public void startDownload() {
+                LoadStaffToServer();
+            }
+        };
+        AsyncTaskRunner asyncTaskRunner = new AsyncTaskRunner(asyncTaskListener);
+        asyncTaskRunner.execute("Update Data...");
 
         return root;
     }

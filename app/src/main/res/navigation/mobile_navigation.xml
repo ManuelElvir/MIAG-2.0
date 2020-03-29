@@ -7,13 +7,13 @@
 
     <fragment
         android:id="@+id/nav_gce_a"
-        android:name="com.MIAG.miaggce.ui.gce_a.GceAFragment"
+        android:name="com.MIAG.miaggce.ui.gce.GceAFragment"
         android:label="@string/gce_a"
         tools:layout="@layout/fragment_gce_a" />
 
     <fragment
         android:id="@+id/nav_gce_o"
-        android:name="com.MIAG.miaggce.ui.gce_o.GceOFragment"
+        android:name="com.MIAG.miaggce.ui.gce.GceOFragment"
         android:label="@string/gce_o"
         tools:layout="@layout/fragment_gce_o" />
 

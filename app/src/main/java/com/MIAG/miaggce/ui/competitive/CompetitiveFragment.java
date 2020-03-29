@@ -28,6 +28,7 @@ import androidx.fragment.app.Fragment;
 import com.MIAG.miaggce.MainActivity;
 import com.MIAG.miaggce.R;
 import com.MIAG.miaggce.adapter.GridAdapterForCOMP;
+import com.MIAG.miaggce.app.AsyncTaskRunner;
 import com.MIAG.miaggce.app.DBManager;
 import com.MIAG.miaggce.app.appConfig;
 import com.MIAG.miaggce.models.ANWSER;
@@ -91,14 +92,17 @@ public class CompetitiveFragment extends Fragment implements CompetitiveView {
 
         this.competitives = dbManager.fetchCompetitive();
         refreshContent();
-        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
-                .permitAll().build();
-        StrictMode.setThreadPolicy(policy);
-        if(appConfig.isInternetAvailable()){
-            if (this.competitives.size()>0){
-                position = 0;
+
+        AsyncTaskRunner.AsyncTaskListener asyncTaskListener = new AsyncTaskRunner.AsyncTaskListener() {
+            @Override
+            public void startDownload() {
                 competitivePresenter.getChapter(competitives.get(position).getCOMP_ID());
             }
+        };
+        if (competitives.size()>0){
+            position = 0;
+            AsyncTaskRunner asyncTaskRunner = new AsyncTaskRunner(asyncTaskListener);
+            asyncTaskRunner.execute("Update Data...");
         }
     }
 
@@ -118,47 +122,43 @@ public class CompetitiveFragment extends Fragment implements CompetitiveView {
         List<SUBJECT> subjects = new ArrayList<>();
         List<CHAPTER> chapters = dbManager.getChapterByCompId(competitives.get(i).getCOMP_ID());//get all chapters for this competitive
 
-        if (chapters!=null){//if chapter is follow
-            for (int j=0; j<chapters.size(); j++){
-                SUBJECT subject = dbManager.getSubjectById(chapters.get(j).getSJ_ID());
-                //This method add subject awich verify the the current subject is already used
-                if (!subject.equals(new SUBJECT())){
-                    boolean alReadyUsed = false;
-                    int k=1;
-                    if (j==0)
+        for (int j=0; j<chapters.size(); j++){
+            SUBJECT subject = dbManager.getSubjectById(chapters.get(j).getSJ_ID());
+            //This method add subject awich verify the the current subject is already used
+            if (!subject.equals(new SUBJECT())){
+                boolean alReadyUsed = false;
+                int k=1;
+                if (j==0)
+                    subjects.add(subject);
+                else{
+                    do{
+                        if (subjects.get(k).getSJ_ID()==subject.getSJ_ID()){//if this subject is already add on String subject list
+                            alReadyUsed =true;
+                        }
+                        k++;
+                    }while (!alReadyUsed && k<j+1);
+                    if (!alReadyUsed){//if never use add then
                         subjects.add(subject);
-                    else{
-                        do{
-                            if (subjects.get(k).getSJ_ID()==subject.getSJ_ID()){//if this subject is already add on String subject list
-                                alReadyUsed =true;
-                            }
-                            k++;
-                        }while (!alReadyUsed && k<j+1);
-                        if (!alReadyUsed){//if never use add then
-                            subjects.add(subject);
-                        }
-                    }
-                }
-            }
-            if (chapters.size()==0)
-                onErrorLoadind(getString(R.string.no_chapter));
-            else {
-                for (int j = 0; j< subjects.size(); j++){
-                    SubMenu menu2sub = menu2.addSubMenu(subjects.get(j).getSJ_NAME());
-                    for (int k =0; k<chapters.size(); k++){
-                        SubMenu menu3sub =menu2sub.addSubMenu(chapters.get(k).getCHAP_NAME());
-                        List<TUTORIAL> tutorials = dbManager.getTutorialByChapter(chapters.get(k).getCOMP_ID(),chapters.get(k).getCHAP_ID());
-                        for (int l=0; l<tutorials.size(); l++){
-                            menu3sub.add(tutorials.get(l).getTUTO_ID(),10000+l,l,tutorials.get(l).getTUTO_NAME());
-                        }
-                        if (tutorials.size()==0)
-                            onErrorLoadind(getString(R.string.no_tutorial));
                     }
                 }
             }
         }
-        else//if any chapter follow show error message
+        if (chapters.size()==0)
             onErrorLoadind(getString(R.string.no_chapter));
+        else {
+            for (int j = 0; j< subjects.size(); j++){
+                SubMenu menu2sub = menu2.addSubMenu(subjects.get(j).getSJ_NAME());
+                for (int k =0; k<chapters.size(); k++){
+                    SubMenu menu3sub =menu2sub.addSubMenu(chapters.get(k).getCHAP_NAME());
+                    List<TUTORIAL> tutorials = dbManager.getTutorialByChapter(chapters.get(k).getCOMP_ID(),chapters.get(k).getCHAP_ID());
+                    for (int l=0; l<tutorials.size(); l++){
+                        menu3sub.add(tutorials.get(l).getTUTO_ID(),10000+l,l,tutorials.get(l).getTUTO_NAME());
+                    }
+                    if (tutorials.size()==0)
+                        onErrorLoadind(getString(R.string.no_tutorial));
+                }
+            }
+        }
 
         popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.KITKAT)
@@ -189,8 +189,9 @@ public class CompetitiveFragment extends Fragment implements CompetitiveView {
                         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
                                 .permitAll().build();
                         StrictMode.setThreadPolicy(policy);
-                        if(appConfig.isInternetAvailable())
+                        if(appConfig.isInternetAvailable()){
                             competitivePresenter.getQuestions(tutorial.getTUTO_ID());
+                        }
                     }
                 }
                 return false;
@@ -257,12 +258,12 @@ public class CompetitiveFragment extends Fragment implements CompetitiveView {
 
     @Override
     public void showLoading() {
-        progressBar.setVisibility(View.VISIBLE);
+        Objects.requireNonNull(progressBar).setVisibility(View.VISIBLE);
     }
 
     @Override
     public void HideLoadding() {
-        progressBar.setVisibility(View.GONE);
+        Objects.requireNonNull(progressBar).setVisibility(View.GONE);
     }
 
     @Override
@@ -308,8 +309,8 @@ public class CompetitiveFragment extends Fragment implements CompetitiveView {
     @Override
     public void onReceiveRequierement(List<REQUIEREMENT> requierements) {
         dbManager.insertListRequierement(requierements);
-
-        startRequierement(requierements.get(0));
+        if (requierements.size()>0)
+            startRequierement(requierements.get(0));
     }
 
     private  void startRequierement (REQUIEREMENT requierement){

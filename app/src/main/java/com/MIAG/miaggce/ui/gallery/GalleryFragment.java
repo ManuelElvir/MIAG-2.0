@@ -17,6 +17,7 @@ import com.MIAG.miaggce.adapter.GridAdapterForImage;
 import com.MIAG.miaggce.adapter.SliderAdapterImage;
 import com.MIAG.miaggce.api.ApiClient;
 import com.MIAG.miaggce.api.ApiInterface;
+import com.MIAG.miaggce.app.AsyncTaskRunner;
 import com.MIAG.miaggce.app.DBManager;
 import com.MIAG.miaggce.app.ExpandableHeightGridView;
 import com.MIAG.miaggce.app.appConfig;
@@ -74,11 +75,14 @@ public class GalleryFragment extends Fragment {
         });
         refreshContent();
 
-        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
-                .permitAll().build();
-        StrictMode.setThreadPolicy(policy);
-        if (appConfig.isInternetAvailable())
-            LoadImageToServer();
+        AsyncTaskRunner.AsyncTaskListener asyncTaskListener = new AsyncTaskRunner.AsyncTaskListener() {
+            @Override
+            public void startDownload() {
+                LoadImageToServer();
+            }
+        };
+        AsyncTaskRunner asyncTaskRunner = new AsyncTaskRunner(asyncTaskListener);
+        asyncTaskRunner.execute("Update Data...");
         return root;
     }
 

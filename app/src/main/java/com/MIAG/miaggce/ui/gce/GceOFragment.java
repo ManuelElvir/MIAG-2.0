@@ -1,4 +1,4 @@
-package com.MIAG.miaggce.ui.gce_o;
+package com.MIAG.miaggce.ui.gce;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -27,6 +27,7 @@ import android.widget.Toast;
 import com.MIAG.miaggce.MainActivity;
 import com.MIAG.miaggce.R;
 import com.MIAG.miaggce.adapter.GridAdapterForGCE;
+import com.MIAG.miaggce.app.AsyncTaskRunner;
 import com.MIAG.miaggce.app.DBManager;
 import com.MIAG.miaggce.app.appConfig;
 import com.MIAG.miaggce.models.ANWSER;
@@ -36,10 +37,7 @@ import com.MIAG.miaggce.models.PAPER3;
 import com.MIAG.miaggce.models.QUESTION;
 import com.MIAG.miaggce.models.SUBJECT;
 import com.MIAG.miaggce.models.SUBJECT_CORRECTION;
-import com.MIAG.miaggce.ui.gce_a.GcePresenter;
-import com.MIAG.miaggce.ui.gce_a.GceView;
 import com.MIAG.miaggce.ui.paper2.Paper2Activity;
-import com.MIAG.miaggce.ui.gce_a.PAPER;
 import com.MIAG.miaggce.ui.paper1.Paper1Activity;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -60,6 +58,7 @@ public class GceOFragment extends Fragment  implements GceView {
     private List<SUBJECT> subjects_list= new ArrayList<>();
     private DBManager dbManager;
     private int position;
+    private boolean isManuallyStart = false;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -76,12 +75,6 @@ public class GceOFragment extends Fragment  implements GceView {
         });
 
         getData();
-        years = new ArrayList<>();
-        years.add("2020");
-        years.add("2019");
-        years.add("2018");
-        years.add("2017");
-        years.add("2016");
 
         return root;
     }
@@ -92,15 +85,19 @@ public class GceOFragment extends Fragment  implements GceView {
         dbManager.open();
 
         subjects_list = dbManager.fetchSubject();
+        years = dbManager.listExamDateByLevel("o");
         refreshContent();
-        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
-                .permitAll().build();
-        StrictMode.setThreadPolicy(policy);
-        if(appConfig.isInternetAvailable()){
-            if (subjects_list.size()>0){
-                position = 0;
+
+        AsyncTaskRunner.AsyncTaskListener asyncTaskListener = new AsyncTaskRunner.AsyncTaskListener() {
+            @Override
+            public void startDownload() {
                 presenter.getPaper1(subjects_list.get(position).getSJ_ID());
             }
+        };
+        if (subjects_list.size()>0){
+            position = 0;
+            AsyncTaskRunner asyncTaskRunner = new AsyncTaskRunner(asyncTaskListener);
+            asyncTaskRunner.execute("Update Data...");
         }
     }
 
@@ -126,45 +123,49 @@ public class GceOFragment extends Fragment  implements GceView {
             public boolean onMenuItemClick(MenuItem item) {
                 int subject = subjects_list.get(i).getSJ_ID();
                 int exam = dbManager.getExamByNameAndDate("o",years.get(item.getGroupId()));
-                if (exam==0){
-                    onErrorLoadind(getString(R.string.no_paper));
+                if(item.getTitle() == getText(R.string.paper_1)){
+                    final PAPER1 paper1 = dbManager.getPaper1BySubjectAndExam(subject,exam);
+                    if(paper1.getPAPER1_ID()==0){
+                        onErrorLoadind(getString(R.string.paper_not_exist));
+                        //on relance le téléchargement de ce paper
+                        presenter.getPaper1(subject);
+                        isManuallyStart=true;
+                    }else {
+                        if(dbManager.getQuestionCountForPaper1(paper1.getPAPER1_ID())>0)
+                            showDialog(paper1.getTEST_NAME(),PAPER.PAPER1,paper1.getPAPER1_ID());
+                        else{
+                            Snackbar snackbar = Snackbar
+                                    .make(progressBar, "The Question are not Downloaded", Snackbar.LENGTH_LONG)
+                                    .setAction("Download", new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View view) {
+                                            presenter.getQuestions(paper1.getPAPER1_ID());
+                                        }
+                                    });
+                            snackbar.show();
+                        }
+                    }
                 }
-                else{
-                    if(item.getTitle() == getText(R.string.paper_1)){
-                        final PAPER1 paper1 = dbManager.getPaper1BySubjectAndExam(subject,exam);
-                        if(paper1.getPAPER1_ID()==0){
-                            onErrorLoadind(getString(R.string.paper_not_exist));
-                        }else {
-                            if(dbManager.getQuestionCountForPaper1(paper1.getPAPER1_ID())>0)
-                                showDialog(paper1.getTEST_NAME(),PAPER.PAPER1,paper1.getPAPER1_ID());
-                            else{
-                                Snackbar snackbar = Snackbar
-                                        .make(progressBar, "The Question are not Downloaded", Snackbar.LENGTH_LONG)
-                                        .setAction("Download", new View.OnClickListener() {
-                                            @Override
-                                            public void onClick(View view) {
-                                                presenter.getQuestions(paper1.getPAPER1_ID());
-                                            }
-                                        });
-                                snackbar.show();
-                            }
-                        }
+                else if(item.getTitle() == getText(R.string.paper_2)){
+                    PAPER2 paper2 = dbManager.getPaper2BySubjectAndExam(subject,exam);
+                    if(paper2.getPAPER2_ID()==0){
+                        onErrorLoadind(getString(R.string.paper_not_exist));
+                        //on relance le téléchargement de ce paper
+                        presenter.getPaper2(subject);
+                        isManuallyStart =true;
+                    }else {
+                        showDialog(paper2.getTEST_NAME(),PAPER.PAPER2,paper2.getPAPER2_ID());
                     }
-                    else if(item.getTitle() == getText(R.string.paper_2)){
-                        PAPER2 paper2 = dbManager.getPaper2BySubjectAndExam(subject,exam);
-                        if(paper2.getPAPER2_ID()==0){
-                            onErrorLoadind(getString(R.string.paper_not_exist));
-                        }else {
-                            showDialog(paper2.getTEST_NAME(),PAPER.PAPER2,paper2.getPAPER2_ID());
-                        }
-                    }
-                    else if(item.getTitle() == getText(R.string.paper_3)){
-                        PAPER3 paper3 = dbManager.getPaper3BySubjectAndExam(subject,exam);
-                        if(paper3.getPAPER3_ID()==0){
-                            onErrorLoadind(getString(R.string.paper_not_exist));
-                        }else {
-                            showDialog(paper3.getTEST_NAME(),PAPER.PAPER3,paper3.getPAPER3_ID());
-                        }
+                }
+                else if(item.getTitle() == getText(R.string.paper_3)){
+                    PAPER3 paper3 = dbManager.getPaper3BySubjectAndExam(subject,exam);
+                    if(paper3.getPAPER3_ID()==0){
+                        onErrorLoadind(getString(R.string.paper_not_exist));
+                        //on relance le téléchargement de ce paper
+                        presenter.getPaper3(subject);
+                        isManuallyStart =true;
+                    }else {
+                        showDialog(paper3.getTEST_NAME(),PAPER.PAPER3,paper3.getPAPER3_ID());
                     }
                 }
                 return false;
@@ -243,40 +244,71 @@ public class GceOFragment extends Fragment  implements GceView {
 
     @Override
     public void showLoading() {
-        progressBar.setVisibility(View.VISIBLE);
+        Objects.requireNonNull(progressBar).setVisibility(View.VISIBLE);
     }
 
     @Override
     public void HideLoadding() {
-        progressBar.setVisibility(View.GONE);
+        Objects.requireNonNull(progressBar).setVisibility(View.GONE);
     }
 
     @Override
     public void onErrorLoadind(String cause) {
-        Toast.makeText(getContext(), cause, Toast.LENGTH_SHORT).show();
+        if (GceOFragment.this.getContext()!=null)
+            Toast.makeText(GceOFragment.this.getContext(), cause, Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onReceivePaper1(List<PAPER1> paper1s) {
         dbManager.insertListPaper1(paper1s);
-        presenter.getPaper2(subjects_list.get(position).getSJ_ID());
+        if (isManuallyStart)// si le téléchargement a été démarer manuellement
+        {
+            starGetQuestion(paper1s);
+            isManuallyStart = false;
+        }
+        else
+            presenter.getPaper2(subjects_list.get(position).getSJ_ID());
     }
 
     @Override
     public void onReceivePaper2(List<PAPER2> paper2s) {
         dbManager.insertListPaper2(paper2s);
-        presenter.getPaper3(subjects_list.get(position).getSJ_ID());
+        for (int i=0; i<paper2s.size(); i++){
+            presenter.getPaper2Correction(paper2s.get(i).getPAPER2_ID());
+        }
+        if (isManuallyStart)
+            isManuallyStart = false;
+        else
+            presenter.getPaper3(subjects_list.get(position).getSJ_ID());
+    }
+
+    @Override
+    public void onReceivePaper2Correction(SUBJECT_CORRECTION correction){
+        dbManager.insertListSubjectCorrection(correction);
     }
 
     @Override
     public void onReceivePaper3(List<PAPER3> paper3s) {
         dbManager.insertListPaper3(paper3s);
-        if (position<subjects_list.size()-1){
-            position++;
-            presenter.getPaper1(subjects_list.get(position).getSJ_ID());
-        }else {
-            starGetQuestion();
+        for (int i=0; i<paper3s.size(); i++){
+            presenter.getPaper3Correction(paper3s.get(i).getPAPER3_ID());
         }
+
+        if (isManuallyStart)
+            isManuallyStart = false;
+        else{
+            if (position<subjects_list.size()-1){
+                position++;
+                presenter.getPaper1(subjects_list.get(position).getSJ_ID());
+            }else {
+                starGetQuestion(null);
+            }
+        }
+    }
+
+    @Override
+    public void onReceivePaper3Correction(SUBJECT_CORRECTION correction){
+        dbManager.insertListSubjectCorrection(correction);
     }
 
     @Override
@@ -284,29 +316,26 @@ public class GceOFragment extends Fragment  implements GceView {
         dbManager.insertListQuestion(questions, paperId,0);
         for (int i=0; i<questions.size(); i++){
             presenter.getAnswers(questions.get(i).getQUEST_ID());
+            if (i == questions.size()-1)
+                Toast.makeText(getContext(), getString(R.string.question_download), Toast.LENGTH_SHORT).show();
         }
     }
-
-    @Override
-    public void onReceivePaper2Correction(SUBJECT_CORRECTION correction) {
-
-    }
-
-    @Override
-    public void onReceivePaper3Correction(SUBJECT_CORRECTION correction) {
-
-    }
-
 
     @Override
     public void onReceiveAnwser(List<ANWSER> anwsers, int questId) {
         dbManager.insertListAnwser(anwsers, questId);
     }
 
-    private void starGetQuestion() {
-        List<PAPER1> paper1s = dbManager.fetchPaper1();
-        for (int i =0; i<paper1s.size(); i++){
-            presenter.getQuestions(paper1s.get(i).getPAPER1_ID());
+    private void starGetQuestion(List<PAPER1> paper1_list) {
+        if (paper1_list!=null)
+            for (int i =0; i<paper1_list.size(); i++){
+                presenter.getQuestions(paper1_list.get(i).getPAPER1_ID());
+            }
+        else{
+            List<PAPER1> paper1s = dbManager.fetchPaper1();
+            for (int i =0; i<paper1s.size(); i++){
+                presenter.getQuestions(paper1s.get(i).getPAPER1_ID());
+            }
         }
     }
 }

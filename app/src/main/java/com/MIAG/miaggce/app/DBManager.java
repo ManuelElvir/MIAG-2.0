@@ -66,6 +66,22 @@ public class DBManager {
     }
 
     /**
+     * get collect of STING : EXAM DATE
+     * @return dates Collection of STRING DATE
+     */
+    public List<String> listExamDateByLevel(String level) {
+        Cursor cursor = database.rawQuery("SELECT EXAM_DATE_END FROM "+DatabaseHelper.EXAM+" WHERE EXAM_NAME LIKE '%"+level+"%' ORDER BY EXAM_DATE_END DESC", null);
+        List<String> dates = new ArrayList<>();
+        cursor.moveToFirst();
+        for (int i=0; i<cursor.getCount(); i++) {
+            dates.add(cursor.getString(0));
+            cursor.moveToNext();
+        }
+        cursor.close();
+        return dates;
+    }
+
+    /**
      * get collect of EXAM
      * @return exams Collection of EXAM
      */
@@ -383,19 +399,24 @@ public class DBManager {
         for (int i=0; i<paper2s.size(); i++)
         {
             Cursor cursor = database.rawQuery("SELECT * FROM "+DatabaseHelper.PAPER2+" WHERE PAPER2_ID = " + paper2s.get(i).getPAPER2_ID(), null);
+
+            ContentValues contentValue = new ContentValues();
+            contentValue.put("PAPER2_ID",paper2s.get(i).getPAPER2_ID());
+            contentValue.put("SJ_ID",paper2s.get(i).getSJ_ID());
+            contentValue.put("TEST_NAME",paper2s.get(i).getTEST_NAME());
+            contentValue.put("TEST_CHRONO",paper2s.get(i).getTEST_CHRONO());
+            contentValue.put("TEST_CONTENT",paper2s.get(i).getTEST_CONTENT());
+            contentValue.put("EXAM_ID",paper2s.get(i).getEXAM_ID());
+
             if (cursor.getCount()==0) {
                 Log.e("INSERT PAPER 2 :", ""+i+"/"+paper2s.size() );
-                ContentValues contentValue = new ContentValues();
-                contentValue.put("PAPER2_ID",paper2s.get(i).getPAPER2_ID());
-                contentValue.put("SJ_ID",paper2s.get(i).getSJ_ID());
-                contentValue.put("TEST_NAME",paper2s.get(i).getTEST_NAME());
-                contentValue.put("TEST_CHRONO",paper2s.get(i).getTEST_CHRONO());
-                contentValue.put("TEST_CONTENT",paper2s.get(i).getTEST_CONTENT());
-                contentValue.put("EXAM_ID",paper2s.get(i).getEXAM_ID());
                 database.insert(DatabaseHelper.PAPER2, null, contentValue);
             }
-            else
+            else{
+                Log.e("UPDATE PAPER 2 :", ""+i+"/"+paper2s.size() );
+                database.update(DatabaseHelper.PAPER2,contentValue, "PAPER2_ID = " + paper2s.get(i).getPAPER2_ID(), null);
                 cursor.close();
+            }
         }
     }
 
@@ -450,18 +471,20 @@ public class DBManager {
         for (int i=0; i<paper3s.size(); i++)
         {
             Cursor cursor = database.rawQuery("SELECT * FROM "+DatabaseHelper.PAPER3+" WHERE PAPER3_ID = " + paper3s.get(i).getPAPER3_ID(), null);
+            ContentValues contentValue = new ContentValues();
+            contentValue.put("PAPER3_ID",paper3s.get(i).getPAPER3_ID());
+            contentValue.put("SJ_ID",paper3s.get(i).getSJ_ID());
+            contentValue.put("TEST_NAME",paper3s.get(i).getTEST_NAME());
+            contentValue.put("TEST_CONTENT",paper3s.get(i).getTEST_CONTENT());
+            contentValue.put("EXAM_ID",paper3s.get(i).getEXAM_ID());
             if (cursor.getCount()==0) {
                 Log.e("INSERT PAPER 3", ""+i+"/"+paper3s.size() );
-                ContentValues contentValue = new ContentValues();
-                contentValue.put("PAPER3_ID",paper3s.get(i).getPAPER3_ID());
-                contentValue.put("SJ_ID",paper3s.get(i).getSJ_ID());
-                contentValue.put("TEST_NAME",paper3s.get(i).getTEST_NAME());
-                contentValue.put("TEST_CONTENT",paper3s.get(i).getTEST_CONTENT());
-                contentValue.put("EXAM_ID",paper3s.get(i).getEXAM_ID());
                 database.insert(DatabaseHelper.PAPER3, null, contentValue);
             }
-            else
+            else{
+                database.update(DatabaseHelper.PAPER3, contentValue, "PAPER3_ID = " + paper3s.get(i).getPAPER3_ID(), null);
                 cursor.close();
+            }
         }
     }
 
@@ -515,15 +538,21 @@ public class DBManager {
         for (int i=0; i<requierements.size(); i++)
         {
             Cursor cursor = database.rawQuery("SELECT * FROM "+DatabaseHelper.REQUIEREMENT+" WHERE REQ_ID = "+requierements.get(i).getREQ_ID(), null);
+
+            ContentValues contentValue = new ContentValues();
+            contentValue.put("REQ_ID",requierements.get(i).getREQ_ID());
+            contentValue.put("COMP_ID",requierements.get(i).getCOMP_ID());
+            contentValue.put("REQ_NAME",requierements.get(i).getREQ_NAME());
+            contentValue.put("REQ_FILE",requierements.get(i).getREQ_FILE());
+            contentValue.put("REQ_CONTENT",requierements.get(i).getREQ_CONTENT());
+
             if (cursor.getCount()==0) {
                 Log.e(" INSERT REQUEREMENT", i+"/"+requierements.size());
-                ContentValues contentValue = new ContentValues();
-                contentValue.put("REQ_ID",requierements.get(i).getREQ_ID());
-                contentValue.put("COMP_ID",requierements.get(i).getCOMP_ID());
-                contentValue.put("REQ_NAME",requierements.get(i).getREQ_NAME());
-                contentValue.put("REQ_FILE",requierements.get(i).getREQ_FILE());
-                contentValue.put("REQ_CONTENT",requierements.get(i).getREQ_CONTENT());
                 database.insert(DatabaseHelper.REQUIEREMENT, null, contentValue);
+            }
+            else {
+                Log.e(" INSERT REQUEREMENT", i+"/"+requierements.size());
+                database.update(DatabaseHelper.REQUIEREMENT,contentValue,"REQ_ID = "+requierements.get(i).getREQ_ID(),null);
             }
             cursor.close();
         }
@@ -636,16 +665,21 @@ public class DBManager {
     public void insertListSubjectCorrection(SUBJECT_CORRECTION correction) {
         Cursor cursor = database.rawQuery("SELECT * FROM "+DatabaseHelper.SUBJECT_CORRECTION+" WHERE SC_ID = "+correction.getSC_ID(), null);
         Log.e(" GET CORRECTION", "ID = "+correction.getSC_ID() +" PAPER2_ID = "+correction.getSC_PAPER1_ID() +" PAPER3_ID = "+correction.getSC_PAPER2_ID());
+
+        ContentValues contentValue = new ContentValues();
+        contentValue.put("SC_ID",correction.getSC_ID());
+        contentValue.put("SC_CONTENT",correction.getSC_CONTENT());
+        contentValue.put("PAPER2_ID",correction.getSC_PAPER1_ID());
+        contentValue.put("PAPER3_ID",correction.getSC_PAPER2_ID());
+
         if (cursor.getCount()==0) {
-            ContentValues contentValue = new ContentValues();
-            contentValue.put("SC_ID",correction.getSC_ID());
-            contentValue.put("SC_CONTENT",correction.getSC_CONTENT());
-            contentValue.put("PAPER2_ID",correction.getSC_PAPER1_ID());
-            contentValue.put("PAPER3_ID",correction.getSC_PAPER2_ID());
             database.insert(DatabaseHelper.SUBJECT_CORRECTION, null, contentValue);
             Log.e("INSERT CORRECTION",contentValue.toString());
+        }else {
+            Log.e("UPDATE CORRECTION",contentValue.toString());
+            database.update(DatabaseHelper.SUBJECT_CORRECTION,contentValue,"SC_ID = "+correction.getSC_ID(),null);
+            cursor.close();
         }
-        cursor.close();
     }
 
     /**

@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.text.Html;
@@ -28,8 +29,8 @@ import com.MIAG.miaggce.models.PAPER2;
 import com.MIAG.miaggce.models.PAPER3;
 import com.MIAG.miaggce.models.QUESTION;
 import com.MIAG.miaggce.models.SUBJECT_CORRECTION;
-import com.MIAG.miaggce.ui.gce_a.GcePresenter;
-import com.MIAG.miaggce.ui.gce_a.GceView;
+import com.MIAG.miaggce.ui.gce.GcePresenter;
+import com.MIAG.miaggce.ui.gce.GceView;
 import com.MIAG.miaggce.ui.paper2_correction.Paper2CorrectionActivity;
 import com.google.android.material.snackbar.Snackbar;
 import java.util.List;
@@ -48,6 +49,7 @@ public class Paper2Activity extends AppCompatActivity implements View.OnClickLis
     String message = "";
     private DBManager dbManager;
     private GcePresenter presenter;
+    private PdfWebViewClient pdfWebViewClient;
 
     @SuppressLint("SetJavaScriptEnabled")
     @Override
@@ -62,7 +64,7 @@ public class Paper2Activity extends AppCompatActivity implements View.OnClickLis
 
         progressBar = findViewById(R.id.progressBar);
         webView = findViewById(R.id.webview);
-        webView.setWebViewClient(new WebViewClient());
+        webView.setWebViewClient(pdfWebViewClient);
         webView.setWebChromeClient(new WebChromeClient());
         webView.getSettings().setJavaScriptEnabled(true);
         paperId = getIntent().getIntExtra("paper",0);
@@ -73,6 +75,20 @@ public class Paper2Activity extends AppCompatActivity implements View.OnClickLis
         card = findViewById(R.id.card_timer);
 
         getDataToDataBase();
+    }
+
+    private class PdfWebViewClient extends WebViewClient {
+        @Override
+        public void onPageStarted(WebView view, String url, Bitmap favicon) {
+            super.onPageStarted(view, url, favicon);
+            showLoading();
+        }
+
+        @Override
+        public void onPageFinished(WebView view, String url) {
+            super.onPageFinished(view, url);
+            HideLoadding();
+        }
     }
 
     private void getDataToDataBase() {
