@@ -18,7 +18,7 @@
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
         <activity
-            android:name=".ui.downloadActivity.DownloadActivity"
+            android:name=".ui.download.DownloadActivity"
             android:label="@string/title_activity_download"
             android:theme="@style/AppTheme.Launch.dark">
             <intent-filter>
@@ -32,10 +32,10 @@
             android:name=".ui.gallery.ImageActivity"
             android:theme="@style/AppTheme" />
         <activity
-            android:name=".ui.Activity.TextActivity"
+            android:name=".ui.activity.TextActivity"
             android:theme="@style/AppTheme" />
         <activity
-            android:name=".ui.Activity.QcmActivity"
+            android:name=".ui.activity.QcmActivity"
             android:theme="@style/AppTheme" />
         <activity
             android:name=".ui.identification.IdentificationActivity"

@@ -744,7 +744,7 @@ public class DBManager {
     public List<BLOC_NOTE> listBlocNote() {
         List<BLOC_NOTE> bloc_notes =  new ArrayList<>();
 
-        Cursor cursor = database.rawQuery("SELECT * FROM "+DatabaseHelper.BLOC_NOTE+" ORDER BY NOTE_ID DESC ", null);
+        Cursor cursor = database.rawQuery("SELECT * FROM "+DatabaseHelper.BLOC_NOTE+" ORDER BY NOTE_DATE DESC ", null);
         if (cursor.getCount()>0) {
             cursor.moveToFirst();
             do{

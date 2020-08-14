@@ -46,11 +46,11 @@ import static com.MyMentor.competitive.app.appConfig.USERKEY;
  */
 public class IdentificationActivity extends AppCompatActivity {
 
-    public final String PREFERENCE = "MIAG_GCE";
+    public final String PREFERENCE = "My_Mentor_Competitive";
     EditText number, password, name;
-    Button login, singin;
-    LinearLayout layoutSingin, layoutLogin;
-    Button buttonLogin, buttonSingin;
+    Button login, singIn;
+    LinearLayout layoutSingIn, layoutLogin;
+    Button buttonLogin, buttonSingIn;
     ProgressBar animate;
     boolean isLogin = true;
     Animation animFadeIn, animFadeOut;
@@ -63,13 +63,13 @@ public class IdentificationActivity extends AppCompatActivity {
         setContentView(R.layout.activity_identification);
 
         login = findViewById(R.id.button_login);
-        singin = findViewById(R.id.button_singin);
+        singIn = findViewById(R.id.button_singin);
 
         buttonLogin = findViewById(R.id.text_login);
-        buttonSingin = findViewById(R.id.text_singin);
+        buttonSingIn = findViewById(R.id.text_singin);
 
         layoutLogin = findViewById(R.id.layout_login);
-        layoutSingin = findViewById(R.id.layout_singin);
+        layoutSingIn = findViewById(R.id.layout_singin);
 
         animate = findViewById(R.id.progressBar);
 
@@ -88,7 +88,7 @@ public class IdentificationActivity extends AppCompatActivity {
                     @Override
                     public void onAnimationEnd(Animation animation) {
                         layoutLogin.setVisibility(View.VISIBLE);
-                        layoutSingin.setVisibility(View.GONE);
+                        layoutSingIn.setVisibility(View.GONE);
                         layoutLogin.startAnimation(animFadeIn);
                     }
 
@@ -97,11 +97,11 @@ public class IdentificationActivity extends AppCompatActivity {
 
                     }
                 });
-                layoutSingin.startAnimation(animFadeOut);
+                layoutSingIn.startAnimation(animFadeOut);
             }
         });
 
-        buttonSingin.setOnClickListener(new View.OnClickListener() {
+        buttonSingIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 isLogin =false;
@@ -115,8 +115,8 @@ public class IdentificationActivity extends AppCompatActivity {
                     @Override
                     public void onAnimationEnd(Animation animation) {
                         layoutLogin.setVisibility(View.GONE);
-                        layoutSingin.setVisibility(View.VISIBLE);
-                        layoutSingin.startAnimation(animFadeIn);
+                        layoutSingIn.setVisibility(View.VISIBLE);
+                        layoutSingIn.startAnimation(animFadeIn);
                     }
 
                     @Override
@@ -137,7 +137,7 @@ public class IdentificationActivity extends AppCompatActivity {
             }
         });
 
-        singin.setOnClickListener(new View.OnClickListener() {
+        singIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 number = findViewById(R.id.number_singin);
@@ -225,7 +225,7 @@ public class IdentificationActivity extends AppCompatActivity {
                         if (isLogin)
                             login.callOnClick();
                         else
-                            singin.callOnClick();
+                            singIn.callOnClick();
                     }
                 });
         snackbar.show();

@@ -1,4 +1,4 @@
-package com.MyMentor.competitive.ui.downloadActivity;
+package com.MyMentor.competitive.ui.download;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -31,6 +31,9 @@ import com.MyMentor.competitive.models.STAFFMEMBER_RES;
 import com.MyMentor.competitive.models.SUBJECT_RES;
 import com.MyMentor.competitive.models.TUTORIAL_QCM_RES;
 import com.MyMentor.competitive.models.TUTORIAL_RES;
+import com.MyMentor.competitive.ui.identification.IdentificationActivity;
+
+import static com.MyMentor.competitive.app.appConfig.ID;
 import static com.MyMentor.competitive.app.appConfig.PREFERENCE;
 import static com.MyMentor.competitive.app.appConfig.USERKEY;
 
@@ -48,9 +51,14 @@ public class DownloadActivity extends AppCompatActivity implements DownloaderInt
         SharedPreferences pref = getApplicationContext().getSharedPreferences(PREFERENCE, 0);
         String userKey = pref.getString(USERKEY, appConfig.DEFAULT_KEY);
 
-        downloaderPresenter = new DownloaderPresenter(userKey,this);
-        dbManager = new DBManager(this);
-
+        int userID = pref.getInt(ID,0);
+        if (userID!=0){
+            goToIdentificationActivity();
+        }
+        else{
+            downloaderPresenter = new DownloaderPresenter(userKey,this);
+            dbManager = new DBManager(this);
+        }
     }
 
     @Override
@@ -489,5 +497,11 @@ public class DownloadActivity extends AppCompatActivity implements DownloaderInt
     void goToMainActivity(){
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
+    }
+
+    void goToIdentificationActivity(){
+        Intent intent = new Intent(this, IdentificationActivity.class);
+        startActivity(intent);
+        finish();
     }
 }

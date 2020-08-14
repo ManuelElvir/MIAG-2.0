@@ -1,4 +1,4 @@
-package com.MyMentor.competitive.ui.Activity;
+package com.MyMentor.competitive.ui.activity;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;

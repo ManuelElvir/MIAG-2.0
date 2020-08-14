@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/color_white"
-    tools:context=".ui.Activity.TextActivity">
+    tools:context=".ui.activity.TextActivity">
 
     <LinearLayout
         android:id="@+id/card_timer"

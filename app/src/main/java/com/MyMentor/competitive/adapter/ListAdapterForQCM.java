@@ -12,10 +12,10 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 import com.MyMentor.competitive.R;
 
-import static com.MyMentor.competitive.ui.Activity.QcmActivity.answers;
-import static com.MyMentor.competitive.ui.Activity.QcmActivity.isCorrection;
-import static com.MyMentor.competitive.ui.Activity.QcmActivity.questions;
-import static com.MyMentor.competitive.ui.Activity.QcmActivity.results;
+import static com.MyMentor.competitive.ui.activity.QcmActivity.answers;
+import static com.MyMentor.competitive.ui.activity.QcmActivity.isCorrection;
+import static com.MyMentor.competitive.ui.activity.QcmActivity.questions;
+import static com.MyMentor.competitive.ui.activity.QcmActivity.results;
 
 public class ListAdapterForQCM extends BaseAdapter {
     private Context context;

@@ -1,4 +1,4 @@
-package com.MyMentor.competitive.ui.downloadActivity;
+package com.MyMentor.competitive.ui.download;
 
 import com.MyMentor.competitive.models.ANWSER_RES;
 import com.MyMentor.competitive.models.CHAPTER_RES;
