@@ -1,2 +1,2 @@
 include ':app'
-rootProject.name='MIAG GCE'
+rootProject.name='MyMentor GCE'

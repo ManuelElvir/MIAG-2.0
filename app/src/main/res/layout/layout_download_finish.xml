@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="@drawable/edittext_background1"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="40dp"
+    android:layout_marginEnd="40dp"
+    android:paddingBottom="30dp"
+    android:paddingTop="30dp"
+    android:orientation="vertical"
+    android:layout_gravity="center"
+    android:gravity="center">
+
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="@string/donwload_finish"
+        android:gravity="center"
+        android:textColor="@color/text_color"
+        android:textStyle="bold"
+        android:textSize="24sp" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/text"
+        android:textColor="@color/text_color"
+        android:layout_marginStart="30dp"
+        android:layout_marginEnd="30dp"
+        android:textAlignment="center"
+        android:layout_marginTop="10dp"
+        android:text="@string/downlaod_finish_with_error"/>
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="30dp"
+        android:layout_marginEnd="30dp"
+        android:layout_marginTop="20dp">
+        <Button
+            android:layout_width="60dp"
+            android:layout_height="35dp"
+            android:textAllCaps="false"
+            android:id="@+id/cancel"
+            android:textColor="@color/text_color"
+            android:background="@drawable/background_button_white"
+            android:text="@string/no_retry"
+            android:layout_alignParentStart="true" />
+
+        <Button
+            android:layout_width="70dp"
+            android:layout_height="35dp"
+            android:layout_marginStart="10dp"
+            android:textAllCaps="false"
+            android:textColor="@color/color_white"
+            android:background="@drawable/button_background"
+            android:id="@+id/start"
+            android:text="@string/yes_start"
+            android:layout_alignParentEnd="true" />
+    </RelativeLayout>
+
+
+
+</LinearLayout>

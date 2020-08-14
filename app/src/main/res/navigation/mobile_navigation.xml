@@ -3,47 +3,53 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/nav_gce_a">
+    app:startDestination="@+id/nav_exam_sessions">
 
     <fragment
-        android:id="@+id/nav_gce_a"
-        android:name="com.MIAG.miaggce.ui.gce.GceAFragment"
-        android:label="@string/gce_a"
-        tools:layout="@layout/fragment_gce_a" />
+        android:id="@+id/nav_exam_sessions"
+        android:name="com.MyMentor.competitive.ui.entrance_exams.ExamSessionsFragment"
+        android:label="@string/exam_sessions"
+        tools:layout="@layout/fragment_exam_sessions" />
 
     <fragment
-        android:id="@+id/nav_gce_o"
-        android:name="com.MIAG.miaggce.ui.gce.GceOFragment"
-        android:label="@string/gce_o"
-        tools:layout="@layout/fragment_gce_o" />
+        android:id="@+id/nav_tutorial"
+        android:name="com.MyMentor.competitive.ui.entrance_exams.TutorialsFragment"
+        android:label="@string/turorials"
+        tools:layout="@layout/fragment_tutorials" />
 
     <fragment
-        android:id="@+id/nav_competitive"
-        android:name="com.MIAG.miaggce.ui.competitive.CompetitiveFragment"
-        android:label="@string/competitive"
-        tools:layout="@layout/fragment_competitive" />
+        android:id="@+id/nav_requierement"
+        android:name="com.MyMentor.competitive.ui.entrance_exams.RequirementsFragment"
+        android:label="@string/requierements"
+        tools:layout="@layout/fragment_requierement" />
+
+    <fragment
+        android:id="@+id/nav_bloc_note"
+        android:name="com.MyMentor.competitive.ui.bloc_note.BlocNoteFragment"
+        android:label="@string/my_blocnote"
+        tools:layout="@layout/fragment_bloc_note" />
 
     <fragment
         android:id="@+id/nav_staff"
-        android:name="com.MIAG.miaggce.ui.staff.StaffFragment"
+        android:name="com.MyMentor.competitive.ui.staff.StaffFragment"
         android:label="@string/staff"
         tools:layout="@layout/fragment_staff" />
 
     <fragment
         android:id="@+id/nav_galery"
-        android:name="com.MIAG.miaggce.ui.gallery.GalleryFragment"
+        android:name="com.MyMentor.competitive.ui.gallery.GalleryFragment"
         android:label="@string/galerie"
         tools:layout="@layout/fragment_gallery" />
 
     <fragment
         android:id="@+id/nav_user"
-        android:name="com.MIAG.miaggce.ui.account.AccountFragment"
+        android:name="com.MyMentor.competitive.ui.account.AccountFragment"
         android:label="@string/account"
         tools:layout="@layout/fragment_account" />
 
     <fragment
         android:id="@+id/nav_about"
-        android:name="com.MIAG.miaggce.ui.about.AboutFragment"
+        android:name="com.MyMentor.competitive.ui.about.AboutFragment"
         android:label="@string/about"
         tools:layout="@layout/fragment_about" />
 </navigation>

@@ -34,7 +34,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
                 android:layout_marginBottom="10dp"
-                android:text="@string/john_doe"
                 android:textColor="@color/text_color"
                 android:textStyle="bold"
                 android:textSize="16sp" />
@@ -44,7 +43,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="sans-serif-light"
-                android:text="@string/polytechnicien_informatique"
+                android:text="@string/student"
                 android:textAlignment="center"
                 android:textSize="13sp"
                 android:textStyle="bold"/>
@@ -336,6 +335,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:id="@+id/bloc_registration"
+                android:paddingBottom="10dp"
                 android:orientation="vertical">
 
                 <View
@@ -403,19 +403,6 @@
                     android:textColor="@color/text_color"
                     tools:ignore="RtlHardcoded" />
             </LinearLayout>
-
-
-            <Button
-                android:id="@+id/logout"
-                android:layout_width="60dp"
-                android:layout_height="35dp"
-                android:text="@string/logout"
-                android:textAllCaps="false"
-                android:layout_marginTop="30dp"
-                android:layout_marginBottom="10dp"
-                android:layout_gravity="end"
-                android:textColor="@color/color_white"
-                android:background="@drawable/button_background"/>
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 

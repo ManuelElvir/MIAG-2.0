@@ -18,9 +18,7 @@
         android:layout_marginTop="10dp"
         android:background="@android:color/transparent"
         android:id="@+id/back"
-        android:drawableStart="@drawable/ic_close"
-        android:drawableLeft="@drawable/ic_close"
-        android:layout_marginRight="10dp" />
+        android:drawableStart="@drawable/ic_close" />
 
 
     <TextView

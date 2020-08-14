@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.MIAG.miaggce">
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.MyMentor.competitive">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
@@ -10,36 +11,41 @@
         android:allowBackup="true"
         android:fullBackupContent="true"
         android:hardwareAccelerated="true"
-        android:icon="@drawable/logo"
+        android:icon="@drawable/my_mentor_logo"
         android:label="@string/app_name"
-        android:roundIcon="@drawable/logo"
+        android:roundIcon="@drawable/my_mentor_logo"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
-        <activity android:name=".ui.image.ImageActivity" />
-        <activity android:name=".ui.requierement.RequierementActivity" />
+        android:theme="@style/AppTheme"
+        tools:ignore="GoogleAppIndexingWarning">
         <activity
-            android:name=".ui.identification.IdentificationActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen" />
-        <activity android:name=".ui.paper2_correction.Paper2CorrectionActivity" />
-        <activity android:name=".ui.paper2.Paper2Activity" />
-        <activity android:name=".ui.paper1.Paper1Activity" />
-        <activity
-            android:name=".ui.splash.SplashScreen"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:label="@string/app_name"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen">
+            android:name=".ui.downloadActivity.DownloadActivity"
+            android:label="@string/title_activity_download"
+            android:theme="@style/AppTheme.Launch.dark">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".ui.bloc_note.BlocNoteActivity" />
+        <activity
+            android:name=".ui.gallery.ImageActivity"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".ui.Activity.TextActivity"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".ui.Activity.QcmActivity"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".ui.identification.IdentificationActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.Launch.light" />
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.Launch.light">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>

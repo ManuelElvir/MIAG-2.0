@@ -29,7 +29,7 @@
                 app:sliderScrollTimeInSec="1"
                 app:sliderStartAutoCycle="true" />
 
-            <com.MIAG.miaggce.app.ExpandableHeightGridView
+            <com.MyMentor.competitive.app.ExpandableHeightGridView
                 android:id="@+id/gridView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

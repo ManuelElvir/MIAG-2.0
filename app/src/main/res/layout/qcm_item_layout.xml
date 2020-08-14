@@ -5,8 +5,7 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginStart="5dp"
-    android:layout_marginLeft="5dp">
+    android:layout_marginStart="5dp">
     <androidx.cardview.widget.CardView
         android:elevation="6dp"
         android:layout_marginTop="10dp"
@@ -37,18 +36,17 @@
         android:layout_width="match_parent"
         android:layout_marginStart="50dp"
         android:layout_marginEnd="10dp"
-        android:layout_height="wrap_content"
-        android:text="@string/lorem_ipsum_50"
-        android:layout_marginLeft="50dp"
-        android:layout_marginRight="10dp" />
+        android:layout_height="wrap_content" />
 
     <RadioGroup
+        android:id="@+id/answers"
         app:layout_constraintTop_toBottomOf="@id/question"
-        app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginStart="70dp"
+        app:layout_constraintStart_toStartOf="@id/question"
+        app:layout_constraintEnd_toEndOf="@id/question"
+        android:layout_marginStart="50dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="70dp"
+        android:layout_marginLeft="10dp"
         android:layout_marginEnd="10dp"
         android:layout_marginRight="10dp">
 
@@ -56,6 +54,7 @@
             android:id="@+id/answer1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_margin="2dp"
             android:visibility="gone"
             android:text="@string/awnser_1" />
 
@@ -63,6 +62,7 @@
             android:id="@+id/answer2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_margin="2dp"
             android:visibility="gone"
             android:text="@string/answer_2" />
 
@@ -70,6 +70,7 @@
             android:id="@+id/answer3"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_margin="2dp"
             android:visibility="gone"
             android:text="@string/answer_3" />
 
@@ -77,7 +78,42 @@
             android:id="@+id/answer4"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_margin="2dp"
             android:visibility="gone"
             android:text="@string/answer_4" />
+
+        <RadioButton
+            android:id="@+id/answer5"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="2dp"
+            android:visibility="gone"
+            android:text="@string/answer_5" />
+
+        <RadioButton
+            android:id="@+id/answer6"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="2dp"
+            android:visibility="gone"
+            android:text="@string/answer_6" />
     </RadioGroup>
+
+    <TextView
+        android:id="@+id/text_indication"
+        app:layout_constraintTop_toBottomOf="@id/answers"
+        app:layout_constraintStart_toStartOf="parent"
+        android:textStyle="italic"
+        android:textSize="12sp"
+        android:background="@drawable/background_blue"
+        android:drawableTop="@drawable/ic_info_black_24dp"
+        android:padding="8dp"
+        android:textColor="@color/textColorBlack"
+        android:layout_marginTop="10dp"
+        android:layout_width="match_parent"
+        android:layout_marginStart="50dp"
+        android:visibility="gone"
+        android:layout_marginEnd="10dp"
+        android:layout_height="wrap_content"
+        android:text="@string/app_description" />
 </androidx.constraintlayout.widget.ConstraintLayout>
